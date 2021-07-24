@@ -1,0 +1,56 @@
+.bg-cover {
+    background-size: cover;
+}
+.bg-center {
+    background-position: center;
+}
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+.fixed {
+    position: fixed;
+}
+.bottom-0 {
+    bottom: 0px;
+}
+.right-0 {
+    right: 0px;
+}
+.left-0 {
+    left: 0px;
+}
+.justify-between {
+    justify-content: space-between;
+}
+.justify-center {
+    justify-content: center;
+}
+.flex-row {
+    flex-direction: row;
+}
+.flex {
+    display: flex;
+}
+
+.rounded-none {
+    border-radius: 0px;
+}
+.border-gray-400 {
+    border-color: rgba(156, 163, 175, 0.3);
+}
+
+.bg-white {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.blur {
+    -webkit-backdrop-filter: blur(40px);	
+    backdrop-filter: blur(40px);	
+}
+
+.duration-150 {
+    transition-duration: .15s;
+}
+.ease-in {
+    transition-timing-function: cubic-bezier(.4,0,1,1);
+}

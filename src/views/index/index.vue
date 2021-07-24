@@ -1,6 +1,22 @@
 <template>
-    <div>
+    <div class="home">
         首页
-        {{ $store.getters.count }}
+        <VmTabbar></VmTabbar>
     </div>
 </template>
+
+
+
+<script>
+import Tabbar from '@/components/tabbar/index.vue';
+export default{
+    components:{
+        VmTabbar:Tabbar
+    }
+}
+</script>
+
+
+<style lang="less">
+    
+</style>

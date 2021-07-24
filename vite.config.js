@@ -5,7 +5,7 @@ const { resolve } = require('path')
 export default defineConfig({
     alias: {
         '@': resolve(__dirname, 'src'),
-        '~assets': resolve(__dirname, 'src/assets'),
+        '~assets': resolve(__dirname, 'src/assets/'),
     },
     server:{
         port:3001

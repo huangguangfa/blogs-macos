@@ -1,5 +1,5 @@
 <template>
-    <div class="gf-blogs-macos">
+    <div class="gf-blogs-macos bg-cover bg-center">
         <router-view></router-view>
     </div>
 </template>
@@ -9,6 +9,8 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
+        background: url("~assets/ui/wallpaper-day.jpg") no-repeat;
+        filter: brightness(106%);
     }
 </style>
 
