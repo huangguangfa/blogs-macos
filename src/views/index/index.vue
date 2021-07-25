@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        首页
+        <VmTopbar></VmTopbar>
         <VmTabbar></VmTabbar>
     </div>
 </template>
@@ -9,9 +9,11 @@
 
 <script>
 import Tabbar from '@/components/tabbar/index.vue';
+import Topbar from "@/components/topbar/index.vue"
 export default{
     components:{
-        VmTabbar:Tabbar
+        VmTabbar:Tabbar,
+        VmTopbar:Topbar
     }
 }
 </script>

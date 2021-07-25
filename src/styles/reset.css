@@ -41,3 +41,7 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+#app,body,html{
+    height: 100vh;
+    overflow: hidden;
+}
