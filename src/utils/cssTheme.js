@@ -7,7 +7,7 @@ export class CssTheme{
         //初始化
         this.addLinkDom()
     }
-    getThemeCSSName() {
+    getThemeCSSName(){
         return localStorage.getItem('gf-css-theme') || 'Light'
     }
     setThemeCssName(themeName,isUpdate = true){
