@@ -32,6 +32,7 @@
 .flex {
     display: flex;
 }
+.align-items-center{align-items: center;}
 
 .rounded-none {
     border-radius: 0px;
@@ -54,6 +55,8 @@
 .ease-in {
     transition-timing-function: cubic-bezier(.4,0,1,1);
 }
+
+.fontbold{font-weight: bold;}
 
 /*边距*/
 .m10{margin:10px}
