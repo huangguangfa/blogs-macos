@@ -71,8 +71,7 @@
             border: 1px solid #e5e7eb;
             border-bottom: transparent;
             border-color: rgba(156,163,175,0.3);
-            display: flex; 
-            // align-items: center;
+            display: flex;
             li:first-child{padding-left: 0;}
         }
     }

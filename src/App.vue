@@ -9,8 +9,8 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background: url("~assets/ui/wallpaper-day.jpg") no-repeat;
-        filter: brightness(106%);
+        //background: url("~assets/ui/wallpaper-day.jpg") no-repeat;
+        //filter: brightness(106%);
     }
 </style>
 
