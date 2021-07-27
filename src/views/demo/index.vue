@@ -1,6 +1,18 @@
 <template>
     <div class="window" ref="ref_windows" @mousedown="windowBarDowStart">
-        <div class="window-bar"></div>
+        <div class="window-bar">
+            <div class="window-bars">
+                <div class="round">
+                    <i class="iconfont macos-shanchu"></i>
+                </div>
+                <div class="round remove-round">
+                    <i class="iconfont macos-jian"></i>
+                </div>
+                <div class="round fullscreen-round">
+                    <i class="iconfont macos-shanchu"></i>
+                </div>
+            </div>
+        </div>
         <div class="window-content"></div>
         <div v-for="(stick, index) in page_config.sticks"
              :key="index" class="vdr-stick"
@@ -38,20 +50,69 @@ export default{
                     windom.style.left = left + "px";
                     windom.style.top = top + "px";
                 }
+                //边框拖动
                 if( sticksStart ){
+                    // 'br', 'bm', 'bl', 'ml'
+                    let config = {
+                        //left
+                        'tl':{
+                            dir:'X',
+                            computed:( value ) => -1 * value
+                        },
+                        //top
+                        'tm':{
+                            dir:'Y',
+                            computed:( value ) => -1 * value
+                        },
+                        //right
+                        'tr':{
+                            dir:'X',
+                            computed:( value ) => 1 * value
+                        },
+                        //bottom
+                        'mr':{
+                            dir:'Y',
+                            computed:( value ) => 1 * value
+                        },
+                        // // top + left
+                        // 'br':{
+                        //     dir:'XY',
+                        //     computed:( value ) => -1 * value,
+                        //     isChangePosition:true
+                        // },
+                        // // top + right
+                        // 'bm':{
+                        //     dir:'XY',
+                        //     computed:( value ) => -1 * value
+                        // }
+                    }
+                    const { dir,computed, isChangePosition } = config[sticksType];
                     const { defaultWidth, defaultHeight } = page_config;
+                    const winLeft = parseInt(windom.style.left);
+                    const winTop = parseInt(windom.style.top);
                     const pageX = ev.pageX;
                     const pageY = ev.pageY;
-                    let widthX = parseInt(pageX-pointerX) + windom.offsetWidth;
-                    console.log(widthX)
-                    // console.log((widthX + windom.offsetWidth) + "px")
-                    windom.style.width = ( widthX < defaultWidth ? defaultWidth : widthX ) + "px";
-                    page_config.sticksConfig.pointerX = pageX;
-                    // console.log(windom.offsetWidth)
+                    // 左右
+                    if( ['X','XY'].includes(dir) ){
+                        const computedChangeValue = computed(parseInt( pageX - pointerX ));
+                        let widthX = computedChangeValue + windom.offsetWidth;
+                        windom.style.width = ( widthX < defaultWidth ? defaultWidth : widthX ) + "px";
+                        if( (widthX > defaultWidth) && (sticksType === 'tl' || isChangePosition ) ){
+                            windom.style.left = (winLeft - computedChangeValue) + 'px'
+                        }
+                        page_config.sticksConfig.pointerX = pageX;
+                    }
 
-                    // let widthX = parseInt(pageX-pointerX);
-                    // console.log('结果',widthX)
-                    // console.log(pointerX + '---' + pageX)
+                    if( ['Y','XY'].includes(dir) ){
+                        const computedChangeValue = computed(parseInt( pageY - pointerY ));
+                        let heightY = computedChangeValue + windom.offsetHeight;
+                        windom.style.height = ( heightY < defaultHeight ? defaultHeight : heightY ) + "px";
+                        page_config.sticksConfig.pointerY = pageY;
+                        if( (heightY > defaultHeight) && (sticksType === 'tm' || isChangePosition ) ){
+                            windom.style.top = (winTop - computedChangeValue) + 'px'
+                        }
+                    }
+
                 }
 
 
@@ -86,37 +147,58 @@ export default{
             this.page_config.winBarConfig.disY = disY;
         },
         stickDownStart(type,ev){
-            const pointerX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
-            const pointerY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
+            const pointerX = ev.pageX;
+            const pointerY = ev.pageY;
             this.page_config.sticksConfig.sticksStart = true;
             this.page_config.sticksConfig.pointerX = pointerX;
             this.page_config.sticksConfig.pointerY = pointerY;
-            // ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml']
-            let config = {
-                'tl':'X',
-                'tm':'Y',
-                'tr':'Y',
-                'mr':'X'
-            }
-            this.page_config.sticksConfig.sticksType = config[type];
+            this.page_config.sticksConfig.sticksType = type;
         }
     }
 }
 </script>
 
 <style lang="less">
+    .window-content{
+        width: 300px;height: 300px;
+    }
     .window{
-        width: 200px;height: 700px;
-        background: aqua;
-        will-change: left,top;
+        will-change: left,top, width,height;
         box-sizing: border-box;
         overflow: hidden;
         position: absolute;
         display: inline-block;
         flex-shrink: 0;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
+        border-radius: 4px;
+        border-color: rgba(107,114,128,0.3);
         .window-bar{
-            width: 100%;height: 30px;
-            background: blueviolet;
+            width: 100%;height: 24px;
+            background-color: rgba(229,231,235,1);
+            display: flex; align-items:center;
+            padding-left: 4px;
+            .window-bars{
+                display: flex; align-items:center;
+                &:hover .round>.iconfont{display: block;}
+                .round{
+                    width:12px;height: 12px;border-radius: 100%;
+                    background-color:rgb(239, 68, 68);
+                    margin: 0 4px;
+                    display: flex;align-items:center; justify-content: center;
+                    .iconfont{
+                        font-size: 7px;
+                        font-weight: bold;
+                        display: none;
+                    }
+                    .macos-jian{font-size: 10px;}
+                }
+                .remove-round{
+                    background-color: rgb(245, 158, 11)
+                }
+                .fullscreen-round{
+                    background-color:rgb(16, 185, 129)
+                }
+            }
         }
         .vdr-stick{
             box-sizing: border-box;
@@ -125,20 +207,19 @@ export default{
         .vdr-stick-tl{
             width: 4px;height: 100%;
             left: 0;top: 0;
-            background: red;
             cursor:w-resize;
             z-index: 2;
         }
         .vdr-stick-tm {
-            width:100%;height: 4px;background: red;top: 0;left: 0;
+            width:100%;height: 4px;top: 0;left: 0;
             cursor: n-resize;
         }
         .vdr-stick-tr {
-            width: 4px;height: 100%;background: red;right: 0;top: 0;
+            width: 4px;height: 100%;right: 0;top: 0;
             cursor: e-resize;
         }
         .vdr-stick-mr {
-            width: 100%;height: 4px;background: red;left: 0;bottom: 0;
+            width: 100%;height: 4px;left: 0;bottom: 0;
             cursor: s-resize;
         }
         .triangle{
