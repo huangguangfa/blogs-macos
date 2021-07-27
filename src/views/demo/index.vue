@@ -5,8 +5,7 @@
 </template>
 
 <script>
-import { addEvents, removeEvents } from "@/utils/dom.js";
-import {onMounted, reactive, ref, computed} from 'vue';
+import { onMounted, reactive, ref, computed } from 'vue';
 export default{
     setup(){
         let ref_windows = ref(null);
@@ -22,15 +21,15 @@ export default{
                 //只有顶部才支持被拖拽
                 if(disY > 30) return;
                 document.onmousemove = e => {
-                    //不可移动的距离
                     let web_width =  document.body.offsetWidth;
                     let dom_width =  windowBarDom.offsetWidth;
+                    let currenrLeft = parseInt(windowBarDom.style.left);
                     //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-                    console.log(parseInt(windowBarDom.style.left))
                     let left = e.clientX - disX;
                     let top = e.clientY - disY;
-                    // if( parseInt(windowBarDom.style.left))
-                    console.log(windowBarDom.offsetLeft);
+                    let letf_boundary =  parseInt((dom_width / 5) * 4);
+                    //不可移动的距离、左右不可超5/4
+                    if( (-letf_boundary) > left || ( left + dom_width ) > (web_width + letf_boundary ) ){  left = currenrLeft; }
                     windowBarDom.style.left = left + "px";
                     windowBarDom.style.top = top + "px";
                 };
@@ -51,7 +50,7 @@ export default{
 
 <style lang="less">
     .window{
-        width: 100px;height: 400px;background: aqua;
+        width: 100px;height: 700px;background: aqua;
         position: fixed;
         will-change: left,top;
         .window-bar{
