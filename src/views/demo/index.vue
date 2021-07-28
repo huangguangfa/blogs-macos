@@ -1,17 +1,17 @@
 <template>
     <div class="window" ref="ref_windows" @mousedown="windowBarDowStart">
         <div class="window-bar">
-            <div class="window-bars">
-                <div class="round">
-                    <i class="iconfont macos-shanchu"></i>
-                </div>
-                <div class="round remove-round">
-                    <i class="iconfont macos-jian"></i>
-                </div>
-                <div class="round fullscreen-round">
-                    <i class="iconfont macos-shanchu"></i>
-                </div>
-            </div>
+<!--            <div class="window-bars">-->
+<!--                <div class="round">-->
+<!--                    <i class="iconfont macos-shanchu"></i>-->
+<!--                </div>-->
+<!--                <div class="round remove-round">-->
+<!--                    <i class="iconfont macos-jian"></i>-->
+<!--                </div>-->
+<!--                <div class="round fullscreen-round">-->
+<!--                    <i class="iconfont macos-quanping"></i>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <div class="window-content"></div>
         <div v-for="(stick, index) in page_config.sticks"
@@ -52,67 +52,82 @@ export default{
                 }
                 //边框拖动
                 if( sticksStart ){
-                    // 'br', 'bm', 'bl', 'ml'
                     let config = {
                         //left
                         'tl':{
                             dir:'X',
-                            computed:( value ) => -1 * value
+                            computedX:( value ) => -1 * value
                         },
                         //top
                         'tm':{
                             dir:'Y',
-                            computed:( value ) => -1 * value
+                            computedY:( value ) => -1 * value
                         },
                         //right
                         'tr':{
                             dir:'X',
-                            computed:( value ) => 1 * value
+                            computedX:( value ) => 1 * value
                         },
                         //bottom
                         'mr':{
                             dir:'Y',
-                            computed:( value ) => 1 * value
+                            computedY:( value ) => 1 * value
                         },
-                        // // top + left
-                        // 'br':{
-                        //     dir:'XY',
-                        //     computed:( value ) => -1 * value,
-                        //     isChangePosition:true
-                        // },
-                        // // top + right
-                        // 'bm':{
-                        //     dir:'XY',
-                        //     computed:( value ) => -1 * value
-                        // }
+                        // top + left
+                        'br':{
+                            dir:'XY',
+                            computedX:( value ) => -1 * value,
+                            computedY:( value ) => -1 * value,
+                            isChangePositionX:true,
+                            isChangePositionY:true
+                        },
+                        // top + right
+                        'bm':{
+                            dir:'XY',
+                            computedY:( value ) => -1 * value,
+                            computedX:( value ) => 1 * value,
+                            isChangePositionY:true
+                        },
+                        // left + bottom
+                        'bl':{
+                            dir:'XY',
+                            computedX:( value ) => -1 * value,
+                            computedY:( value ) => 1 * value,
+                            isChangePositionX:true
+                        },
+                        //right/bottom
+                        'ml':{
+                            dir:'XY',
+                            computedX:( value ) => 1 * value,
+                            computedY:( value ) => 1 * value,
+                        },
                     }
-                    const { dir,computed, isChangePosition } = config[sticksType];
+                    const { dir,computedX, computedY, isChangePositionX, isChangePositionY } = config[sticksType];
                     const { defaultWidth, defaultHeight } = page_config;
                     const winLeft = parseInt(windom.style.left);
                     const winTop = parseInt(windom.style.top);
                     const pageX = ev.pageX;
                     const pageY = ev.pageY;
-                    // 左右
+                    // left/right
                     if( ['X','XY'].includes(dir) ){
-                        const computedChangeValue = computed(parseInt( pageX - pointerX ));
+                        const computedChangeValue = computedX(parseInt( pageX - pointerX ));
                         let widthX = computedChangeValue + windom.offsetWidth;
                         windom.style.width = ( widthX < defaultWidth ? defaultWidth : widthX ) + "px";
-                        if( (widthX > defaultWidth) && (sticksType === 'tl' || isChangePosition ) ){
+                        if( (widthX > defaultWidth) && (sticksType === 'tl' || isChangePositionX ) ){
                             windom.style.left = (winLeft - computedChangeValue) + 'px'
                         }
                         page_config.sticksConfig.pointerX = pageX;
                     }
-
+                    //top/bottom
                     if( ['Y','XY'].includes(dir) ){
-                        const computedChangeValue = computed(parseInt( pageY - pointerY ));
+                        const computedChangeValue = computedY(parseInt( pageY - pointerY ));
                         let heightY = computedChangeValue + windom.offsetHeight;
                         windom.style.height = ( heightY < defaultHeight ? defaultHeight : heightY ) + "px";
                         page_config.sticksConfig.pointerY = pageY;
-                        if( (heightY > defaultHeight) && (sticksType === 'tm' || isChangePosition ) ){
+                        if( (heightY > defaultHeight) && (sticksType === 'tm' || isChangePositionY ) ){
                             windom.style.top = (winTop - computedChangeValue) + 'px'
                         }
                     }
-
                 }
 
 
@@ -186,14 +201,16 @@ export default{
                     margin: 0 4px;
                     display: flex;align-items:center; justify-content: center;
                     .iconfont{
-                        font-size: 7px;
+                        font-size: 12px;
                         font-weight: bold;
                         display: none;
                     }
-                    .macos-jian{font-size: 10px;}
+                    .macos-jian{ transform: scale(0.8) }
+                    .macos-quanping{transform: scale(0.9) }
+                    .macos-shanchu{ transform: scale(0.6);}
                 }
                 .remove-round{
-                    background-color: rgb(245, 158, 11)
+                    background-color: rgb(245, 158, 11);
                 }
                 .fullscreen-round{
                     background-color:rgb(16, 185, 129)

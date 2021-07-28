@@ -1,6 +1,6 @@
 export const pageConfig = {
-    sticks: ['tl', 'tm', 'tr', 'mr'],
-    // sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
+    // sticks: ['tl', 'tm', 'tr', 'mr'],
+    sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
     winBarConfig:{
         winBarStart:false,
         disX:0,
