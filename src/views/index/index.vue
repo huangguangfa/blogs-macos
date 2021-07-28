@@ -5,8 +5,6 @@
     </div>
 </template>
 
-
-
 <script>
 import Tabbar from '@/components/tabbar/index.vue';
 import Topbar from "@/components/topbar/index.vue"
