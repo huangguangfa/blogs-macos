@@ -1,6 +1,6 @@
 <template>
-    <window :show="data.status"></window>
-    <button @click=" data.status = !data.status ">显示</button>
+    <window v-model:show="data.status"></window>
+    <button @click=" data.status = true ">显示</button>
 </template>
 
 <script>

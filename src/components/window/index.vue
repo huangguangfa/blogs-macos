@@ -1,30 +1,34 @@
 <template>
-    <div class="window" v-show="show" ref="ref_windows" @mousedown="windowBarDowStart">
-        <div class="window-bar">
+    <div class="window noCopy" 
+        v-show="page_config.shows" ref="ref_windows" 
+        @mousedown="windowBarDowStart">
+        <div class="window-bar" v-show="isBarShow">
             <div class="window-bars">
-                <div class="round">
-                    <i class="iconfont macos-shanchu"></i>
-                </div>
-                <div class="round remove-round">
-                    <i class="iconfont macos-jian"></i>
-                </div>
-                <div class="round fullscreen-round">
-                    <i class="iconfont macos-quanping"></i>
+                <div class="round" 
+                    v-for="(item,index) in statusLists" 
+                    :key="index" 
+                    @click="statusSwitch(index)"
+                    :class="item.className">
+                    <i class="iconfont" :class="item.icon"></i>
                 </div>
             </div>
         </div>
-        <div class="window-content"></div>
+        <div class="window-content">
+            <slot></slot>
+        </div>
+
         <div v-for="(stick, index) in page_config.sticks"
-             :key="index" class="vdr-stick"
-             @mousedown.stop.prevent="stickDownStart(stick,$event)"
-             :class="['vdr-stick-' + stick, index > 3 ? 'triangle':'']">
+            :key="index" class="vdr-stick"
+            v-show="page_config.currentWindowStatus !== 'fullScreen'"
+            @mousedown.stop.prevent="stickDownStart(stick,$event)"
+            :class="['vdr-stick-' + stick, index > 3 ? 'triangle':'']">
         </div>
     </div>
 </template>
 
 <script>
-import {onMounted, reactive, ref, onUnmounted, watch, nextTick} from 'vue';
-import { pageConfig, initWindowStaus, mouseups, documentMoves } from "./data.js";
+import { onMounted, reactive, ref, onUnmounted, watch, nextTick, computed } from 'vue';
+import { pageConfig, initWindowStaus, mouseups, documentMoves, statusList } from "./data.js";
 import { addEvents, removeEvents } from "@/utils/dom";
 export default{
     name:"window",
@@ -37,18 +41,25 @@ export default{
     setup(props){
         let ref_windows = ref(null);
         let page_config = reactive(pageConfig);
-        watch( () => props.show, (count, prevCount) => {
-            nextTick(() =>{
-                initWindowStaus(ref_windows.value);
-            })
+        let statusLists = reactive(statusList);
+        watch( () => props.show, ( status ) => {
+            page_config.shows = status;
+            status === true && nextTick(() =>{ initWindowStaus(ref_windows.value); })
         })
         onMounted( () =>{
             let windom = ref_windows.value;
             //web页面移动
-            page_config.domEvents.set('mousemove',documentMoves.bind(this,windom));
+            page_config.domEvents.set('mousemove',ev =>{
+                const { clientY } = ev;
+                page_config.cursorPointerY = clientY < 40;
+                documentMoves(windom,ev)
+            });
             //鼠标松开、清除状态
             page_config.domEvents.set('mouseup',mouseups)
             addEvents(page_config.domEvents)
+        })
+        const isBarShow = computed( () =>{
+            return page_config.isFullScreen === false || page_config.isFullScreen === true && page_config.cursorPointerY  === true;
         })
         //销毁
         onUnmounted( () =>{
@@ -56,10 +67,35 @@ export default{
         })
         return {
             ref_windows,
-            page_config
+            statusLists,
+            page_config,
+            isBarShow
         }
     },
     methods:{
+        statusSwitch(index){
+            let enums = {
+                0:{
+                    type:'close',
+                    status:false
+                },
+                1:{
+                    type:'activeClose',
+                    status:false
+                },
+                2:{
+                    type:'fullScreen',
+                    status:true
+                }
+            }
+            const { type, status } = enums[index];
+            this.page_config.currentWindowStatus = type;
+            this.page_config.shows = status;
+            this.$emit('update:show',status);
+            if( type === 'fullScreen' ){
+                this.windowFullScreen()
+            }
+        },
         windowBarDowStart(e){
             //算出鼠标相对元素的位置
             let disX = e.clientX - this.ref_windows.offsetLeft;
@@ -77,13 +113,32 @@ export default{
             this.page_config.sticksConfig.pointerX = pointerX;
             this.page_config.sticksConfig.pointerY = pointerY;
             this.page_config.sticksConfig.sticksType = type;
+        },
+        windowFullScreen(){
+            this.page_config.isFullScreen = !this.page_config.isFullScreen;
+            let newStyle = null;
+            if( this.page_config.isFullScreen === true ){
+                const { offsetWidth, offsetHeight, style } = this.ref_windows;
+                const { top, left } = style;
+                let web_width = document.body.offsetWidth;
+                let web_height = document.body.offsetHeight;
+                this.ref_windows.__formerW = offsetWidth;
+                this.ref_windows.__formerH = offsetHeight;
+                this.ref_windows.__formerL = parseInt(left);
+                this.ref_windows.__formerT = parseInt(top);
+                newStyle = `width:${web_width}px;height:${web_height}px;top:0px;left:0px`;
+            } else{
+                const { __formerW, __formerH, __formerL, __formerT } = this.ref_windows;
+                newStyle = `width:${__formerW}px;height:${__formerH}px;top:${__formerT}px;left:${__formerL}px`;
+            }
+            this.ref_windows.setAttribute('style',newStyle)
         }
     }
 }
 </script>
 
 <style lang="less">
-.window-content{ width: 860px;height: 500px; }
+.window-content{ width: 100%;height: 100%; background: #fff; }
 .window{
     will-change: left,top, width,height;
     box-sizing: border-box;
@@ -92,10 +147,16 @@ export default{
     display: inline-block;
     flex-shrink: 0;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
-    border-radius: 4px;
+    width: 860px;height: 500px;
     border-color: rgba(107,114,128,0.3);
+    .top-hover{
+        width: 100%;height:10px;background: red;
+        &:hover +.window-bar{
+            display: block;
+        }
+    }
     .window-bar{
-        width: 100%;height: 24px;
+        width: 100%;height: 30px;
         background-color: rgba(229,231,235,1);
         display: flex; align-items:center;
         padding-left: 4px;

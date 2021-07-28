@@ -1,5 +1,3 @@
-
-
 export const pageConfig = {
     sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
     winBarConfig:{
@@ -13,9 +11,13 @@ export const pageConfig = {
         pointerY:0,
         sticksType:null
     },
+    cursorPointerY:false,
     domEvents:new Map(),
     defaultWidth:300,
     defaultHeight:300,
+    currentWindowStatus:'close',
+    shows:false,
+    isFullScreen:false
 }
 
 //八点拖拽点计算规则
@@ -70,6 +72,12 @@ export const sticksRule = {
     },
 }
 
+export const statusList = [
+    { icon:'macos-shanchu', className:'' },
+    { icon:'macos-jian', className:'remove-round' },
+    { icon:'macos-quanping', className:'fullscreen-round' },
+]
+
 //初始化Window
 export function initWindowStaus(dom){
     let web_width =  document.body.offsetWidth;
@@ -86,8 +94,9 @@ export function mouseups(){
     pageConfig.winBarConfig.winBarStart = false;
     pageConfig.sticksConfig.sticksStart = false;
 }
-
 export function documentMoves(windom,ev){
+    const { clientY, clientX, pageX, pageY  } = ev;
+    // pageConfig.cursorPointerY = clientY < 10;
     let web_width =  document.body.offsetWidth;
     const { winBarStart, disX, disY } = pageConfig.winBarConfig;
     const { sticksStart, pointerX,pointerY, sticksType } = pageConfig.sticksConfig;
@@ -96,8 +105,8 @@ export function documentMoves(windom,ev){
         let dom_width = windom.offsetWidth;
         let currenrLeft = parseInt(windom.style.left);
         //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
-        let left = ev.clientX - disX;
-        let top = ev.clientY - disY;
+        let left = clientX - disX;
+        let top = clientY - disY;
         let letf_boundary =  parseInt((dom_width / 5) * 4);
         //不可移动的距离、左右不可超5/4
         if( (-letf_boundary) > left || ( left + dom_width ) > (web_width + letf_boundary ) ){  left = currenrLeft; }
@@ -110,8 +119,6 @@ export function documentMoves(windom,ev){
         const { defaultWidth, defaultHeight } = pageConfig;
         const winLeft = parseInt(windom.style.left);
         const winTop = parseInt(windom.style.top);
-        const pageX = ev.pageX;
-        const pageY = ev.pageY;
         // left/right
         if( ['X','XY'].includes(dir) ){
             const computedChangeValue = computedX(parseInt( pageX - pointerX ));
