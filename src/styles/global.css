@@ -8,9 +8,7 @@
     margin-left: auto;
     margin-right: auto;
 }
-.fixed {
-    position: fixed;
-}
+
 .bottom-0 {
     bottom: 0px;
 }
@@ -20,20 +18,21 @@
 .left-0 {
     left: 0px;
 }
-.justify-between {
-    justify-content: space-between;
-}
-.justify-center {
-    justify-content: center;
-}
-.flex-row {
-    flex-direction: row;
-}
-.flex {
-    display: flex;
-}
+/*flex布局*/
+.flex {  display: flex;}
+.flex-row { flex-direction: row;}
+.flex-column{ flex-direction: column;}
+.justify-between { justify-content: space-between;}
+.justify-flex-end{ justify-content: flex-end;}
+.justify-center { justify-content: center; }
 .align-items-center{align-items: center;}
 
+/*定位*/
+.fixed { position: fixed;}
+.relative{position:relative}
+.absolute{position:absolute}
+
+.d-none{display:none}
 .rounded-none {
     border-radius: 0px;
 }

@@ -19,34 +19,31 @@
 <script>
     import dockItem from "./dock-item.vue";
     import { TABABR_NAVIGATION } from "@/config/dock.config.js";
-    import { reactive } from "vue"
+    import { reactive, ref } from "vue";
     export default{
-        components:{
-            dockItem
-        },
+        components:{ dockItem },
         setup(){
             const TABABR_NAVIGATIONS = reactive(TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(TABABR_NAVIGATIONS.length).fill(50));
-
             return {
                 TABABR_NAVIGATIONS,
-                TABABR_LIST_WIDTH
+                TABABR_LIST_WIDTH,
             }
         },
         methods:{
             tabbarMove(e){
-                const { target } = e;
-                let currentEleIndex = target.getAttribute("data-index");
-                if( !currentEleIndex ) return;
-                currentEleIndex = Number(currentEleIndex);
+                const { target, offsetX } = e;
+                let currentEleIndex = Number( target.getAttribute("data-index") );
+                if( currentEleIndex === undefined ) return;
                 let TABABR_LIST_WIDTH = this.TABABR_LIST_WIDTH;
-                TABABR_LIST_WIDTH[ currentEleIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex] = 100 );
+                TABABR_LIST_WIDTH[ currentEleIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex] = 110 );
                 //左
-                TABABR_LIST_WIDTH[ currentEleIndex - 1 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex -1] = 70 );
-                TABABR_LIST_WIDTH[ currentEleIndex - 2 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex -2] = 60 );
+                TABABR_LIST_WIDTH[ currentEleIndex - 1 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex -1] = 80 );
+                TABABR_LIST_WIDTH[ currentEleIndex - 2 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex -2] = 70 );
                 //右
-                TABABR_LIST_WIDTH[ currentEleIndex + 1 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 1] = 70 );
-                TABABR_LIST_WIDTH[ currentEleIndex + 2 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 2] = 60 );
+                TABABR_LIST_WIDTH[ currentEleIndex + 1 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 1] = 80 );
+                TABABR_LIST_WIDTH[ currentEleIndex + 2 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 2] = 70 );
+                console.log('offsetX',offsetX);
             },
             tabbarMouseout(){
                 this.TABABR_LIST_WIDTH.fill(50)

@@ -107,6 +107,7 @@ export function documentMoves(windom,ev){
         //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
         let left = clientX - disX;
         let top = clientY - disY;
+        top = top < 0 ? 0 : top;
         let letf_boundary =  parseInt((dom_width / 5) * 4);
         //不可移动的距离、左右不可超5/4
         if( (-letf_boundary) > left || ( left + dom_width ) > (web_width + letf_boundary ) ){  left = currenrLeft; }
