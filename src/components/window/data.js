@@ -17,7 +17,7 @@ export const pageConfig = {
     defaultHeight:300,
     currentWindowStatus:'close',
     shows:false,
-    isFullScreen:false
+    isFullScreen:false,
 }
 
 //八点拖拽点计算规则

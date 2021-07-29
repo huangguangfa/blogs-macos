@@ -8,7 +8,7 @@
     export default {
         setup(){
             let data = reactive({
-                status:false
+                status:true
             })
             return {
                 data

@@ -47,6 +47,8 @@ export default{
             status === true && nextTick(() =>{ initWindowStaus(ref_windows.value); })
         })
         onMounted( () =>{
+            page_config.shows = props.show;
+            props.show && nextTick(() =>{ initWindowStaus(ref_windows.value); })
             let windom = ref_windows.value;
             //web页面移动
             page_config.domEvents.set('mousemove',ev =>{
