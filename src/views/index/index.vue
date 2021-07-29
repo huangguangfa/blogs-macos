@@ -1,16 +1,16 @@
 <template>
     <div class="home">
         <VmTopbar></VmTopbar>
-        <VmTabbar></VmTabbar>
+        <VmDock></VmDock>
     </div>
 </template>
 
 <script>
-import Tabbar from '@/components/tabbar/index.vue';
+import Dock from '@/components/Dock/index.vue';
 import Topbar from "@/components/topbar/index.vue"
 export default{
     components:{
-        VmTabbar:Tabbar,
+        VmDock:Dock,
         VmTopbar:Topbar
     }
 }
