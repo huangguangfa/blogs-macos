@@ -1,6 +1,6 @@
 <template>
     <div class="window noCopy" 
-        v-show="page_config.shows" ref="ref_windows" 
+        v-show="page_config.shows" ref="ref_windows"
         @mousedown="windowBarDowStart">
         <div class="window-bar" v-show="isBarShow">
             <div class="window-bars">
@@ -16,9 +16,9 @@
         <div class="window-content">
             <slot></slot>
         </div>
-
         <div v-for="(stick, index) in page_config.sticks"
-            :key="index" class="vdr-stick"
+            :key="index"
+            class="vdr-stick"
             v-show="page_config.currentWindowStatus !== 'fullScreen'"
             @mousedown.stop.prevent="stickDownStart(stick,$event)"
             :class="['vdr-stick-' + stick, index > 3 ? 'triangle':'']">
@@ -145,12 +145,14 @@ export default{
     will-change: left,top, width,height;
     box-sizing: border-box;
     overflow: hidden;
-    position: absolute;
+    position: fixed;
+    top: 0;left: 0;
     display: inline-block;
     flex-shrink: 0;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
     width: 860px;height: 500px;
     border-color: rgba(107,114,128,0.3);
+    z-index: 999;
     .top-hover{
         width: 100%;height:10px;background: red;
         &:hover +.window-bar{

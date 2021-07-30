@@ -8,8 +8,10 @@
                 v-for="(item,index) in TABABR_NAVIGATIONS" 
                 :title="item.title"
                 :key-index="index"
+                @aaa="aaa"
                 :img="item.img"
                 :TABABRLISTWIDTH="TABABR_LIST_WIDTH"
+                v-model:desktop="item.desktop"
                 :key="index">
             </dockItem>
         </ul>
@@ -31,6 +33,9 @@
             }
         },
         methods:{
+            aaa(){
+                console.log(this.TABABR_NAVIGATIONS)
+            },
             tabbarMove(e){
                 const { target, offsetX } = e;
                 let currentEleIndex = Number( target.getAttribute("data-index") );
@@ -43,7 +48,6 @@
                 //右
                 TABABR_LIST_WIDTH[ currentEleIndex + 1 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 1] = 80 );
                 TABABR_LIST_WIDTH[ currentEleIndex + 2 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 2] = 70 );
-                console.log('offsetX',offsetX);
             },
             tabbarMouseout(){
                 this.TABABR_LIST_WIDTH.fill(50)

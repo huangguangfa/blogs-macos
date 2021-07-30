@@ -1,25 +1,27 @@
-export const pageConfig = {
-    sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
-    winBarConfig:{
-        winBarStart:false,
-        disX:0,
-        disY:0
-    },
-    sticksConfig:{
-        sticksStart:false,
-        pointerX:0,
-        pointerY:0,
-        sticksType:null
-    },
-    cursorPointerY:false,
-    domEvents:new Map(),
-    defaultWidth:300,
-    defaultHeight:300,
-    currentWindowStatus:'close',
-    shows:false,
-    isFullScreen:false,
+function initData(){
+    return {
+        sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
+        winBarConfig:{
+            winBarStart:false,
+            disX:0,
+            disY:0
+        },
+        sticksConfig:{
+            sticksStart:false,
+            pointerX:0,
+            pointerY:0,
+            sticksType:null
+        },
+        cursorPointerY:false,
+        domEvents:new Map(),
+        defaultWidth:300,
+        defaultHeight:300,
+        currentWindowStatus:'close',
+        shows:false,
+        isFullScreen:false,
+    }
 }
-
+export const pageConfig = initData();
 //八点拖拽点计算规则
 export const sticksRule = {
     //left
@@ -80,8 +82,8 @@ export const statusList = [
 
 //初始化Window
 export function initWindowStaus(dom){
-    let web_width =  document.body.offsetWidth;
-    let web_height =  document.body.offsetHeight;
+    let web_width = window.screen.width;
+    let web_height = window.screen.height;
     let domW = dom.offsetWidth
     let domH = dom.offsetHeight
     if( !(domW && domH )) return;

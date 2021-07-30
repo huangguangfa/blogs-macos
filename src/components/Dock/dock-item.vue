@@ -1,7 +1,10 @@
 <template>
     <li class="tabbar-item duration-150 ease-in flex align-items-center justify-flex-end flex-column relative">
         <p class="tabbar-title absolute d-none">{{ title }}</p>
-        <img  class="tabbar-img" :style="`width:${TABABRLISTWIDTH[keyIndex]}px;height:${TABABRLISTWIDTH[keyIndex]}px;`" :data-index="keyIndex" :src="img" alt="">
+        <img @click="openWindows" class="tabbar-img" :style="`width:${TABABRLISTWIDTH[keyIndex]}px;height:${TABABRLISTWIDTH[keyIndex]}px;`" :data-index="keyIndex" :src="img" alt="">
+        <div v-if="title === 'Finder'">
+            <window v-model:show="desktop"></window>
+        </div>
     </li>
 </template>
 
@@ -23,6 +26,19 @@
             TABABRLISTWIDTH:{
                 type:Array,
                 default:[]
+            },
+            desktop:{
+                type:Boolean,
+                default:false
+            }
+        },
+        setup(){
+
+        },
+        methods:{
+            openWindows(){
+                this.$emit('update:desktop',true);
+                this.$emit('aaa',true);
             }
         }
     }
