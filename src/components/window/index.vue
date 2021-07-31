@@ -1,6 +1,7 @@
 <template>
-    <div class="window noCopy" 
-        v-show="page_config.shows" ref="ref_windows"
+    <div class="window noCopy" :class="{ 'isScreenFacade':isScreenFacade }"
+        v-show="page_config.shows" :id="windowId"
+        @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
         <div class="window-bar" v-show="isBarShow">
             <div class="window-bars">
@@ -16,9 +17,9 @@
         <div class="window-content">
             <slot></slot>
         </div>
+
         <div v-for="(stick, index) in page_config.sticks"
-            :key="index"
-            class="vdr-stick"
+            :key="index" class="vdr-stick"
             v-show="page_config.currentWindowStatus !== 'fullScreen'"
             @mousedown.stop.prevent="stickDownStart(stick,$event)"
             :class="['vdr-stick-' + stick, index > 3 ? 'triangle':'']">
@@ -27,9 +28,11 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, onUnmounted, watch, nextTick, computed } from 'vue';
-import { pageConfig, initWindowStaus, mouseups, documentMoves, statusList } from "./data.js";
-import { addEvents, removeEvents } from "@/utils/dom";
+import { onMounted, reactive, onUnmounted, watch, nextTick, computed } from 'vue';
+import { initWindowStaus, mouseups, documentMoves, statusList } from "./data.js";
+import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
+import store from "../../store/index"
+let id = 0;
 export default{
     name:"window",
     props: {
@@ -39,27 +42,52 @@ export default{
         }
     },
     setup(props){
-        let ref_windows = ref(null);
-        let page_config = reactive(pageConfig);
+        let ref_windows = reactive({ dom:null });
+        let page_config = reactive({
+            sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
+            winBarConfig:{
+                winBarStart:false,
+                disX:0,
+                disY:0
+            },
+            sticksConfig:{
+                sticksStart:false,
+                pointerX:0,
+                pointerY:0,
+                sticksType:null
+            },
+            cursorPointerY:false,
+            domEvents:new Map(),
+            defaultWidth:300,
+            defaultHeight:300,
+            currentWindowStatus:'close',
+            shows:false,
+            isFullScreen:false
+        });
         let statusLists = reactive(statusList);
+        id ++;
+        let windowId = `window${id}`;
+        store.commit("SET_WINDOWID",windowId)
         watch( () => props.show, ( status ) => {
-            console.log('变化了吗',status)
             page_config.shows = status;
-            status === true && nextTick(() =>{ initWindowStaus(ref_windows.value); })
+            status === true && nextTick(() =>{ initWindowStaus(getByIdDom( windowId )); })
         })
+        let isScreenFacade = computed(() => store.state.WINDOWID === windowId );
         onMounted( () =>{
-            console.log('1111')
+            let windom = getByIdDom( windowId );
+            ref_windows.dom = windom;
             page_config.shows = props.show;
-            props.show && nextTick(() =>{ initWindowStaus(ref_windows.value); })
-            let windom = ref_windows.value;
+            props.show && nextTick(() =>{ initWindowStaus(windom); })
             //web页面移动
             page_config.domEvents.set('mousemove',ev =>{
                 const { clientY } = ev;
                 page_config.cursorPointerY = clientY < 40;
-                documentMoves(windom,ev)
+                documentMoves(windom,ev,page_config)
             });
             //鼠标松开、清除状态
-            page_config.domEvents.set('mouseup',mouseups)
+            page_config.domEvents.set('mouseup',() =>{
+                mouseups(page_config)
+            })
             addEvents(page_config.domEvents)
         })
         const isBarShow = computed( () =>{
@@ -73,7 +101,9 @@ export default{
             ref_windows,
             statusLists,
             page_config,
-            isBarShow
+            isBarShow,
+            windowId,
+            isScreenFacade
         }
     },
     methods:{
@@ -100,10 +130,13 @@ export default{
                 this.windowFullScreen()
             }
         },
+        setScreenFacade(){
+            store.commit("SET_WINDOWID",this.windowId)
+        },
         windowBarDowStart(e){
             //算出鼠标相对元素的位置
-            let disX = e.clientX - this.ref_windows.offsetLeft;
-            let disY = e.clientY - this.ref_windows.offsetTop;
+            let disX = e.clientX - this.ref_windows.dom.offsetLeft;
+            let disY = e.clientY - this.ref_windows.dom.offsetTop;
             //只有顶部才支持被拖拽
             if(disX < 6 || disY < 6 || disY > 30) return;
             this.page_config.winBarConfig.winBarStart = true;
@@ -122,39 +155,40 @@ export default{
             this.page_config.isFullScreen = !this.page_config.isFullScreen;
             let newStyle = null;
             if( this.page_config.isFullScreen === true ){
-                const { offsetWidth, offsetHeight, style } = this.ref_windows;
+                const { offsetWidth, offsetHeight, style } = this.ref_windows.dom;
                 const { top, left } = style;
                 let web_width = document.body.offsetWidth;
                 let web_height = document.body.offsetHeight;
-                this.ref_windows.__formerW = offsetWidth;
-                this.ref_windows.__formerH = offsetHeight;
-                this.ref_windows.__formerL = parseInt(left);
-                this.ref_windows.__formerT = parseInt(top);
+                this.ref_windows.dom.__formerW = offsetWidth;
+                this.ref_windows.dom.__formerH = offsetHeight;
+                this.ref_windows.dom.__formerL = parseInt(left);
+                this.ref_windows.dom.__formerT = parseInt(top);
                 newStyle = `width:${web_width}px;height:${web_height}px;top:0px;left:0px`;
             } else{
-                const { __formerW, __formerH, __formerL, __formerT } = this.ref_windows;
+                const { __formerW, __formerH, __formerL, __formerT } = this.ref_windows.dom;
                 newStyle = `width:${__formerW}px;height:${__formerH}px;top:${__formerT}px;left:${__formerL}px`;
             }
-            this.ref_windows.setAttribute('style',newStyle)
+            this.ref_windows.dom.setAttribute('style',newStyle)
         }
     }
 }
 </script>
 
 <style lang="less">
-.window-content{ width: 100%;height: 100%; background: #fff; }
+.window-content{ width: 100%;height: 100%;  }
 .window{
     will-change: left,top, width,height;
     box-sizing: border-box;
     overflow: hidden;
     position: fixed;
-    top: 0;left: 0;
     display: inline-block;
     flex-shrink: 0;
+    z-index: 9998;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
-    width: 860px;height: 500px;
+    min-width: 635px; 
+    min-height: 400px;
+    background: #fff;
     border-color: rgba(107,114,128,0.3);
-    z-index: 999;
     .top-hover{
         width: 100%;height:10px;background: red;
         &:hover +.window-bar{
@@ -246,4 +280,6 @@ export default{
         cursor:se-resize;
     }
 }
+.isScreenFacade{z-index: 9999;}
+
 </style>

@@ -8,17 +8,24 @@
                 v-for="(item,index) in TABABR_NAVIGATIONS"  
                 :key="index">
                 <p class="tabbar-title absolute d-none">{{ item.title }}</p>
-                <img @click="openWindows" class="tabbar-img"  :style="dockStyle(index)"  :data-index="index" :src="item.img">
+                <img @click="openWindows(index)" class="tabbar-img"  :style="dockStyle(index)"  :data-index="index" :src="item.img">
             </li>
         </ul>
-        
+        <app-safari v-if="TABABR_NAVIGATIONS[0].desktop"></app-safari>
+        <app-vscode v-if="TABABR_NAVIGATIONS[1].desktop"></app-vscode>
     </div>
 </template>
 
 <script>
     import { TABABR_NAVIGATION } from "@/config/dock.config.js";
     import { reactive, computed } from "vue";
+    import safari from "@/components/apps/safari.vue";
+    import vscode from "@/components/apps/vscode.vue";
     export default{
+        components:{
+            appSafari:safari,
+            appVscode:vscode
+        },
         setup(){
             const TABABR_NAVIGATIONS = reactive(TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(TABABR_NAVIGATIONS.length).fill(50));
@@ -49,6 +56,9 @@
             },
             tabbarMouseout(){
                 this.TABABR_LIST_WIDTH.fill(50)
+            },
+            openWindows(index){
+                this.TABABR_NAVIGATIONS[index].desktop = true;
             }
         }
     }

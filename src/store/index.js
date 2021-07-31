@@ -3,16 +3,16 @@ import { createStore } from 'vuex';
 export default createStore({
     state () {
         return {
-            count: 0
+            WINDOWID:null
         }
     },
     mutations: {
-        increment (state) {
-            state.count++
+        SET_WINDOWID(state,id) {
+            state.WINDOWID = id;
         }
     },
     getters: {
-        count: (state) => state.count
+        windowId: (state) => state.windowId
     }
 })
   

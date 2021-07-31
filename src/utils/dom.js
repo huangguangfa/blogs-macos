@@ -8,3 +8,7 @@ export function removeEvents(events) {
         document.documentElement.removeEventListener(eventName, cb);
     });
 }
+
+export function getByIdDom(id){
+    return document.getElementById(id)
+}

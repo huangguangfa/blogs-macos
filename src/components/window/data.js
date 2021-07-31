@@ -1,27 +1,4 @@
-function initData(){
-    return {
-        sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
-        winBarConfig:{
-            winBarStart:false,
-            disX:0,
-            disY:0
-        },
-        sticksConfig:{
-            sticksStart:false,
-            pointerX:0,
-            pointerY:0,
-            sticksType:null
-        },
-        cursorPointerY:false,
-        domEvents:new Map(),
-        defaultWidth:300,
-        defaultHeight:300,
-        currentWindowStatus:'close',
-        shows:false,
-        isFullScreen:false,
-    }
-}
-export const pageConfig = initData();
+
 //八点拖拽点计算规则
 export const sticksRule = {
     //left
@@ -92,13 +69,12 @@ export function initWindowStaus(dom){
     dom.style.top = (web_height - domH) / 2 + 'px';
 }
 //鼠标松开、清除状态
-export function mouseups(){
+export function mouseups(pageConfig){
     pageConfig.winBarConfig.winBarStart = false;
     pageConfig.sticksConfig.sticksStart = false;
 }
-export function documentMoves(windom,ev){
+export function documentMoves(windom,ev,pageConfig){
     const { clientY, clientX, pageX, pageY  } = ev;
-    // pageConfig.cursorPointerY = clientY < 10;
     let web_width =  document.body.offsetWidth;
     const { winBarStart, disX, disY } = pageConfig.winBarConfig;
     const { sticksStart, pointerX,pointerY, sticksType } = pageConfig.sticksConfig;
