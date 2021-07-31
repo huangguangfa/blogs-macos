@@ -3,39 +3,37 @@
         <ul 
             class="tabbars-u justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white blur"
             @mousemove="tabbarMove" @mouseout="tabbarMouseout">
-            <dockItem
-                :data-index="index"
-                v-for="(item,index) in TABABR_NAVIGATIONS" 
-                :title="item.title"
-                :key-index="index"
-                @aaa="aaa"
-                :img="item.img"
-                :TABABRLISTWIDTH="TABABR_LIST_WIDTH"
-                v-model:desktop="item.desktop"
+            <li 
+                class="tabbar-item duration-150 ease-in flex align-items-center justify-flex-end flex-column relative"
+                v-for="(item,index) in TABABR_NAVIGATIONS"  
                 :key="index">
-            </dockItem>
+                <p class="tabbar-title absolute d-none">{{ item.title }}</p>
+                <img @click="openWindows" class="tabbar-img"  :style="dockStyle(index)"  :data-index="index" :src="item.img">
+            </li>
         </ul>
+        
     </div>
 </template>
 
 <script>
-    import dockItem from "./dock-item.vue";
     import { TABABR_NAVIGATION } from "@/config/dock.config.js";
-    import { reactive, ref } from "vue";
+    import { reactive, computed } from "vue";
     export default{
-        components:{ dockItem },
         setup(){
             const TABABR_NAVIGATIONS = reactive(TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(TABABR_NAVIGATIONS.length).fill(50));
+            const dockStyle = computed( () =>{
+                return function(index){
+                    return `width:${TABABR_LIST_WIDTH[index]}px;height:${TABABR_LIST_WIDTH[index]}px;`
+                }
+            })
             return {
                 TABABR_NAVIGATIONS,
                 TABABR_LIST_WIDTH,
+                dockStyle
             }
         },
         methods:{
-            aaa(){
-                console.log(this.TABABR_NAVIGATIONS)
-            },
             tabbarMove(e){
                 const { target, offsetX } = e;
                 let currentEleIndex = Number( target.getAttribute("data-index") );
@@ -74,6 +72,11 @@
             border-color: rgba(156,163,175,0.3);
             display: flex;
             li:first-child{padding-left: 0;}
+            .tabbar-item{ padding-left:8px; padding-bottom: 10px; will-change: width; user-select: none;
+                &:hover .tabbar-title{display: block;}
+                .tabbar-title{ color: black; background-color: rgba(209,213,219,0.8);  padding:5px 10px; border-radius: .375rem; top: -80px;}
+                .tabbar-img{ transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; transition-duration: .15s;  will-change: width; }
+            }
         }
     }
 </style>

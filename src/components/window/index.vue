@@ -35,7 +35,7 @@ export default{
     props: {
         show: {
             type:Boolean,
-            default:false
+            default:true
         }
     },
     setup(props){
@@ -43,10 +43,12 @@ export default{
         let page_config = reactive(pageConfig);
         let statusLists = reactive(statusList);
         watch( () => props.show, ( status ) => {
+            console.log('变化了吗',status)
             page_config.shows = status;
             status === true && nextTick(() =>{ initWindowStaus(ref_windows.value); })
         })
         onMounted( () =>{
+            console.log('1111')
             page_config.shows = props.show;
             props.show && nextTick(() =>{ initWindowStaus(ref_windows.value); })
             let windom = ref_windows.value;

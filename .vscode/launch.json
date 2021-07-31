@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "pwa-msedge",
+        "request": "launch",
+        "name": "chrome",
+        "url": "http://localhost:3001",
+        "webRoot": "${workspaceFolder}"
+      }
+    ]
+  }
