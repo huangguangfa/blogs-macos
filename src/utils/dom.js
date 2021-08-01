@@ -12,3 +12,4 @@ export function removeEvents(events) {
 export function getByIdDom(id){
     return document.getElementById(id)
 }
+

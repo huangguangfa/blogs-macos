@@ -1,5 +1,6 @@
 <template>
     <div class="window noCopy" :class="{ 'isScreenFacade':isScreenFacade }"
+        :style="initSzie"
         v-show="page_config.shows" :id="windowId"
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
@@ -12,6 +13,9 @@
                     :class="item.className">
                     <i class="iconfont" :class="item.icon"></i>
                 </div>
+            </div>
+            <div class="bar-title">
+                {{ title }}
             </div>
         </div>
         <div class="window-content">
@@ -38,6 +42,18 @@ export default{
         show: {
             type:Boolean,
             default:true
+        },
+        title:{
+            type:String,
+            default:'bar'
+        },
+        width:{
+            type:[Number,String],
+            default:635,
+        },
+        height:{
+            type:[Number,String],
+            default:400,
         }
     },
     setup(props){
@@ -71,6 +87,7 @@ export default{
             page_config.shows = status;
             status === true && nextTick(() =>{ initWindowStaus(getByIdDom( windowId )); })
         })
+        let initSzie = computed(() => `width:${props.width}px;height:${props.height}px;` );
         let isScreenFacade = computed(() => store.state.WINDOWID === windowId );
         onMounted( () =>{
             let windom = getByIdDom( windowId );
@@ -102,7 +119,8 @@ export default{
             page_config,
             isBarShow,
             windowId,
-            isScreenFacade
+            isScreenFacade,
+            initSzie
         }
     },
     methods:{
@@ -133,7 +151,8 @@ export default{
             store.commit("SET_WINDOWID",this.windowId)
         },
         windowBarDowStart(e){
-            document.querySelector('iframe').style['pointer-events'] = 'none'
+            let iframe = document.querySelector('iframe')
+            iframe && (iframe.style['pointer-events'] = 'none')
             //算出鼠标相对元素的位置
             let disX = e.clientX - this.ref_windows.dom.offsetLeft;
             let disY = e.clientY - this.ref_windows.dom.offsetTop;
@@ -144,7 +163,8 @@ export default{
             this.page_config.winBarConfig.disY = disY;
         },
         stickDownStart(type,ev){
-            document.querySelector('iframe').style['pointer-events'] = 'none'
+            let iframe = document.querySelector('iframe')
+            iframe && (iframe.style['pointer-events'] = 'none')
             const pointerX = ev.pageX;
             const pointerY = ev.pageY;
             this.page_config.sticksConfig.sticksStart = true;
@@ -186,8 +206,8 @@ export default{
     flex-shrink: 0;
     z-index: 9998;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
-    width: 635px; 
-    height: 400px;
+    // width: 635px; 
+    // height: 400px;
     border-color: rgba(107,114,128,0.3);
     .top-hover{
         width: 100%;height:10px;background: red;
@@ -198,8 +218,12 @@ export default{
         background-color: rgba(229,231,235,1);
         display: flex; align-items:center;
         padding-left: 4px;
+        justify-content: center;
+        position: relative;
+        .bar-title{font-size: 14px; font-weight: 600;}
         .window-bars{ 
             display: flex; align-items:center;
+            position: absolute; left: 10px;
             &:hover .round>.iconfont{display: block;}
             .round{ 
                 width:12px;height: 12px;border-radius: 100%; background-color:rgb(239, 68, 68); margin: 0 4px;display: flex;align-items:center; justify-content: center;

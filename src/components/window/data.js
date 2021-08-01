@@ -70,8 +70,8 @@ export function initWindowStaus(dom){
 }
 //鼠标松开、清除状态
 export function mouseups(pageConfig){
-    console.log('松开了')
-    document.querySelector('iframe').style['pointer-events'] = 'auto'
+    let iframe = document.querySelector('iframe')
+    iframe && (iframe.style['pointer-events'] = 'auto')
     pageConfig.winBarConfig.winBarStart = false;
     pageConfig.sticksConfig.sticksStart = false;
 }

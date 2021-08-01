@@ -11,8 +11,10 @@
                 <img @click="openWindows(index)" class="tabbar-img"  :style="dockStyle(index)"  :data-index="index" :src="item.img">
             </li>
         </ul>
-        <app-safari v-if="TABABR_NAVIGATIONS[0].desktop"></app-safari>
-        <app-vscode v-if="TABABR_NAVIGATIONS[1].desktop"></app-vscode>
+        
+        <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop"></app-facetime>
+        <app-safari v-model:show="TABABR_NAVIGATIONS[5].desktop"></app-safari>
+        <app-vscode v-model:show="TABABR_NAVIGATIONS[7].desktop"></app-vscode>
     </div>
 </template>
 
@@ -21,10 +23,12 @@
     import { reactive, computed } from "vue";
     import safari from "@/components/apps/safari.vue";
     import vscode from "@/components/apps/vscode.vue";
+    import facetime from "@/components/apps/facetime.vue";
     export default{
         components:{
             appSafari:safari,
-            appVscode:vscode
+            appVscode:vscode,
+            appFacetime:facetime
         },
         setup(){
             const TABABR_NAVIGATIONS = reactive(TABABR_NAVIGATION);
@@ -37,12 +41,12 @@
             return {
                 TABABR_NAVIGATIONS,
                 TABABR_LIST_WIDTH,
-                dockStyle
+                dockStyle,
             }
         },
         methods:{
             tabbarMove(e){
-                const { target, offsetX } = e;
+                const { target } = e;
                 let currentEleIndex = Number( target.getAttribute("data-index") );
                 if( currentEleIndex === undefined ) return;
                 let TABABR_LIST_WIDTH = this.TABABR_LIST_WIDTH;
@@ -66,9 +70,10 @@
 
 <style lang="less">
     .tabbars{
-        z-index: 99999;
         width:-webkit-min-content;
         width: max-content;
+        position: fixed;
+        z-index: 99999;
         .tabbars-u{
             height: 65px;
             box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.17);
