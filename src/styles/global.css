@@ -111,3 +111,6 @@
     -o-user-select:none; /* Opera私有属性 */
     user-select:none; /* CSS3属性 */
 }
+.zIndexTop{
+    z-index: 999999 !important;
+}

@@ -1,0 +1,36 @@
+
+  
+@keyframes fadeInDownBig {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -500px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.barFadeInDownBig {
+  animation-name: fadeInDownBig;
+  animation-duration: 0.3s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.barFadeInUp {
+  animation-name: fadeInUp;
+  animation-duration: 0.3s;
+}
+  

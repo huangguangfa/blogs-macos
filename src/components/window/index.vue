@@ -4,26 +4,25 @@
         v-show="page_config.shows" :id="windowId"
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
-        <div class="window-bar" v-show="isBarShow">
+        <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
+        <div class="window-bar" :class="[ page_config.isFullScreen ? 'barFullScreen barFadeInDownBig' : '' ]" v-show="isBarShow">
             <div class="window-bars">
                 <div class="round" 
                     v-for="(item,index) in statusLists" 
                     :key="index" 
                     @click="statusSwitch(index)"
-                    :class="item.className">
+                    :class="[item.className, (index === 1 && page_config.isFullScreen) ? 'no-minimize' : '' ]">
                     <i class="iconfont" :class="item.icon"></i>
                 </div>
             </div>
-            <div class="bar-title">
-                {{ title }}
-            </div>
+            <div class="bar-title"> {{ title }} </div>
         </div>
         <div class="window-content">
             <slot></slot>
         </div>
         <div v-for="(stick, index) in page_config.sticks"
             :key="index" class="vdr-stick"
-            v-show="page_config.currentWindowStatus !== 'fullScreen'"
+            v-show="!page_config.isFullScreen"
             @mousedown.stop.prevent="stickDownStart(stick,$event)"
             :class="['vdr-stick-' + stick, index > 3 ? 'triangle':'']">
         </div>
@@ -34,7 +33,7 @@
 import { onMounted, reactive, onUnmounted, watch, nextTick, computed } from 'vue';
 import { initWindowStaus, mouseups, documentMoves, statusList } from "./data.js";
 import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
-import store from "../../store/index"
+import store from "@/store/index"
 let id = 0;
 export default{
     name:"window",
@@ -85,15 +84,17 @@ export default{
         store.commit("SET_WINDOWID",windowId);
         watch( () => props.show, ( status ) => {
             page_config.shows = status;
-            status === true && nextTick(() =>{ initWindowStaus(getByIdDom( windowId )); })
+            status === true && nextTick(() =>{ 
+                initWindowStaus(getByIdDom( windowId ),props.width, props.height); 
+            })
         })
         let initSzie = computed(() => `width:${props.width}px;height:${props.height}px;` );
-        let isScreenFacade = computed(() => store.state.WINDOWID === windowId );
+        let isScreenFacade = computed(() => store.getters.WINDOWID === windowId );
         onMounted( () =>{
             let windom = getByIdDom( windowId );
             ref_windows.dom = windom;
             page_config.shows = props.show;
-            props.show && nextTick(() =>{ initWindowStaus(windom); })
+            props.show && nextTick(() =>{ initWindowStaus( getByIdDom( windowId ),props.width, props.height) })
             //web页面移动
             page_config.domEvents.set('mousemove',ev =>{
                 const { clientY } = ev;
@@ -107,7 +108,10 @@ export default{
             addEvents(page_config.domEvents)
         })
         const isBarShow = computed( () =>{
-            return page_config.isFullScreen === false || page_config.isFullScreen === true && page_config.cursorPointerY  === true;
+            let status = page_config.isFullScreen === false || page_config.isFullScreen === true && page_config.cursorPointerY  === true;
+            //barTop只需要判断全屏和是否到顶部
+            store.commit("SET_FULLSCREENBAR",page_config.isFullScreen === true && page_config.cursorPointerY  === true);
+            return status;
         })
         //销毁
         onUnmounted( () =>{
@@ -125,6 +129,8 @@ export default{
     },
     methods:{
         statusSwitch(index){
+            let isContinue = [ index === 1 && this.page_config.isFullScreen ];
+            if( isContinue.some( item => item === true ) ) return;
             let enums = {
                 0:{
                     type:'close',
@@ -143,6 +149,9 @@ export default{
             this.page_config.currentWindowStatus = type;
             this.page_config.shows = status;
             this.$emit('update:show',status);
+            if( status === false ){
+                this.page_config.isFullScreen = false;
+            }
             if( type === 'fullScreen' ){
                 this.windowFullScreen()
             }
@@ -196,7 +205,6 @@ export default{
 </script>
 
 <style lang="less">
-
 .window{
     will-change: left,top, width,height;
     box-sizing: border-box;
@@ -206,9 +214,10 @@ export default{
     flex-shrink: 0;
     z-index: 9998;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
-    // width: 635px; 
-    // height: 400px;
     border-color: rgba(107,114,128,0.3);
+    .fullScreen-top{
+        position: fixed;top: 0;left: 0;width: 100%;height: 5px;z-index: 9999;
+    }
     .top-hover{
         width: 100%;height:10px;background: red;
         &:hover +.window-bar{ display: block; }
@@ -219,7 +228,6 @@ export default{
         display: flex; align-items:center;
         padding-left: 4px;
         justify-content: center;
-        position: relative;
         .bar-title{font-size: 14px; font-weight: 600;}
         .window-bars{ 
             display: flex; align-items:center;
@@ -234,10 +242,19 @@ export default{
             }
             .remove-round{ background-color: rgb(245, 158, 11);}
             .fullscreen-round{ background-color:rgb(16, 185, 129)}
+            .no-minimize{
+                background-color:#424346;
+                .iconfont{ color: #424346; }
+            }
         }
     }
-    .window-content{  width: 100%; height:100%; background: #fff; padding-bottom: 30px;box-sizing: border-box; }
-    .vdr-stick{ box-sizing: border-box; position: absolute; }
+    .barFullScreen{
+        position: absolute;
+        top:24px;left:0;
+        z-index: 99;
+    }
+    .window-content{  width: 100%; height:100%; background: #fff;}
+    .vdr-stick{ box-sizing: border-box; position: absolute; z-index: 9999;}
     .vdr-stick-tl{
         width: 4px;height: 100%;
         left: 0;top: 0;
@@ -290,5 +307,4 @@ export default{
     }
 }
 .isScreenFacade{z-index: 9999;}
-
 </style>

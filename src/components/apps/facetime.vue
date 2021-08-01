@@ -59,7 +59,7 @@
     }
     .closure{
         position: absolute;
-        left: 50%;bottom: 20px;
+        left: 50%;bottom: 60px;
         transform: translate(-50%);
         z-index: 2;
         background: crimson;

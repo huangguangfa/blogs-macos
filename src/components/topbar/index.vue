@@ -1,5 +1,5 @@
 <template>
-    <div class="topbar">
+    <div class="topbar" :class="{ 'barFadeInDownBig zIndexTop': FULLSCREENBAR === true }">
         <div class="topbar-left">
             <VmAbout></VmAbout>
         </div>
@@ -18,6 +18,8 @@
     import Wifi from "./components/Wifi.vue";
     import Search from "./components/Search.vue";
     import Controlcenter from "./components/Controlcenter.vue";
+    import { useStore } from "vuex";
+    import { computed } from "vue"
     export default{
         components:{
             VmAbout:About,
@@ -25,8 +27,17 @@
             VmWifi:Wifi,
             VmSearch:Search,
             VmControlcenter:Controlcenter
+        },
+        setup(){
+            const store = useStore();
+            const FULLSCREENBAR = computed( () => {
+                console.log('你没变化吗',store.getters.FULLSCREENBAR )
+                return store.getters.FULLSCREENBAR 
+            })
+            return {
+                FULLSCREENBAR
+            }
         }
-
     }
 </script>
 
@@ -40,6 +51,7 @@
         justify-content:space-between;
         padding: 0 10px 0 15px;
         box-sizing: border-box;
+        position: fixed;top:0;left:0;
         .topbar-left{
             height: 100%;
         }

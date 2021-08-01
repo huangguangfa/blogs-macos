@@ -1,4 +1,3 @@
-
 //八点拖拽点计算规则
 export const sticksRule = {
     //left
@@ -58,15 +57,15 @@ export const statusList = [
 ]
 
 //初始化Window
-export function initWindowStaus(dom){
+export function initWindowStaus(dom,width,height){
     let web_width = window.screen.width;
     let web_height = window.screen.height;
-    let domW = dom.offsetWidth
-    let domH = dom.offsetHeight
+    let domW = Number(width) 
+    let domH = Number(height)
     if( !(domW && domH )) return;
+    let newStyle = `left:${(web_width - domW) / 2}px;top:${(web_height - domH) / 2}px;width:${domW}px;height:${domH}px`;
     //初始化元素居中
-    dom.style.left = (web_width - domW) / 2 + 'px';
-    dom.style.top = (web_height - domH) / 2 + 'px';
+    dom.setAttribute('style',newStyle)
 }
 //鼠标松开、清除状态
 export function mouseups(pageConfig){
