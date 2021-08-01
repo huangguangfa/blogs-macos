@@ -82,7 +82,7 @@ export default{
         let statusLists = reactive(statusList);
         id ++;
         let windowId = `window${id}`;
-        store.commit("SET_WINDOWID",windowId)
+        store.commit("SET_WINDOWID",windowId);
         watch( () => props.show, ( status ) => {
             page_config.shows = status;
             status === true && nextTick(() =>{ initWindowStaus(getByIdDom( windowId )); })

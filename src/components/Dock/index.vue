@@ -86,11 +86,12 @@
             border-bottom: transparent;
             border-color: rgba(156,163,175,0.3);
             display: flex;
-            li:first-child{padding-left: 0;}
-            .tabbar-item{ padding-left:8px; padding-bottom: 10px; will-change: width; user-select: none;
+            .tabbar-item{ 
+                padding-bottom: 10px; 
+                will-change: width height; user-select: none;
                 &:hover .tabbar-title{display: block;}
                 .tabbar-title{ color: black; background-color: rgba(209,213,219,0.8);  padding:5px 10px; border-radius: .375rem; top: -80px;}
-                .tabbar-img{ transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; transition-duration: .15s;  will-change: width; }
+                .tabbar-img{ transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; transition-duration: .15s;  will-change: width height; padding: 0 3px; }
             }
         }
     }
