@@ -1,15 +1,22 @@
 <template>
     <div class="vscode">
-        <window>vscode</window>
+        <window>
+            <div class="vscode-content">
+                <iframe style="width:100%;height:100%" src="https://github1s.com/huanggungfa/blogs-macos" frameborder="0"></iframe>
+            </div>
+        </window>
     </div>
 </template>
 
 <script>
-    import window from "../window/index.vue"
     export default{
-        components:{
-            window
-        }
-
+        
+        
     }
 </script>
+
+<style scoped>
+.vscode-content{
+    width: 100%;height: 100%;
+}
+</style>

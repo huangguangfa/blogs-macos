@@ -17,7 +17,6 @@
         <div class="window-content">
             <slot></slot>
         </div>
-
         <div v-for="(stick, index) in page_config.sticks"
             :key="index" class="vdr-stick"
             v-show="page_config.currentWindowStatus !== 'fullScreen'"
@@ -134,6 +133,7 @@ export default{
             store.commit("SET_WINDOWID",this.windowId)
         },
         windowBarDowStart(e){
+            document.querySelector('iframe').style['pointer-events'] = 'none'
             //算出鼠标相对元素的位置
             let disX = e.clientX - this.ref_windows.dom.offsetLeft;
             let disY = e.clientY - this.ref_windows.dom.offsetTop;
@@ -144,6 +144,7 @@ export default{
             this.page_config.winBarConfig.disY = disY;
         },
         stickDownStart(type,ev){
+            document.querySelector('iframe').style['pointer-events'] = 'none'
             const pointerX = ev.pageX;
             const pointerY = ev.pageY;
             this.page_config.sticksConfig.sticksStart = true;
@@ -175,7 +176,7 @@ export default{
 </script>
 
 <style lang="less">
-.window-content{ width: 100%;height: 100%;  }
+
 .window{
     will-change: left,top, width,height;
     box-sizing: border-box;
@@ -185,50 +186,34 @@ export default{
     flex-shrink: 0;
     z-index: 9998;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
-    min-width: 635px; 
-    min-height: 400px;
-    background: #fff;
+    width: 635px; 
+    height: 400px;
     border-color: rgba(107,114,128,0.3);
     .top-hover{
         width: 100%;height:10px;background: red;
-        &:hover +.window-bar{
-            display: block;
-        }
+        &:hover +.window-bar{ display: block; }
     }
     .window-bar{
         width: 100%;height: 30px;
         background-color: rgba(229,231,235,1);
         display: flex; align-items:center;
         padding-left: 4px;
-        .window-bars{
+        .window-bars{ 
             display: flex; align-items:center;
             &:hover .round>.iconfont{display: block;}
-            .round{
-                width:12px;height: 12px;border-radius: 100%;
-                background-color:rgb(239, 68, 68);
-                margin: 0 4px;
-                display: flex;align-items:center; justify-content: center;
-                .iconfont{
-                    font-size: 12px;
-                    font-weight: bold;
-                    display: none;
-                }
+            .round{ 
+                width:12px;height: 12px;border-radius: 100%; background-color:rgb(239, 68, 68); margin: 0 4px;display: flex;align-items:center; justify-content: center;
+                .iconfont{ font-size: 12px; font-weight: bold; display: none;}
                 .macos-jian{ transform: scale(0.8) }
                 .macos-quanping{transform: scale(0.9) }
                 .macos-shanchu{ transform: scale(0.6);}
             }
-            .remove-round{
-                background-color: rgb(245, 158, 11);
-            }
-            .fullscreen-round{
-                background-color:rgb(16, 185, 129)
-            }
+            .remove-round{ background-color: rgb(245, 158, 11);}
+            .fullscreen-round{ background-color:rgb(16, 185, 129)}
         }
     }
-    .vdr-stick{
-        box-sizing: border-box;
-        position: absolute;
-    }
+    .window-content{  width: 100%; height:100%; background: #fff; padding-bottom: 30px;box-sizing: border-box; }
+    .vdr-stick{ box-sizing: border-box; position: absolute; }
     .vdr-stick-tl{
         width: 4px;height: 100%;
         left: 0;top: 0;

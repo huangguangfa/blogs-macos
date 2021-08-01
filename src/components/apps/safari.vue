@@ -5,11 +5,7 @@
 </template>
 
 <script>
-    import window from "../window/index.vue"
     export default{
-        components:{
-            window
-        }
 
     }
 </script>
