@@ -29,6 +29,25 @@ export default{
         onMounted( () =>{
             let terminalContainer = document.getElementById('xterm')
             xterms.open(terminalContainer,true);
+            xterms.writeln('Welcome to gf cloud!!!');
+            xterms._initialized = true;
+            xterms.prompt = () => {
+                xterms.write('\r\n~$ ');
+            };
+            xterms.prompt();
+            xterms.onData( function(data) {
+                xterms.write(data)
+            })
+            xterms.onKey(e => {
+                const printable = !e.domEvent.altKey && !e.domEvent.altGraphKey && !e.domEvent.ctrlKey && !e.domEvent.metaKey;
+                if (e.domEvent.keyCode === 13) {
+                    xterms.prompt()
+                } else if (e.domEvent.keyCode === 8) {
+                    if (xterms._core.buffer.x > 3) {
+                        xterms.write('\b \b');
+                    }
+                }
+            });
         })
         watch( () => props.show ,(status) =>{
             vm.emit('update:show',status);
