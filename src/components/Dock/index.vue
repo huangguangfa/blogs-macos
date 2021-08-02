@@ -23,7 +23,7 @@
     import { reactive, computed } from "vue";
     import safari from "@/components/apps/safari.vue";
     import vscode from "@/components/apps/vscode.vue";
-    import facetime from "@/components/apps/facetime.vue";
+    import facetime from "@/components/apps/facetime/index.vue";
     export default{
         components:{
             appSafari:safari,
