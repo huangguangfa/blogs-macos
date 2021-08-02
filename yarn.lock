@@ -838,6 +838,11 @@ vuex@^4.0.2:
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.11"
 
+xterm@^4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/xterm/-/xterm-4.13.0.tgz#7998de1e2ad92c4796fe45807be4f31061f3d9d1"
+  integrity sha512-HVW1gdoLOTnkMaqQCr2r3mQy4fX9iSa5gWxKZ2UTYdLa4iqavv7QxJ8n1Ypse32shPVkhTYPLS6vHEFZp5ghzw==
+
 yallist@^3.0.2:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.1.1.tgz#dbb7daf9bfd8bac9ab45ebf602b8cbad0d5d08fd"

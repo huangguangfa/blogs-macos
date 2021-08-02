@@ -1,6 +1,5 @@
 <template>
-    <vscode></vscode>
-    <safari></safari>
+    <Terminal v-model:show="data.status"></Terminal>
     <button @click="data.status = true ">显示</button>
 </template>
 
@@ -8,14 +7,16 @@
     import { reactive } from "vue";
     import safari from "../../components/apps/safari.vue"
     import vscode from "../../components/apps/vscode.vue"
+    import Terminal from "../../components/apps/Terminal.vue"
     export default {
         components:{
             safari,
-            vscode
+            vscode,
+            Terminal
         },
         setup(){
             let data = reactive({
-                status:false
+                status:true
             })
             return {
                 data
