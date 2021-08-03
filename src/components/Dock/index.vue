@@ -14,6 +14,7 @@
         
         <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop"></app-facetime>
         <app-safari v-model:show="TABABR_NAVIGATIONS[5].desktop"></app-safari>
+        <app-termial v-model:show="TABABR_NAVIGATIONS[6].desktop"></app-termial>
         <app-vscode v-model:show="TABABR_NAVIGATIONS[7].desktop"></app-vscode>
     </div>
 </template>
@@ -24,11 +25,13 @@
     import safari from "@/components/apps/safari.vue";
     import vscode from "@/components/apps/vscode.vue";
     import facetime from "@/components/apps/facetime/index.vue";
+    import termial from "@/components/apps/Terminal/index.vue";
     export default{
         components:{
             appSafari:safari,
             appVscode:vscode,
-            appFacetime:facetime
+            appFacetime:facetime,
+            appTermial:termial
         },
         setup(){
             const TABABR_NAVIGATIONS = reactive(TABABR_NAVIGATION);

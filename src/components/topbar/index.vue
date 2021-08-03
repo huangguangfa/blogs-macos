@@ -31,7 +31,6 @@
         setup(){
             const store = useStore();
             const FULLSCREENBAR = computed( () => {
-                console.log('你没变化吗',store.getters.FULLSCREENBAR )
                 return store.getters.FULLSCREENBAR 
             })
             return {
