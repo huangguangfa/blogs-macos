@@ -13,7 +13,8 @@
     "vue": "^3.0.5",
     "vue-router": "4",
     "vuex": "^4.0.2",
-    "xterm": "^4.13.0"
+    "xterm": "^4.13.0",
+    "xterm-addon-attach": "^0.6.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.5",
