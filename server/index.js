@@ -39,9 +39,7 @@ app.ws("/socket/:pid", (ws, req) => {
     term.on("data", function (data) {
         ws.send(data);
     });
-
     ws.on("message", (data) => {
-        console.log(typeof data === "string");
         term.write(data);
     });
     ws.on("close", function () {
@@ -49,4 +47,4 @@ app.ws("/socket/:pid", (ws, req) => {
         termMap.delete(pid);
     });
 });
-app.listen(4000, "127.0.0.1");
+app.listen(4000);

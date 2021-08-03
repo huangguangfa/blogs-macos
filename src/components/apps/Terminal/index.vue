@@ -40,6 +40,7 @@ export default{
             let terminalContainer = document.getElementById('xterm')
             xterms.open(terminalContainer,true);
             xterms.writeln('Welcome to gf cloud!!!');
+            xterms.writeln('');
             async function asyncInitSysEnv() {
                 const pid = await initSysEnv(),
                 ws = new WebSocket(socketURL + pid),
