@@ -1,7 +1,6 @@
 <template>
     <div class="tabbars mx-auto fixed bottom-0 right-0 left-0 ">
-        <ul 
-            class="tabbars-u justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white blur"
+        <ul class="tabbars-u justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white blur"
             @mousemove="tabbarMove" @mouseout="tabbarMouseout">
             <li 
                 class="tabbar-item duration-150 ease-in flex align-items-center justify-flex-end flex-column relative"
@@ -11,7 +10,6 @@
                 <img @click="openWindows(index)" class="tabbar-img"  :style="dockStyle(index)"  :data-index="index" :src="item.img">
             </li>
         </ul>
-        
         <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop"></app-facetime>
         <app-safari v-model:show="TABABR_NAVIGATIONS[5].desktop"></app-safari>
         <app-termial v-model:show="TABABR_NAVIGATIONS[6].desktop"></app-termial>

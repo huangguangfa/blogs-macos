@@ -1,6 +1,6 @@
 <template>
-    <Terminal v-model:show="data.status"></Terminal>
-    <button @click="data.status = true ">显示</button>
+<!--    <Terminal v-model:show="data.status"></Terminal>-->
+    <button v-clickoutside="aaa">显示</button>
 </template>
 
 <script>
@@ -13,6 +13,11 @@
             safari,
             vscode,
             Terminal
+        },
+        methods:{
+            aaa(){
+                console.log('dianjile ')
+            }
         },
         setup(){
             let data = reactive({

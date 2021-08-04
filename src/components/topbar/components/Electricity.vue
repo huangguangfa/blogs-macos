@@ -1,10 +1,14 @@
 <template>
-    <div class="electricity">
+    <div class="electricity" >
         <span class="mr5 cursorAuto noCopy">90%</span>
         <i class="iconfont macos-electricity-full"></i>
     </div>
 </template>
+<script>
+    export default {
 
+    }
+</script>
 
 <style lang="less">
     .electricity{
