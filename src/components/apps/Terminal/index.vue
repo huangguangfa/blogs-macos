@@ -11,7 +11,7 @@
 <script>
 import { watch, onMounted, nextTick  } from "vue";
 import 'xterm/css/xterm.css';
-import { initXterm } from "./index"
+import { initXterm } from "./index";
 export default{
     props:{
         show:Boolean

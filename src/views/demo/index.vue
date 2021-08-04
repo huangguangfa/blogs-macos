@@ -1,6 +1,7 @@
 <template>
-    <Terminal v-model:show="data.status"></Terminal>
-    <button @click="data.status = true ">显示</button>
+<!--    <Terminal v-model:show="data.status"></Terminal>-->
+    <button v-clickoutside="aaa">显示</button>
+    <globalSearch></globalSearch>
 </template>
 
 <script>
@@ -8,11 +9,18 @@
     import safari from "../../components/apps/safari.vue"
     import vscode from "@/components/apps/vscode/index.vue"
     import Terminal from "@/components/apps/Terminal/index.vue"
+    import globalSearch from "@/components/global-search/index.vue"
     export default {
         components:{
             safari,
             vscode,
-            Terminal
+            Terminal,
+            globalSearch
+        },
+        methods:{
+            aaa(){
+                console.log('dianjile ')
+            }
         },
         setup(){
             let data = reactive({

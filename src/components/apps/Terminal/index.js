@@ -15,7 +15,7 @@ let xterms = null;
 const getSysId = async () => await axios .post("http://106.54.70.48:4000/terminal").then((res) => res.data) .catch((err) => { throw new Error(err); });
 export async function initXterm(){
     xterms = new Terminal(xtermConfig);
-    let terminalContainer = document.getElementById('xterm')
+    let terminalContainer = document.getElementById('xterm');
     xterms.open(terminalContainer,true);
     xterms.writeln('\x1b[32m Welcome to gf cloud!!!\x1b[0m');
     xterms.writeln('');
