@@ -1,14 +1,15 @@
 <template>
     <div class="topbar" :class="{ 'barFadeInDownBig zIndexTop': FULLSCREENBAR === true }">
         <div class="topbar-left">
-            <VmAbout></VmAbout>
+            <vm-about></vm-about>
         </div>
         <div class="topbar-right">
-            <VmElectricity></VmElectricity>
-            <VmWifi></VmWifi>
-            <VmSearch></VmSearch>
-            <VmControlcenter></VmControlcenter>
+            <vm-electricity></vm-electricity>
+            <vm-wifi></vm-wifi>
+            <vm-search></vm-search>
+            <vm-controlcenter></vm-controlcenter>
         </div>
+        <vm-global-search v-if="STARTGLOBALSEARCH"></vm-global-search>
     </div>
 </template>
 
@@ -18,6 +19,7 @@
     import Wifi from "./components/Wifi.vue";
     import Search from "./components/Search.vue";
     import Controlcenter from "./components/Controlcenter.vue";
+    import globalSearch from "@/components/global-search/index.vue"
     import { useStore } from "vuex";
     import { computed } from "vue"
     export default{
@@ -26,15 +28,20 @@
             VmElectricity:Electricity,
             VmWifi:Wifi,
             VmSearch:Search,
-            VmControlcenter:Controlcenter
+            VmControlcenter:Controlcenter,
+            VmGlobalSearch:globalSearch
         },
         setup(){
             const store = useStore();
             const FULLSCREENBAR = computed( () => {
                 return store.getters.FULLSCREENBAR 
             })
+            const STARTGLOBALSEARCH = computed( () => {
+                return store.getters.STARTGLOBALSEARCH
+            })
             return {
-                FULLSCREENBAR
+                FULLSCREENBAR,
+                STARTGLOBALSEARCH
             }
         }
     }

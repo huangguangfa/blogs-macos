@@ -1,6 +1,7 @@
 <template>
 <!--    <Terminal v-model:show="data.status"></Terminal>-->
     <button v-clickoutside="aaa">显示</button>
+    <globalSearch></globalSearch>
 </template>
 
 <script>
@@ -8,11 +9,13 @@
     import safari from "../../components/apps/safari.vue"
     import vscode from "../../components/apps/vscode.vue"
     import Terminal from "@/components/apps/Terminal/index.vue"
+    import globalSearch from "@/components/global-search/index.vue"
     export default {
         components:{
             safari,
             vscode,
-            Terminal
+            Terminal,
+            globalSearch
         },
         methods:{
             aaa(){
