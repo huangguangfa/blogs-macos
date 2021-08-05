@@ -30,7 +30,7 @@
 
 <style lang="less">
     .global-search{ width: 100vw;height: 100vh;
-        .search-tag{width:660px;box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);backdrop-filter: blur(40px);border: 1px solid rgba(156,163,175,0.5);left: 50%;top: 10%;transform: translate(-50%);border-radius: .375rem;
+        .search-tag{width:660px;box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);backdrop-filter: blur(40px);background: #fff;border: 1px solid rgba(156,163,175,0.5);left: 50%;top: 10%;transform: translate(-50%);border-radius: .375rem;
             .search-tga-input{width: 100%;height: 59px;padding: 0 10px; box-sizing:border-box;
                 .macos-sousuo{width: 60px;height: 100%;display: flex;align-items: center;justify-content: center;color: rgb(75,85,99);font-size: 30px;}
                 .search-input{width: 100%;height: 100%;border: none;padding: 0;line-height:0;box-sizing: border-box;
