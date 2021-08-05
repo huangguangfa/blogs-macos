@@ -138,7 +138,7 @@ export default{
                 },
                 1:{
                     type:'activeClose',
-                    status:false
+                    status:true
                 },
                 2:{
                     type:'fullScreen',
@@ -152,8 +152,18 @@ export default{
             if( status === false ){
                 this.page_config.isFullScreen = false;
             }
+            //全屏
             if( type === 'fullScreen' ){
                 this.windowFullScreen()
+            }
+            //最小化
+            if( type === 'activeClose' ){
+                const { width, height, top, left } = this.ref_windows.dom.style;
+                //保存最小化状态
+                this.ref_windows.dom.minimize = {  width, height, top, left };
+                let current_minimize_list = [...store.getters.SYSTEMMINIMIZELIST, `window${id}`];
+                store.commit("SET_SYSTEMMINIMIZELIST",current_minimize_list);
+                this.windowMinimize()
             }
         },
         setScreenFacade(){
@@ -180,6 +190,9 @@ export default{
             this.page_config.sticksConfig.pointerX = pointerX;
             this.page_config.sticksConfig.pointerY = pointerY;
             this.page_config.sticksConfig.sticksType = type;
+        },
+        windowMinimize(){
+            console.log('最小化')
         },
         windowFullScreen(){
             this.page_config.isFullScreen = !this.page_config.isFullScreen;
