@@ -1,7 +1,8 @@
 <template>
 <!--    <Terminal v-model:show="data.status"></Terminal>-->
-    <button v-clickoutside="aaa">显示</button>
-    <globalSearch></globalSearch>
+    <button >显示</button>
+<!--    <globalSearch></globalSearch>-->
+    <safari :show="true"></safari>
 </template>
 
 <script>
