@@ -26,6 +26,12 @@ export const TABABR_NAVIGATION = [
         img: "/src/assets/images/tabbar-navigation/facetime.png"
     },
     {
+        id: "Maps",
+        title: "Maps",
+        desktop: false,
+        img: "/src/assets/images/tabbar-navigation/maps.png"
+    },
+    {
         id: "Mail",
         title: "Mail",
         desktop: false,
