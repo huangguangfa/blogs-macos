@@ -43,17 +43,18 @@
     }
 </script>
 
-
 <style lang="less">
     .topbar{
         width: 100vw;height: 24px;
         background: rgba(24,48,87, 0.1);
+        backdrop-filter: blur(40px);
         display: flex;
         align-items: center;
         justify-content:space-between;
         padding: 0 10px 0 15px;
         box-sizing: border-box;
-        position: fixed;top:0;left:0;
+        position: fixed;
+        top:0;left:0;
         .topbar-left{
             height: 100%;
         }

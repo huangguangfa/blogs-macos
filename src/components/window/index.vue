@@ -1,11 +1,11 @@
 <template>
-    <div class="window noCopy" :class="{ 'isScreenFacade':isScreenFacade }"
+    <div class="window noCopy" :class="{ 'isScreenFacade':isScreenFacade, 'bor-radius7':!page_config.isFullScreen}"
         :style="initSzie"
         v-show="page_config.shows" :id="windowId"
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
         <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
-        <div class="window-bar" :class="[ page_config.isFullScreen ? 'barFullScreen barFadeInDownBig box-shadow' : '' ]" v-show="isBarShow">
+        <div class="window-bar" ref="ref_bar" :class="[ page_config.isFullScreen ? 'barFullScreen barFadeInDownBig box-shadow' : '' ]" v-show="isBarShow">
             <div class="window-bars">
                 <div class="round" 
                     v-for="(item,index) in statusLists" 
@@ -15,7 +15,9 @@
                     <i class="iconfont" :class="item.icon"></i>
                 </div>
             </div>
-            <div class="bar-title"> {{ title }} </div>
+            <slot name="bar-title">
+                <div class="bar-title"> {{ title }} </div>
+            </slot>
         </div>
         <div class="window-content">
             <slot></slot>
@@ -30,7 +32,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, onUnmounted, watch, nextTick, computed } from 'vue';
+import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
 import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
 import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
 import store from "@/store/index"
@@ -58,6 +60,7 @@ export default{
     },
     setup(props,{ emit }){
         let ref_windows = reactive({ dom:null });
+        let ref_bar = ref(null);
         let page_config = reactive({
             sticks: ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'],
             winBarConfig:{
@@ -76,7 +79,8 @@ export default{
             defaultHeight:300,
             currentWindowStatus:'close',
             shows:false,
-            isFullScreen:false
+            isFullScreen:false,
+            barHeight:40
         });
         let domEvents = reactive(new Map());
         let statusLists = reactive(statusList);
@@ -87,6 +91,8 @@ export default{
         watch( () => props.show, ( status ) => {
             page_config.shows = status;
             status === true && nextTick(() =>{ 
+                const { offsetHeight } = ref_bar.value;
+                page_config.barHeight = offsetHeight + 10;
                 initWindowStaus(getByIdDom( windowId ),props.width, props.height); 
             })
         })
@@ -107,7 +113,7 @@ export default{
             //web页面移动
             domEvents.set('mousemove',ev =>{
                 const { clientY } = ev;
-                page_config.cursorPointerY = clientY < 40;
+                page_config.cursorPointerY = clientY < page_config.barHeight;
                 documentMoves(windom,ev,page_config)
             });
             //鼠标松开、清除状态
@@ -201,6 +207,7 @@ export default{
             windowId,
             isScreenFacade,
             initSzie,
+            ref_bar,
 
             //methods
             windowFullScreen,

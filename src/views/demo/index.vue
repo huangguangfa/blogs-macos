@@ -7,7 +7,7 @@
 
 <script>
     import { reactive } from "vue";
-    import safari from "../../components/apps/safari.vue"
+    import safari from "@/components/apps/safari/index.vue"
     import vscode from "@/components/apps/vscode/index.vue"
     import Terminal from "@/components/apps/Terminal/index.vue"
     import globalSearch from "@/components/global-search/index.vue"
