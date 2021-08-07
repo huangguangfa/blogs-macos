@@ -16,7 +16,7 @@
             safari,
             vscode,
             Terminal,
-            globalSearch
+            globalSearch,
         },
         methods:{
             aaa(){

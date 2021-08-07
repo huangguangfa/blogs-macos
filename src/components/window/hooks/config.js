@@ -121,3 +121,18 @@ export function documentMoves(windom,ev,pageConfig){
         }
     }
 }
+
+export const windowTbarConfig = {
+    0:{
+        type:'close',
+        status:false
+    },
+    1:{
+        type:'activeClose',
+        status:true
+    },
+    2:{
+        type:'fullScreen',
+        status:true
+    }
+}

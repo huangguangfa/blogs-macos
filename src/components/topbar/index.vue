@@ -33,13 +33,8 @@
         },
         setup(){
             const store = useStore();
-            console.log(store.getters)
-            const FULLSCREENBAR = computed( () => {
-                return store.getters.FULLSCREENBAR 
-            })
-            const STARTGLOBALSEARCH = computed( () => {
-                return store.getters.STARTGLOBALSEARCH
-            })
+            const FULLSCREENBAR = computed( () => store.getters.FULLSCREENBAR )
+            const STARTGLOBALSEARCH = computed( () => store.getters.STARTGLOBALSEARCH)
             return {
                 FULLSCREENBAR,
                 STARTGLOBALSEARCH

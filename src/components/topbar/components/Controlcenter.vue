@@ -2,7 +2,7 @@
     <div class="controlcenter">
         <div class="controlcenter-img">
             <img src="@/assets/images/topbar/controlcenter.png" alt="">
-            <div class="controlcenter-content">
+            <div class="controlcenter-content" v-show="false">
                 <div class="controlcenter-content-options">
                     <div class="options-content">
                         <div class="options-left bg-radius-com">
