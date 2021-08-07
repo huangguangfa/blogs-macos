@@ -1,5 +1,5 @@
 <template>
-    <div class="window noCopy" :class="{ 'isScreenFacade':isScreenFacade, 'bor-radius7':!page_config.isFullScreen}"
+    <div class="window noCopy fixed ov-hide" :class="{ 'isScreenFacade':isScreenFacade, 'bor-radius7':!page_config.isFullScreen}"
         :style="initSzie"
         v-show="page_config.shows" :id="windowId"
         @click.stop="setScreenFacade"

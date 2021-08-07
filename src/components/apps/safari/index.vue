@@ -19,13 +19,20 @@
                     </div>  
                 </div>
             </template>
+            <div class="safari-content">
+                <vm-init-page></vm-init-page>
+            </div>
         </window>
     </div>
 </template>
 
 <script>
-    import { watch  } from "vue"
+    import { watch  } from "vue";
+    import initPage from "./initPage.vue"
     export default{
+        components:{
+            vmInitPage:initPage
+        },
         props:{
             show:Boolean
         },

@@ -12,7 +12,7 @@ const xtermConfig = {
     screenKeys: true//
 }
 let xterms = null;
-const getSysId = async () => await axios .post("http://106.54.70.48:4000/terminal").then((res) => res.data) .catch((err) => { throw new Error(err); });
+const getSysId = async () => await axios.post("http://106.54.70.48:4000/terminal").then((res) => res.data) .catch((err) => { throw new Error(err); });
 export async function initXterm(){
     xterms = new Terminal(xtermConfig);
     let terminalContainer = document.getElementById('xterm');
@@ -20,6 +20,8 @@ export async function initXterm(){
     xterms.writeln('\x1b[32m Welcome to gf cloud!!!\x1b[0m');
     xterms.writeln('');
     xterms.writeln('\x1B[1;3;31m个人五毛钱服务器、我相信你不会乱搞!!!\x1B[0m');
+    xterms.writeln('');
+    xterms.writeln('[root@VM-0-8-centos ~]# ');
     xterms.writeln('');
     const pid = await getSysId(),
           ws = new WebSocket(socketURL + pid),
