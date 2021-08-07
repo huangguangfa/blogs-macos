@@ -5,10 +5,11 @@
 </template>
 <script>
     import store from "@/store/index";
+    import { SET_START_GLOBAL_SEARCH } from "@/config/store.config.js";
     export default {
         methods:{
             startGlobalSearch(){
-                store.commit('SET_STARTGLOBALSEARCH',true)
+                store.commit(SET_START_GLOBAL_SEARCH,true)
             }
         }
     }

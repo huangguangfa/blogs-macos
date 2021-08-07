@@ -14,6 +14,7 @@
 
 <script>
     import store from "@/store/index";
+    import { SET_START_GLOBAL_SEARCH } from "@/config/store.config.js"
     export default {
         setup(){
             return {
@@ -22,7 +23,7 @@
         },
         methods:{
             cancelGlobalSearch(){
-                store.commit('SET_STARTGLOBALSEARCH',false)
+                store.commit(SET_START_GLOBAL_SEARCH,false)
             }
         }
     }

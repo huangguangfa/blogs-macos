@@ -34,6 +34,7 @@ import { onMounted, reactive, onUnmounted, watch, nextTick, computed } from 'vue
 import { initWindowStaus, mouseups, documentMoves, statusList } from "./data.js";
 import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
 import store from "@/store/index"
+import { SET_WINDOW_ID, SET_SYSTEM_MINIMIZE_LIST, SET_FULL_SCREENBAR } from "@/config/store.config.js"
 let id = 0;
 export default{
     name:"window",
@@ -81,7 +82,7 @@ export default{
         let statusLists = reactive(statusList);
         id ++;
         let windowId = `window${id}`;
-        store.commit("SET_WINDOWID",windowId);
+        store.commit(SET_WINDOW_ID,windowId);
         watch( () => props.show, ( status ) => {
             page_config.shows = status;
             status === true && nextTick(() =>{ 
@@ -110,7 +111,7 @@ export default{
         const isBarShow = computed( () =>{
             let status = page_config.isFullScreen === false || page_config.isFullScreen === true && page_config.cursorPointerY  === true;
             //barTop只需要判断全屏和是否到顶部
-            store.commit("SET_FULLSCREENBAR",page_config.isFullScreen === true && page_config.cursorPointerY  === true);
+            store.commit(SET_FULL_SCREENBAR,page_config.isFullScreen === true && page_config.cursorPointerY  === true);
             return status;
         })
         //销毁
@@ -162,12 +163,12 @@ export default{
                 //保存最小化状态
                 this.ref_windows.dom.minimize = {  width, height, top, left };
                 let current_minimize_list = [...store.getters.SYSTEMMINIMIZELIST, `window${id}`];
-                store.commit("SET_SYSTEMMINIMIZELIST",current_minimize_list);
+                store.commit(SET_SYSTEM_MINIMIZE_LIST,current_minimize_list);
                 this.windowMinimize()
             }
         },
         setScreenFacade(){
-            store.commit("SET_WINDOWID",this.windowId)
+            store.commit(SET_WINDOW_ID,this.windowId)
         },
         windowBarDowStart(e){
             let iframe = document.querySelector('iframe')

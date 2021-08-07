@@ -33,6 +33,7 @@
         },
         setup(){
             const store = useStore();
+            console.log(store.getters)
             const FULLSCREENBAR = computed( () => {
                 return store.getters.FULLSCREENBAR 
             })
