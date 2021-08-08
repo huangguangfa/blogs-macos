@@ -1,8 +1,8 @@
 <template>
     <div class="maps">
-        <window v-model:show="show" title="高德地图">
+        <window v-model:show="show" title="高德地图" width="1000" height="600">
             <div class="github-content wh100" v-if="show">
-                <iframe style="width:100%;height:100%" src="https://www.amap.com" frameborder="0"></iframe>
+                <vm-iframe webUrl="https://www.amap.com"></vm-iframe>
             </div>
         </window>
     </div>

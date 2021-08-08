@@ -63,7 +63,8 @@ export function initWindowStaus(dom,width,height){
     let domW = Number(width) 
     let domH = Number(height)
     if( !(domW && domH )) return;
-    let newStyle = `left:${(web_width - domW) / 2}px;top:${(web_height - domH) / 2}px;width:${domW}px;height:${domH}px`;
+    console.log( web_width, web_height, domH, domW )
+    let newStyle = `left:${(web_width - domW) / 2}px;top:${ (web_height - domH) / 2 - 100}px;width:${domW}px;height:${domH}px`;
     //初始化元素居中
     dom.setAttribute('style',newStyle)
 }
