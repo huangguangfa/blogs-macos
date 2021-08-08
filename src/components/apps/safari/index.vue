@@ -20,26 +20,44 @@
                 </div>
             </template>
             <div class="safari-content">
-                <vm-init-page></vm-init-page>
+                <vm-init-page v-show="!isShowWeb" @dispatchNewWeb="openNewUrl"></vm-init-page>
+                <vm-web-page v-show="isShowWeb" :webUrl="currentWebUrl"></vm-web-page>
             </div>
         </window>
     </div>
 </template>
 
 <script>
-    import { watch  } from "vue";
-    import initPage from "./initPage.vue"
+    import { watch, ref  } from "vue";
+    import initPage from "./initPage.vue";
+    import webPage from "./web.vue"
     export default{
         components:{
-            vmInitPage:initPage
+            vmInitPage:initPage,
+            vmWebPage:webPage
         },
         props:{
             show:Boolean
         },
-        setup(props, vm){
-            watch( () => props.show ,(status) =>{
-                vm.emit('update:show',status);
-            })
+        setup(props, { emit }){
+            const isShowWeb = ref(false);
+            const currentWebUrl = ref(null);
+            watch( () => props.show ,status => emit('update:show',status))
+
+            // methods
+            function openNewUrl(url){
+                if(!url) return ;
+                isShowWeb.value = true;
+                currentWebUrl.value = url;
+
+            }
+            return {
+                isShowWeb,
+                currentWebUrl,
+
+                //methods
+                openNewUrl
+            }
         }        
     }
 </script>

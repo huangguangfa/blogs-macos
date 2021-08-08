@@ -16,12 +16,12 @@ export default{
     props:{
         show:Boolean
     },
-    setup(props, vm){
+    setup(props, { emit }){
         onMounted( () =>{
             props.show && initXterm();
         })
-        watch( () => props.show ,(status) =>{
-            vm.emit('update:show',status);
+        watch( () => props.show , status =>{
+            emit('update:show',status);
             nextTick( () =>{
                 status && initXterm();
             })

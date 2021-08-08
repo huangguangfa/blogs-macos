@@ -18,13 +18,13 @@
         props:{
             show:Boolean
         },
-        setup(props, vm){
+        setup(props, { emit }){
             const videos = ref(null);
             let streams = reactive({
                 stream:null
             });
             watch( () => props.show ,(status) => {
-                vm.emit('update:show',status);
+                emit('update:show',status);
                 if( status ){
                     getUserMedia( stream => {
                         streams.stream = stream;

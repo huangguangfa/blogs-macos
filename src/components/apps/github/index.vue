@@ -14,10 +14,8 @@
         props:{
             show:Boolean
         },
-        setup(props, vm){
-            watch( () => props.show ,(status) =>{
-                vm.emit('update:show',status);
-            })
-        }        
+        setup(props, {emit}){
+            watch( () => props.show ,status => emit('update:show',status))
+        }       
     }
 </script>
