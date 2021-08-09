@@ -29,8 +29,8 @@ class Socket{
     reconnectTimes = 10
   
     constructor( params ) {
-        this.#params = params
-        this.init()
+      this.#params = params
+      this.init()
     }
     
     /* 初始化 */
@@ -48,7 +48,7 @@ class Socket{
         //定义全局变量
         Object.keys( params ).forEach( key =>{
             if ( global_params.indexOf( key ) !== -1) {
-                this[ key ] = params[ key ]
+            this[ key ] = params[ key ]
             }
         })
         let ws_url = port ? url + ':' + port : url
