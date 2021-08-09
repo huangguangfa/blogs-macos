@@ -1,6 +1,6 @@
 <!--theme-desktop-bg-->
 <template>
-    <div class="gf-blogs-macos bg-cover bg-center theme-desktop-bg">
+    <div class="gf-blogs-macos bg-cover bg-center">
         <router-view></router-view>
     </div>
 </template>
