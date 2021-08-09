@@ -8,6 +8,6 @@ const app = express();
 expressWs(app);
 
 app.use('/', indexRouter);
-app.use('/webrtc', wbrtcRouter);
+app.use('/scoket', wbrtcRouter);
 
 app.listen(4000);

@@ -7,7 +7,7 @@
 
 <script>
 import Dock from '@/components/Dock/index.vue';
-import Topbar from "@/components/topbar/index.vue"
+import Topbar from "@/components/topbar/index.vue";
 export default{
     components:{
         VmDock:Dock,

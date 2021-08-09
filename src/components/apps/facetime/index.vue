@@ -13,7 +13,9 @@
 
 <script>
     import { ref, watch, reactive  } from "vue";
-    import { getUserMedia } from "@/utils/utils.js"; 
+    import { getUserMedia } from "@/utils/utils.js";
+    import { getActiveUserList } from "../../../services/facetime"
+
     export default{
         props:{
             show:Boolean
@@ -27,6 +29,9 @@
                 emit('update:show',status);
                 if( status ){
                     getUserMedia( stream => {
+                        getActiveUserList().then( res =>{
+                            console.log('11111',res)
+                        })
                         streams.stream = stream;
                         let video = videos.value;
                         video.srcObject = stream;
@@ -36,17 +41,18 @@
                     streams.stream.getTracks().forEach( track => track.stop() );
                 }
             });
-            return {
-                videos,
-                streams
-            }
-        },
-        methods:{
-            closures(){
+            //methods
+            function closures(){
                 this.streams.stream.getTracks().forEach( track => track.stop() );
                 this.$emit('update:show',false);
             }
-        }      
+            return {
+                videos,
+                streams,
+
+                closures
+            }
+        }
     }
 </script>
 
