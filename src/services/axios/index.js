@@ -50,18 +50,10 @@ window.Promise.prototype.done = done;
 service.interceptors.request.use(onsend);
 service.interceptors.response.use(onsuccess, onerror);
 
-export const EGT =  (url, params) => service.get(url, { params })
-export const PUT =   (url, o) => service.put(url, o)
-export const POST =  (url, params) => service.get(url, { params })
-export const EGT =  (url, params) => service.get(url, { params })
-
-export default {
-
-    $pop: (url, params) => service.delete(url, { params }),
-    $put: (url, o) => service.put(url, o),
-    $post: (url, o) => service.post(url, o),
-    $patch: (url, o) => service.patch(url, o),
-    $form: (url, o) => service.post(url, o),
-    $auth: (url, o) => service.post(url, o, { responseType: 'blob' }),
-    $uploadPost:(url,o,fn) => service.post(url, o,{ headers: {'Content-Type': 'multipart/form-data',},onUploadProgress:fn })
-}
+export const $get =  (url, params) => service.get(url, { params })
+export const $put =  (url, o) => service.put(url, o)
+export const $post = (url, o) => service.post(url, o)
+export const $patch = (url, o) => service.patch(url, o)
+export const $form = (url, o) => service.post(url, o)
+export const $auth = (url, o) => service.post(url, o, { responseType: 'blob' })
+export const $uploadPost = (url,o,fn) => service.post(url, o,{ headers: {'Content-Type': 'multipart/form-data',},onUploadProgress:fn })

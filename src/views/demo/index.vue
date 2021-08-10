@@ -2,7 +2,8 @@
 <!--    <Terminal v-model:show="data.status"></Terminal>-->
     <button >显示</button>
 <!--    <globalSearch></globalSearch>-->
-    <safari :show="true"></safari>
+    <facetime :show="true"></facetime>
+    <!-- <safari :show="true"></safari> -->
 </template>
 
 <script>
@@ -10,6 +11,7 @@
     import safari from "@/components/apps/safari/index.vue"
     import vscode from "@/components/apps/vscode/index.vue"
     import Terminal from "@/components/apps/Terminal/index.vue"
+    import facetime from "@/components/apps/facetime/index.vue"
     import globalSearch from "@/components/global-search/index.vue"
     export default {
         components:{
@@ -17,6 +19,7 @@
             vscode,
             Terminal,
             globalSearch,
+            facetime
         },
         methods:{
             aaa(){
