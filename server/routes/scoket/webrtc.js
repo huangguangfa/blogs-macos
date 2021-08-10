@@ -8,17 +8,19 @@ const active_user = {};
 router.ws('/webrtc/user', function( ws, req ){
     ws.send('连接成功！')
     const { uid } = req.query;
+    console.log('有人连接进来',uid)
     uid && (active_user[uid] = ws);
     //接收消息、【保存用户信息】
     ws.on("message", function(data){
+        if(data === "ping") return;
         const { uid, mes } = JSON.parse(data);
         const ws = active_user[uid];
         ws && ws.send(mes)
     });
     //监听关闭、【删除内存中用户】
     ws.on("close", function(w) {
+        console.log('结束了',uid)
         delete active_user[uid];
-        console.log(JSON.stringify(Object.keys(active_user) ))
     });
 })
 

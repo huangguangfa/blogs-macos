@@ -50,7 +50,7 @@ window.Promise.prototype.done = done;
 service.interceptors.request.use(onsend);
 service.interceptors.response.use(onsuccess, onerror);
 
-export const $get =  (url, params) => service.get(url, { params })
+export const $get = (url, params) => service.get(url, { params })
 export const $put =  (url, o) => service.put(url, o)
 export const $post = (url, o) => service.post(url, o)
 export const $patch = (url, o) => service.patch(url, o)
