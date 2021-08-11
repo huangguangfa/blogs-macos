@@ -15,8 +15,8 @@
                    </div>
                 </div>
                 <div id="videos">
-                    <video class="otherSide" ref="videos"></video>
-                    <video class="local-video" ref="me"></video>
+                    <video class="remote-video" ref="remote_video_dom"></video>
+                    <video class="local-video" ref="local_video_dom"></video>
                 </div>
             </div>
         </window>
@@ -25,17 +25,17 @@
 
 <script>
     import { ref, watch, reactive, onMounted, onBeforeUnmount  } from "vue";
-    import { getUserMedia } from "@/utils/utils.js";
-    import { getActiveUserList } from "@/services/api/facetime.js";
     import SkyRTC from "./hooks/webrtc.js"
+    import { getRandomMoble, getRandomName } from "@/utils/utils.js"
     export default{
         props:{
             show:Boolean
         },
         setup(props, { emit }){
-            let me = ref(null)
+            let local_video_dom = ref(null)
+            let remote_video_dom = ref(null)
             let rtc = SkyRTC();
-            let user = { uid:'1357788',  uname:'张三' };
+            let user = { uid:getRandomMoble(),  uname:getRandomName() };
             let activeUserList = ref([]);
             let sockets = null;
             /**********************************************************/
@@ -51,19 +51,27 @@
             rtc.on("socket_receive_message", function (serve_data,socket) {
                 const { sender, data } = serve_data;
                 //目前系统只会派发当前活跃用户列表
-                // if( sender === 'system' ){ activeUserList.value = data.filter( item => item.uid !== user.uid ) }
-                if( sender === 'system' ){ activeUserList.value = data }
+                if( sender === 'system' ){ activeUserList.value = data.filter( item => item.uid !== user.uid ) }
+                // if( sender === 'system' ){ activeUserList.value = data }
+                console.log('消息',serve_data)
             });
 
             //创建本地视频流成功
             rtc.on("stream_created", function (stream) {
-                let me_video = me.value;
+                let me_video = local_video_dom.value;
                 rtc.attachStream(stream, me_video, true)
                 //生成PeerConnection
                 rtc.createPeerConnection()
-                // stream.getTracks().forEach( track => rtc.localPeer.addTrack(track, stream));
-                //把我们的数据流发送到对面
-                rtc.localPeer.addStream(stream);
+                //本地数据流添加到PeerConnection
+                stream.getTracks().forEach( track => rtc.localPeer.addTrack(track, stream));
+            });
+
+            rtc.on("remote_streams", function (stream) {
+                let remote_video = remote_video_dom.value;
+                if (!remote_video.srcObject || remote_video.srcObject.id !== stream.id) {
+				    console.log('收到对方音频/视频流数据...',stream);
+                    rtc.attachStream(stream, remote_video, false)
+                }
             });
 
             //创建本地视频流失败
@@ -86,10 +94,12 @@
 
             //methds
             function callUser(userInfo){
-                console.log(userInfo.uname)
+                const { uid } = userInfo;
+                rtc.sendOffers(uid)
             }
             return {
-                me,
+                local_video_dom,
+                remote_video_dom,
                 activeUserList,
 
                 //methods
@@ -119,7 +129,7 @@
     }
     #videos{
         flex: 1;height: 100%;position: relative;
-        .otherSide{width: 100%;height: 100%;object-fit: cover;}
+        .remote-video{width: 100%;height: 100%;object-fit: cover;}
         .local-video{
             width: 150px;height: 150px;bottom: 40px;right: 10px;z-index: 99;position: absolute;border-radius: 5px;border: 4px solid rgba(91,194,79,0.8);
             object-fit: cover;

@@ -10,8 +10,7 @@ const SkyRTC = function () {
         navigator.mozGetUserMedia ||     //firfox浏览器
         navigator.msGetUserMedia
     );
-
-    let nativeRTCIceCandidate = (window.mozRTCIceCandidate || window.RTCIceCandidate);
+    
     let nativeRTCSessionDescription = (window.mozRTCSessionDescription || window.RTCSessionDescription);
 
     const iceServer = {
@@ -68,14 +67,18 @@ const SkyRTC = function () {
         this.socket = null;
         //本地相连的peer connection， 
         this.localPeer = null;
-        //保存所有与本地连接的socket的id
-        this.connections = [];
-        //初始时需要构建链接的数目
-        this.numStreams = 0;
         //初始时已经连接的数目
-        this.initializedStreams = 0;
         //保存所有的data channel，键为socket id，值通过PeerConnection实例的createChannel创建
         this.dataChannels = {};
+        this.localIEC = null;
+        this.user = {
+            uid:null,
+            uname:null
+        };
+        this.receiveUser = {
+            uid:null,
+            uname:null
+        }
     }
 
     //继承自事件处理器，提供绑定事件和触发事件的功能
@@ -85,8 +88,9 @@ const SkyRTC = function () {
 
     skyrtc.prototype.connect = function (uid,uname) {
         let socket, that = this; 
-        uid = uid || "";
         socket = this.socket = initScoket(uid,uname);
+        this.user.uid = uid;
+        this.user.uname = uname;
         socket.onopen(function () {
             that.emit("socket_opened", socket);
             that.emit('connected', socket);
@@ -94,7 +98,17 @@ const SkyRTC = function () {
 
         socket.onmessage( function (message) {
             typeof message === 'string' ? message = JSON.parse(message) : message
-            that.emit("socket_receive_message", message,socket );
+            const { sender } = message;
+            let scoketData = message.data;
+            if( sender === "exc" ){
+                const { data, call_uid, call_uname, exc_type  } = scoketData;
+                that.receiveUser.uid = call_uid;
+                that.receiveUser.uname = call_uname;
+                //添加远端offer
+                exc_type === "sdp" && that.receiveOffer(data)
+
+            }
+            that.emit("socket_receive_message", message, socket );
         });
 
         socket.onerror(function (error) {
@@ -132,7 +146,6 @@ const SkyRTC = function () {
     function createStreamSuccess(stream) {
         if (gThat) {
             gThat.localMediaStream = stream;
-            gThat.initializedStreams++;
             gThat.emit("stream_created", stream);
         }
     }
@@ -150,7 +163,6 @@ const SkyRTC = function () {
         options.audio = !!options.audio;
         
         if (getUserMedia) {
-            this.numStreams++;
             // 调用用户媒体设备, 访问摄像头
             getUserMediaFun(options, createStreamSuccess, createStreamError);
         } else {
@@ -160,7 +172,7 @@ const SkyRTC = function () {
 
 
     // 将流绑定到video标签上用于输出
-    skyrtc.prototype.attachStream = function (stream, dom, isSound) {
+    skyrtc.prototype.attachStream = function (stream, dom, isSound = false) {
         if (navigator.mediaDevices.getUserMedia) {
             dom.srcObject = stream;
         } else {
@@ -173,19 +185,23 @@ const SkyRTC = function () {
 
     /***********************信令交换部分*******************************/
     //向所有PeerConnection发送Offer类型信令
-    skyrtc.prototype.sendOffers = function () {
-
+    skyrtc.prototype.sendOffers = function ( uid ) {
+        this.sendMessage(uid,this.localPeer.localDescription, 'sdp')
     };
 
     //接收到Offer类型信令后作为回应返回answer类型信令
-    skyrtc.prototype.receiveOffer = function (socketId, sdp) {
-        let pc = this.peerConnections[socketId];
-        this.sendAnswer(socketId, sdp);
+    skyrtc.prototype.receiveOffer = function (sdp) {
+        this.localPeer.setRemoteDescription(new nativeRTCSessionDescription(sdp))
+        this.sendAnswer();
     };
 
     //发送answer类型信令
-    skyrtc.prototype.sendAnswer = function (socketId, sdp) {
-
+    skyrtc.prototype.sendAnswer = function () {
+        let that = this;
+        this.localPeer.createAnswer().then( answerOffer =>{
+            const { uid } = that.receiveUser;
+            that.sendMessage(uid, answerOffer, 'sdp')
+        });
     };
 
     //接收到answer类型信令后将对方的session描述写入PeerConnection中
@@ -199,15 +215,14 @@ const SkyRTC = function () {
     skyrtc.prototype.createPeerConnection = function () {
         let that = this;
         this.localPeer = new PeerConnection(iceServer);
-        // console.log('localPeer',this.localPeer)
 
         //ICE信息
         this.localPeer.onicecandidate = function (evt) {
             //这里发送ICE信息
             if( evt.candidate ){
-
+                that.localIEC = evt;
+                console.log("ICE信息",evt);
             }
-            console.log("ICE信息",evt);
         };
         //检查状态
         // new        ICE代理正在收集候选人或等待提供远程候选人。
@@ -232,8 +247,8 @@ const SkyRTC = function () {
 
         //接收远端视频流
         this.localPeer.ontrack = function(e){
-			if (e && e.streams) {
-				message.log('收到对方音频/视频流数据...');
+			if (e && e.streams.length) {
+                that.emit('remote_streams', e.streams[0]); 
 			}
 		};
 
@@ -249,8 +264,18 @@ const SkyRTC = function () {
 
     /***********************数据通道连接部分*****************************/
     //发送消息方法
-    skyrtc.prototype.sendMessage = function (message, socketId) {
-
+    skyrtc.prototype.sendMessage = function (callId, message, exc_type) {
+        const { uid, uname } = this.user;
+        let data = {
+            uid:callId,
+            data:{
+                call_uid:uid,
+                call_uname:uname,
+                exc_type,
+                data:message
+            }
+        }
+        this.socket.send(data);
     };
 
     return new skyrtc();

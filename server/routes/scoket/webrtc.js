@@ -19,7 +19,7 @@ router.ws('/webrtc/user', function( ws, req ){
         if(mes === "ping") return;
         const { uid, data } = JSON.parse(mes);
         const { ws } = active_user[uid];
-        ws && dispatchMessage(ws, data);
+        ws && dispatchMessage(ws, gteSendData('exc',data));
     });
     //监听关闭、【删除内存中用户】
     ws.on("close", function(w) {
@@ -36,7 +36,8 @@ router.get('/getActiveUserList',(req,res)=>{
 
 //发送数据
 function dispatchMessage(ws,data){
-    ws.send(JSON.stringify(data))
+    let datas = JSON.stringify(data)
+    ws.send(datas)
 }
 
 //获取当前活跃人数
