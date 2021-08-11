@@ -6,27 +6,56 @@ expressWs(router);
 
 const active_user = {};
 router.ws('/webrtc/user', function( ws, req ){
-    ws.send('连接成功！')
-    const { uid } = req.query;
-    console.log('有人连接进来',uid)
-    uid && (active_user[uid] = ws);
+    const { uid, uname } = req.query;
+    console.log('enter',uname);
+    if(uid && uname){
+        active_user[uid] = {  ws,uid,uname  }
+        //通知所有人有新成员加入
+        let activeUser = gteSendData('system',getActiveUserList() );
+        dispatchAllUserMessage( activeUser )
+    };
     //接收消息、【保存用户信息】
-    ws.on("message", function(data){
-        if(data === "ping") return;
-        const { uid, mes } = JSON.parse(data);
-        const ws = active_user[uid];
-        ws && ws.send(mes)
+    ws.on("message", function(mes){
+        if(mes === "ping") return;
+        const { uid, data } = JSON.parse(mes);
+        const { ws } = active_user[uid];
+        ws && dispatchMessage(ws, data);
     });
     //监听关闭、【删除内存中用户】
     ws.on("close", function(w) {
-        console.log('结束了',uid)
+        console.log('end',uname)
         delete active_user[uid];
     });
 })
 
 //查询当前服务活跃用户
 router.get('/getActiveUserList',(req,res)=>{
-    res.send({ status:true,result:Object.keys(active_user) })
+    res.send({ status:true,result:Object.values(active_user) })
 })
 
+
+//发送数据
+function dispatchMessage(ws,data){
+    ws.send(JSON.stringify(data))
+}
+
+//获取当前活跃人数
+function getActiveUserList(){
+    let userList = Object.values(active_user).map( item => {
+        const { uid, uname } = item;
+        return { uid, uname }
+    })
+    return userList;
+}
+
+//发送的数据
+function gteSendData(type,data){
+    return { sender:type, data }
+}
+function dispatchAllUserMessage(data){
+    for(let key in active_user){
+        let { ws } = active_user[key];
+        ws && dispatchMessage(ws, data);
+    }
+}
 module.exports = router;

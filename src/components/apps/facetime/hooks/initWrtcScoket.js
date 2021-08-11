@@ -1,7 +1,7 @@
 import scoket from "@/services/scoket/index.js";
 import { wrtcScoketHost } from "@/config/service.config.js";
-export function initScoket(uid){
-    const url = `${wrtcScoketHost}?uid=${uid}`
+export function initScoket(uid,uname){
+    const url = `${wrtcScoketHost}?uid=${uid}&uname=${uname}`
     return new scoket({
         //网址
         url,

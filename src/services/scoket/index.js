@@ -139,7 +139,6 @@ class Socket{
     //websocket连接成功事件
     onopen(func) {
         this.ws.onopen = event => {
-            console.log('连接成功')
             this.#alive = true;
             this.onheartbeat();
             func ? func(event) : false
