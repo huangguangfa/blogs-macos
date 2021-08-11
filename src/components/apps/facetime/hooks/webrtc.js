@@ -190,7 +190,7 @@ const SkyRTC = function () {
 
     //接收到answer类型信令后将对方的session描述写入PeerConnection中
     skyrtc.prototype.receiveAnswer = function (socketId, sdp) {
-
+        console.log('xsax')
     };
 
 
