@@ -10,7 +10,8 @@ const SkyRTC = function () {
         navigator.mozGetUserMedia ||     //firfox浏览器
         navigator.msGetUserMedia
     );
-    
+
+    let nativeRTCIceCandidate = (window.mozRTCIceCandidate || window.RTCIceCandidate);
     let nativeRTCSessionDescription = (window.mozRTCSessionDescription || window.RTCSessionDescription);
 
     const iceServer = {
@@ -70,7 +71,6 @@ const SkyRTC = function () {
         //初始时已经连接的数目
         //保存所有的data channel，键为socket id，值通过PeerConnection实例的createChannel创建
         this.dataChannels = {};
-        this.localIEC = null;
         //是否是呼叫方
         this.isCalls = false;
         this.user = {
@@ -108,7 +108,8 @@ const SkyRTC = function () {
                 that.receiveUser.uname = call_uname;
                 //添加远端offer
                 exc_type === "sdp" && that.receiveOffer(data)
-
+                //添加IEC
+                exc_type === "ice" && receiveIce(data);
             }
             that.emit("socket_receive_message", message, socket );
         });
@@ -186,19 +187,18 @@ const SkyRTC = function () {
 
 
     /***********************信令交换部分*******************************/
-    //向所有PeerConnection发送Offer类型信令
+    /******* SDP 信息交换 ******/
+    //向用户发送Offer类型信令
     skyrtc.prototype.sendOffers = function ( uid ) {
         this.isCalls = true;
         this.sendMessage(uid,this.localPeer.localDescription, 'sdp')
     };
-
-    //接收到Offer类型信令后作为回应返回answer类型信令
+    //接收到answer类型信令后将对方的sdp描述写入PeerConnection中返回answer类型信令
     skyrtc.prototype.receiveOffer = function (sdp) {
         this.localPeer.setRemoteDescription(new nativeRTCSessionDescription(sdp))
         //呼叫方不需要在去获取sdp
         this.isCalls  === false && this.sendAnswer();
     };
-
     //发送answer类型信令
     skyrtc.prototype.sendAnswer = function () {
         let that = this;
@@ -207,12 +207,16 @@ const SkyRTC = function () {
             that.sendMessage(uid, answerOffer, 'sdp')
         });
     };
-
-    //接收到answer类型信令后将对方的session描述写入PeerConnection中
-    skyrtc.prototype.receiveAnswer = function (socketId, sdp) {
-        console.log('xsax')
-    };
-
+    /****** ICE 信息交换 *****/
+    //向用户发送ICE信息后将对方的ice描述写入PeerConnection中返回answer类型信令
+    skyrtc.prototype.sendIceData = function (uid,ice){
+        this.sendMessage(uid,ice, 'ice')
+    }
+    //接收answer类型信令
+    skyrtc.prototype.receiveIce = function (ice){
+        let candidate = new nativeRTCIceCandidate(ice);
+        this.localPeer.addIceCandidate(candidate);
+    }
 
     /***********************点对点连接部分*****************************/
     //创建单个PeerConnection
@@ -223,8 +227,10 @@ const SkyRTC = function () {
         //ICE信息
         this.localPeer.onicecandidate = function (evt) {
             //这里发送ICE信息
-            if( evt.candidate ){
-                that.localIEC = evt;
+            let candidate = evt.candidate
+            if( candidate ){
+                //发送逻辑判断、怎么获取指定发送用户uid
+                //that.sendIceData(  )
                 console.log("ICE信息",evt);
             }
         };
@@ -265,7 +271,6 @@ const SkyRTC = function () {
         pc.close();
     };
 
-
     /***********************数据通道连接部分*****************************/
     //发送消息方法
     skyrtc.prototype.sendMessage = function (callId, message, exc_type) {
@@ -281,6 +286,7 @@ const SkyRTC = function () {
         }
         this.socket.send(data);
     };
+
     return new skyrtc();
 };
 
