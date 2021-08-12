@@ -71,6 +71,8 @@ const SkyRTC = function () {
         //保存所有的data channel，键为socket id，值通过PeerConnection实例的createChannel创建
         this.dataChannels = {};
         this.localIEC = null;
+        //是否是呼叫方
+        this.isCalls = false;
         this.user = {
             uid:null,
             uname:null
@@ -186,13 +188,15 @@ const SkyRTC = function () {
     /***********************信令交换部分*******************************/
     //向所有PeerConnection发送Offer类型信令
     skyrtc.prototype.sendOffers = function ( uid ) {
+        this.isCalls = true;
         this.sendMessage(uid,this.localPeer.localDescription, 'sdp')
     };
 
     //接收到Offer类型信令后作为回应返回answer类型信令
     skyrtc.prototype.receiveOffer = function (sdp) {
         this.localPeer.setRemoteDescription(new nativeRTCSessionDescription(sdp))
-        this.sendAnswer();
+        //呼叫方不需要在去获取sdp
+        this.isCalls  === false && this.sendAnswer();
     };
 
     //发送answer类型信令
@@ -277,7 +281,6 @@ const SkyRTC = function () {
         }
         this.socket.send(data);
     };
-
     return new skyrtc();
 };
 
