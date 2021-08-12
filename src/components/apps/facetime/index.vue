@@ -63,7 +63,7 @@
                 //生成PeerConnection
                 rtc.createPeerConnection()
                 //本地数据流添加到PeerConnection
-                stream.getTracks().forEach( track => rtc.localPeer.addTrack(track, stream));
+                // stream.getTracks().forEach( track => rtc.localPeer.addTrack(track, stream));
             });
 
             rtc.on("remote_streams", function (stream) {
@@ -95,7 +95,8 @@
             //methds
             function callUser(userInfo){
                 const { uid } = userInfo;
-                rtc.sendOffers(uid)
+                rtc.sendOffers(uid);
+                rtc.sendIceData(uid,rtc.ICE)
             }
             return {
                 local_video_dom,

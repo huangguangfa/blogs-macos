@@ -68,9 +68,7 @@ const SkyRTC = function () {
         this.socket = null;
         //本地相连的peer connection， 
         this.localPeer = null;
-        //初始时已经连接的数目
-        //保存所有的data channel，键为socket id，值通过PeerConnection实例的createChannel创建
-        this.dataChannels = {};
+        this.ICE = null;
         //是否是呼叫方
         this.isCalls = false;
         this.user = {
@@ -109,7 +107,7 @@ const SkyRTC = function () {
                 //添加远端offer
                 exc_type === "sdp" && that.receiveOffer(data)
                 //添加IEC
-                exc_type === "ice" && receiveIce(data);
+                exc_type === "ice" && that.receiveIce(data);
             }
             that.emit("socket_receive_message", message, socket );
         });
@@ -197,12 +195,15 @@ const SkyRTC = function () {
     skyrtc.prototype.receiveOffer = function (sdp) {
         this.localPeer.setRemoteDescription(new nativeRTCSessionDescription(sdp))
         //呼叫方不需要在去获取sdp
-        this.isCalls  === false && this.sendAnswer();
+        this.isCalls === false && this.sendAnswer();
     };
     //发送answer类型信令
     skyrtc.prototype.sendAnswer = function () {
         let that = this;
         this.localPeer.createAnswer().then( answerOffer =>{
+            //设置下本地
+            console.log('我是接收方')
+            that.localPeer.setLocalDescription(answerOffer)
             const { uid } = that.receiveUser;
             that.sendMessage(uid, answerOffer, 'sdp')
         });
@@ -210,38 +211,44 @@ const SkyRTC = function () {
     /****** ICE 信息交换 *****/
     //向用户发送ICE信息后将对方的ice描述写入PeerConnection中返回answer类型信令
     skyrtc.prototype.sendIceData = function (uid,ice){
+        console.log(ice)
         this.sendMessage(uid,ice, 'ice')
     }
     //接收answer类型信令
     skyrtc.prototype.receiveIce = function (ice){
+        const { uid } = this.receiveUser;
+        console.log('收到ice',ice)
         let candidate = new nativeRTCIceCandidate(ice);
         this.localPeer.addIceCandidate(candidate);
+        //判断是否是接收方
+        this.isCalls === false && this.sendIceData(uid,this.ICE)
     }
+   
 
     /***********************点对点连接部分*****************************/
     //创建单个PeerConnection
     skyrtc.prototype.createPeerConnection = function () {
         let that = this;
         this.localPeer = new PeerConnection(iceServer);
-
+        //本地数据流添加到PeerConnection
+        // gThat.localMediaStream.getTracks().forEach(track => this.localPeer.addTrack(track, gThat.localMediaStream));
+        try{
+            this.localPeer.addStream(gThat.localMediaStream);
+        }catch(e){
+            console.log(e)
+        }
+        
         //ICE信息
         this.localPeer.onicecandidate = function (evt) {
             //这里发送ICE信息
             let candidate = evt.candidate
             if( candidate ){
                 //发送逻辑判断、怎么获取指定发送用户uid
-                //that.sendIceData(  )
-                console.log("ICE信息",evt);
+                that.ICE = candidate;
+                // console.log("ICE信息",that.ICE);
             }
         };
-        //检查状态
-        // new        ICE代理正在收集候选人或等待提供远程候选人。
-        // checking   ICE代理已经在至少一个组件上接收了远程候选者，并且正在检查候选但尚未找到连接。除了检查，它可能还在收集。
-        // connected  ICE代理已找到所有组件的可用连接，但仍在检查其他候选对以查看是否存在更好的连接。它可能还在收集。
-        // completed  ICE代理已完成收集和检查，并找到所有组件的连接。
-        // failed     ICE代理已完成检查所有候选对，但未能找到至少一个组件的连接。可能已找到某些组件的连接。
-        // disconnected ICE 连接断开
-        // closed      ICE代理已关闭，不再响应STUN请求
+
         this.localPeer.oniceconnectionstatechange = (evt) => {
             console.log('ICE connection state change: ' + evt.target.iceConnectionState);
         };
