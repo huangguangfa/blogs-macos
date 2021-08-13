@@ -16,12 +16,8 @@ const SkyRTC = function () {
 
     const iceServer = {
         "iceServers": [
-            {
-                "url": "stun:stun.l.google.com:19302"
-            },
-            {
-                "url": "stun:global.stun.twilio.com:3478"
-            },
+            { "url": "stun:stun.l.google.com:19302" },
+            { "url": "stun:global.stun.twilio.com:3478" },
             {
                 "url": "turn:global.stun.twilio.com:3478",
                 "username": "79fdd6b3c57147c5cc44944344c69d85624b63ec30624b8674ddc67b145e3f3c",
@@ -36,7 +32,7 @@ const SkyRTC = function () {
     }
     //绑定事件函数
     EventEmitter.prototype.on = function (eventName, callback) {
-        this.events[eventName] = this.events[eventName] || [];
+        this.events[eventName] = this.events[eventName] ?? [];
         this.events[eventName].push(callback);
     };
     //触发事件函数

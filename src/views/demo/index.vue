@@ -1,8 +1,8 @@
 <template>
 <!--    <Terminal v-model:show="data.status"></Terminal>-->
-    <button >显示</button>
+    <button @click="show">显示</button>
 <!--    <globalSearch></globalSearch>-->
-    <facetime :show="true"></facetime>
+    <facetime :show="data.status"></facetime>
     <!-- <safari :show="true"></safari> -->
 </template>
 
@@ -21,17 +21,17 @@
             globalSearch,
             facetime
         },
-        methods:{
-            aaa(){
-                console.log('dianjile ')
-            }
-        },
         setup(){
             let data = reactive({
                 status:true
             })
+
+            function show(){
+                data.status = true
+            }
             return {
-                data
+                data,
+                show
             }
         }
     }
