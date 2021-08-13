@@ -93,7 +93,7 @@
             /**********************************************************/
             /*                   业务逻辑                               */
             /**********************************************************/
-            webrtcStarter()
+            // webrtcStarter()
             watch( () => props.show ,status => {
                 emit('update:show',status)
                 if( status ){
