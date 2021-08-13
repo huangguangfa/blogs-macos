@@ -62,8 +62,6 @@
                 rtc.attachStream(stream, me_video, true)
                 //生成PeerConnection
                 rtc.createPeerConnection()
-                //本地数据流添加到PeerConnection
-                // stream.getTracks().forEach( track => rtc.localPeer.addTrack(track, stream));
             });
 
             rtc.on("remote_streams", function (stream) {
@@ -79,19 +77,26 @@
                 console.log("创建视频流失败");
             });
 
-            rtc.on('pc_get_ice_candidate',( candidate, pc )=>{
-                console.log(candidate)
-                console.log(pc)
-            })
 
-            const { uid, uname } = user;
-            rtc.connect(uid, uname);
 
             /**********************************************************/
             /*                   业务逻辑                               */
             /**********************************************************/
-            watch( () => props.show ,status => emit('update:show',status) );
-
+            watch( () => props.show ,status => {
+                emit('update:show',status)
+                if( status ){
+                    webrtcStarter()
+                }else{
+                    webrtcClose()
+                }
+            });
+            function webrtcStarter(){
+                const { uid, uname } = user;
+                rtc.connect(uid, uname);
+            }
+            function webrtcClose(){
+                rtc.closePeerConnection();
+            }
             //methds
             function callUser(userInfo){
                 const { uid } = userInfo;

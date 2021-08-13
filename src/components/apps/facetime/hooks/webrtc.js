@@ -162,7 +162,6 @@ const SkyRTC = function () {
         gThat = this;
         options.video = !!options.video;
         options.audio = !!options.audio;
-        
         if (getUserMedia) {
             // 调用用户媒体设备, 访问摄像头
             getUserMediaFun(options, createStreamSuccess, createStreamError);
@@ -202,7 +201,6 @@ const SkyRTC = function () {
         let that = this;
         this.localPeer.createAnswer().then( answerOffer =>{
             //设置下本地
-            console.log('我是接收方')
             that.localPeer.setLocalDescription(answerOffer)
             const { uid } = that.receiveUser;
             that.sendMessage(uid, answerOffer, 'sdp')
@@ -231,24 +229,16 @@ const SkyRTC = function () {
         let that = this;
         this.localPeer = new PeerConnection(iceServer);
         //本地数据流添加到PeerConnection
-        // gThat.localMediaStream.getTracks().forEach(track => this.localPeer.addTrack(track, gThat.localMediaStream));
-        try{
-            this.localPeer.addStream(gThat.localMediaStream);
-        }catch(e){
-            console.log(e)
-        }
-        
+        gThat && this.localPeer.addStream(gThat.localMediaStream);
         //ICE信息
         this.localPeer.onicecandidate = function (evt) {
-            //这里发送ICE信息
             let candidate = evt.candidate
             if( candidate ){
-                //发送逻辑判断、怎么获取指定发送用户uid
                 that.ICE = candidate;
                 // console.log("ICE信息",that.ICE);
             }
         };
-
+        //rtc连接状态变化
         this.localPeer.oniceconnectionstatechange = (evt) => {
             console.log('ICE connection state change: ' + evt.target.iceConnectionState);
         };
@@ -268,14 +258,14 @@ const SkyRTC = function () {
                 that.emit('remote_streams', e.streams[0]); 
 			}
 		};
-
         return this.localPeer;
     };
 
     //关闭PeerConnection连接
-    skyrtc.prototype.closePeerConnection = function (pc) {
-        if (!pc) return;
-        pc.close();
+    skyrtc.prototype.closePeerConnection = function () {
+        let peer = this.localPeer;
+        if (!peer) return;
+        peer.close();
     };
 
     /***********************数据通道连接部分*****************************/
