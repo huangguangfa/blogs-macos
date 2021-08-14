@@ -92,9 +92,12 @@
                 console.log("创建视频流失败");
             });
 
+
+
             /**********************************************************/
             /*                   业务逻辑                               */
             /**********************************************************/
+            webrtcStarter()
             watch( () => props.show ,status => {
                 emit('update:show',status)
                 if( status ){
@@ -147,15 +150,7 @@
         }
     }
 
-    .facetime-content-right{flex: 1;height: 100%;position: relative;border-left: 1px solid rgba(204,204,204,0.4);position: relative;
-        .facetime-content-right-userInfo{position: absolute;left: 0;top: 0;width: 100%;height: 100%;z-index: 100;background: #fff;
-            .userInfo{ width: 100%;height: 100%;background: red; position: absolute; left: 50%;top: 50%;transform: translate(-50%, -50%);background-color: #fff;padding: 10px;box-sizing: border-box;
-                background-image: url("../../../assets/images/facetime/login.png") ;background-repeat: no-repeat;
-                .userInfo_img{
-                    height: 100%;width: auto;
-                }
-            }
-        }
+    #videos{flex: 1;height: 100%;position: relative;border-left: 1px solid rgba(204,204,204,0.4);
         .remote-video{width: 100%;height: 100%;object-fit: cover;}
         .local-video{ width: 150px;height: 150px;bottom: 40px;right: 10px;z-index: 99;position: absolute;border-radius: 5px;border: 2px solid rgba(91,194,79,0.5); object-fit: cover; }
     }
