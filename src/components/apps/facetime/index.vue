@@ -1,6 +1,6 @@
 <template>
     <div class="facetime">
-        <window v-model:show="show" title="Facetime" width="1000" height="600">
+        <window v-model:show="show" title="Facetime" width="1000" height="450">
             <div class="facetime-content" v-if="show">
                 <div class="facetime-content-left">
                     <div class="active-user" v-show="activeUserList.length">
@@ -22,7 +22,24 @@
                 <div class="facetime-content-right">
                     <div class="facetime-content-right-userInfo">
                         <div class="userInfo">
-<!--                            <img class="userInfo_img" src="../../../assets/images/facetime/login.png" alt="">-->
+                            <img class="userInfo_img" draggable="false" src="../../../assets/images/facetime/login.png" alt="">
+                            <div class="input-userInfo">
+                                <div class="inputs">
+                                    <span class="title">姓名：</span>
+                                    <div class="inputs-content">
+                                        <input v-model="user.uname" type="text">
+                                        <label alt="请输入名称" placeholder="请输入名称"></label>
+                                    </div>
+                                </div>
+                                <div class="inputs">
+                                    <span class="title">手机：</span>
+                                    <div class="inputs-content">
+                                        <input v-model="user.uid" type="text">
+                                        <label alt="请输入手机号" placeholder="请输入手机号"></label>
+                                    </div>
+                                </div>
+                                <div class="submit">  提交 </div>
+                            </div>
                         </div>
                     </div>
                     <video class="remote-video" ref="remote_video_dom"></video>
@@ -97,7 +114,8 @@
             /**********************************************************/
             /*                   业务逻辑                               */
             /**********************************************************/
-            webrtcStarter()
+            // webrtcStarter()
+
             watch( () => props.show ,status => {
                 emit('update:show',status)
                 if( status ){
@@ -125,7 +143,7 @@
                 local_video_dom,
                 remote_video_dom,
                 activeUserList,
-
+                user,
                 //methods
                 callUser
             }
@@ -150,13 +168,42 @@
         }
     }
 
-    #videos{flex: 1;height: 100%;position: relative;border-left: 1px solid rgba(204,204,204,0.4);
+    .facetime-content-right{flex: 1;height: 100%;position: relative;border-left: 1px solid rgba(204,204,204,0.4);
+        .facetime-content-right-userInfo{position: absolute;width: 100%;height: 100%;left: 0;top: 0;background: #fff;z-index: 100;
+            .userInfo{ width: 100%;height: 450px;display: flex;align-items: center;
+                img{height: 450px;width: auto;filter: grayscale(30%);}
+                .inputs{
+                    width: 100%;display: flex;align-items: center;margin: 20px 0;
+                    .title{font-size: 12px;display: block;width: 40px;}
+                    .inputs-content{height: 40px;position: relative;
+                        input{ box-sizing: border-box;  width: 260px;  height:100%; border: 1px solid #cccccc; border-radius: 6px; background: #fff; resize: none; outline: none;text-indent: 20px;
+                            color: #898989;
+                            &:focus {  border-color: #5bc24f; color: #5bc24f;}
+                            &:focus + label[placeholder]:before{color: #5bc24f;}
+                            &:focus + .title{color: #5bc24f;}
+                            &:focus + label[placeholder]:before, &:valid + label[placeholder]:before {  transition-duration: .2s; transform: translate(0, -20px) scale(0.9, 0.9); }
+                            //&:invalid + label[placeholder][alt]:before{content: attr(alt);}
+                            &:label[placeholder]{ display: block;  pointer-events: none;  line-height: 40px;}
+                            & + label[placeholder]:before {
+                                content: attr(placeholder); display: inline-block; color: #898989; white-space: nowrap;
+                                transition: 0.3s ease-in-out;  background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+                                background-size: 100% 5px; background-repeat: no-repeat; background-position: center;
+                            }
+                        }
+                        label{ position: absolute;left: 20px;top: 50%;transform:translate(0,-50%);font-size: 12px;text-align: left}
+                    }
+                }
+                .submit{
+                    border: 1px solid red;padding: 0 20px;display: inline-block;line-height: 35px;border-radius: 10px;font-size: 12px;background: linear-gradient(to bottom, #000000 0%,#ffffff 100%);
+                }
+            }
+        }
         .remote-video{width: 100%;height: 100%;object-fit: cover;}
         .local-video{ width: 150px;height: 150px;bottom: 40px;right: 10px;z-index: 99;position: absolute;border-radius: 5px;border: 2px solid rgba(91,194,79,0.5); object-fit: cover; }
     }
     .closure{position: absolute; left: 50%;bottom: 60px; transform: translate(-50%); z-index: 2; background: crimson;width: 40px;height:40px; border-radius:100%; display: flex; justify-content: center; align-items: center;
         .iconfont{ color:#fff; font-size: 25px;  cursor: pointer;  }
     }
-    
 }
+
 </style>
