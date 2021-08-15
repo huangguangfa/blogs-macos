@@ -20,10 +20,14 @@
                     </div>
                 </div>
                 <div class="facetime-content-right">
-                    <div class="facetime-content-right-userInfo">
+                    <div class="facetime-content-right-userInfo" v-show="!isStartWebRtc">
                         <div class="userInfo">
                             <img class="userInfo_img" draggable="false" src="../../../assets/images/facetime/login.png" alt="">
                             <div class="input-userInfo">
+                                <div class="reset-name" @click="resetName">
+                                    <i class="iconfont macos-zhongzhi"></i>
+                                    <span>换一个</span>
+                                </div>
                                 <div class="inputs">
                                     <span class="title">姓名：</span>
                                     <div class="inputs-content">
@@ -38,7 +42,7 @@
                                         <label alt="请输入手机号" placeholder="请输入手机号"></label>
                                     </div>
                                 </div>
-                                <div class="submit">  提交 </div>
+                                <div class="submit" @click="submit">  提交 </div>
                             </div>
                         </div>
                     </div>
@@ -62,9 +66,11 @@
             let local_video_dom = ref(null)
             let remote_video_dom = ref(null)
             let rtc = SkyRTC();
-            let user = { uid:getRandomMoble(),  uname:getRandomName() };
+            let user = reactive({ uid: null,  uname:null });
             let activeUserList = ref([]);
             let sockets = null;
+            let isStartWebRtc = ref(false)
+            resetName()
             /**********************************************************/
             /*                   webrtc通信                           */
             /**********************************************************/
@@ -73,6 +79,14 @@
                 //创建本地视频流
                 rtc.createStream({ "video": true, "audio": true });
                 sockets = socket;
+            });
+            //创建本地视频流成功
+            rtc.on("stream_created", function (stream) {
+                isStartWebRtc.value = true;
+                let me_video = local_video_dom.value;
+                rtc.attachStream(stream, me_video, true)
+                //生成PeerConnection
+                rtc.createPeerConnection()
             });
             //接收scoket消息
             rtc.on("socket_receive_message", function (serve_data,socket) {
@@ -88,13 +102,6 @@
                 console.log('消息',serve_data)
             });
 
-            //创建本地视频流成功
-            rtc.on("stream_created", function (stream) {
-                let me_video = local_video_dom.value;
-                rtc.attachStream(stream, me_video, true)
-                //生成PeerConnection
-                rtc.createPeerConnection()
-            });
 
             rtc.on("remote_streams", function (stream) {
                 let remote_video = remote_video_dom.value;
@@ -114,45 +121,52 @@
             /**********************************************************/
             /*                   业务逻辑                               */
             /**********************************************************/
-            // webrtcStarter()
 
             watch( () => props.show ,status => {
                 emit('update:show',status)
-                if( status ){
-                    webrtcStarter()
-                }else{
-                    webrtcClose()
-                }
+                status === false && webrtcClose()
             });
+            
+            //methds
+            function callUser(userInfo){
+                const { uid, _is_me } = userInfo;
+                if( _is_me ) return ;
+                rtc.sendOffers(uid);
+                rtc.sendIceData(uid,rtc.ICE)
+            }
             function webrtcStarter(){
                 const { uid, uname } = user;
                 rtc.connect(uid, uname);
             }
             function webrtcClose(){
                 rtc.closePeerConnection();
+                rtc.closeVideoConnection()
+                isStartWebRtc.value = false;
             }
-            //methds
-            function callUser(userInfo){
-                const { uid, _is_me } = userInfo;
-                console.log(_is_me)
-                if( _is_me ) return ;
-                rtc.sendOffers(uid);
-                rtc.sendIceData(uid,rtc.ICE)
+            function resetName(){
+                user.uid = getRandomMoble();
+                user.uname = getRandomName()
+            }
+            function submit(){
+                webrtcStarter();
             }
             return {
                 local_video_dom,
                 remote_video_dom,
                 activeUserList,
                 user,
+                isStartWebRtc,
                 //methods
-                callUser
+                callUser,
+                resetName,
+                submit
             }
         }
     }
 </script>
 
 <style lang="less">
-.facetime-content{ width: 100%;height: 100%;display: flex;
+.facetime-content{ width: 100%;height: 100%;display: flex;background:#fff;
     .facetime-content-left{ width: 240px;padding:20px;overflow: hidden; box-sizing: border-box; overflow-y: auto;
         .active-user{width: 100%;
             .user{display: flex;align-items: center; justify-content: space-between; position: relative;padding-bottom:10px;margin-top:10px;
@@ -172,8 +186,11 @@
         .facetime-content-right-userInfo{position: absolute;width: 100%;height: 100%;left: 0;top: 0;background: #fff;z-index: 100;
             .userInfo{ width: 100%;height: 450px;display: flex;align-items: center;
                 img{height: 450px;width: auto;filter: grayscale(30%);}
-                .inputs{
-                    width: 100%;display: flex;align-items: center;margin: 20px 0;
+                .input-userInfo{position: relative;cursor: pointer;
+                    .reset-name{position: absolute;right: 30px;top: -10px;font-size: 12px;display:flex;align-items:center;color:#898989;
+                        i{font-size: 15px;margin-right:3px;}
+                    }
+                    .inputs{width: 100%;display: flex;align-items: center;margin: 20px 0;
                     .title{font-size: 12px;display: block;width: 40px;}
                     .inputs-content{height: 40px;position: relative;
                         input{ box-sizing: border-box;  width: 260px;  height:100%; border: 1px solid #cccccc; border-radius: 6px; background: #fff; resize: none; outline: none;text-indent: 20px;
@@ -190,12 +207,14 @@
                                 background-size: 100% 5px; background-repeat: no-repeat; background-position: center;
                             }
                         }
-                        label{ position: absolute;left: 20px;top: 50%;transform:translate(0,-50%);font-size: 12px;text-align: left}
+                        label{ position: absolute;left: 20px;top: 50%;transform:translate(0,-50%);font-size: 12px;text-align: left;}
                     }
                 }
-                .submit{
-                    border: 1px solid red;padding: 0 20px;display: inline-block;line-height: 35px;border-radius: 10px;font-size: 12px;background: linear-gradient(to bottom, #000000 0%,#ffffff 100%);
+                .submit{ border: 1px solid #5bc24f;padding: 0 50px;display: inline-block;line-height: 35px;border-radius: 10px;font-size: 12px;background: #5bc24f;
+                    color:#fff;margin:0 100px;
                 }
+                }
+                
             }
         }
         .remote-video{width: 100%;height: 100%;object-fit: cover;}

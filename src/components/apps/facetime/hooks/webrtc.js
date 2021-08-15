@@ -205,7 +205,6 @@ const SkyRTC = function () {
     /****** ICE 信息交换 *****/
     //向用户发送ICE信息后将对方的ice描述写入PeerConnection中返回answer类型信令
     skyrtc.prototype.sendIceData = function (uid,ice){
-        console.log(ice)
         this.sendMessage(uid,ice, 'ice')
     }
     //接收answer类型信令
@@ -262,6 +261,11 @@ const SkyRTC = function () {
         let peer = this.localPeer;
         if (!peer) return;
         peer.close();
+    };
+    //关闭视频流
+    skyrtc.prototype.closeVideoConnection = function () {
+        console.log(gThat.localMediaStream)
+        gThat && gThat.localMediaStream.removeTrack()
     };
 
     /***********************数据通道连接部分*****************************/
