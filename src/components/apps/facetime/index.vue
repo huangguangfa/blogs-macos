@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="facetime-content-right">
-                    <div class="facetime-content-right-userInfo" v-show="!isStartWebRtc">
+                    <div class="facetime-content-right-userInfo" v-show="!callConfig.isStartWebRtc">
                         <div class="userInfo">
                             <img class="userInfo_img" draggable="false" src="../../../assets/images/facetime/login.png" alt="">
                             <div class="input-userInfo">
@@ -48,6 +48,19 @@
                     </div>
                     <video class="remote-video" ref="remote_video_dom"></video>
                     <video class="local-video" ref="local_video_dom"></video>
+
+                    <div class="call_btn" v-if="callConfig.isCall">
+                        <div class="call-info">
+                            <span v-if="callConfig.isCaller">正在呼叫：</span>
+                            <span class="mr10">{{ callConfig.callName }}</span>
+                            <span>{{ callConfig.callMobile }}</span>
+                        </div>
+
+                        <div class="call_btns" :class="callConfig.isCaller ? 'justify-center':'justify-between' ">
+                            <i class="iconfont macos-guaduan call_btn_common"></i>
+                            <i v-if="callConfig.isCaller === false" class="iconfont macos-shipindianhua call_btn_common" @click="answerCall"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </window>
@@ -55,7 +68,7 @@
 </template>
 
 <script>
-    import { ref, watch, reactive, onMounted, onBeforeUnmount  } from "vue";
+    import { ref, watch, reactive  } from "vue";
     import SkyRTC from "./hooks/webrtc.js"
     import { getRandomMoble, getRandomName } from "@/utils/utils.js"
     export default{
@@ -68,8 +81,18 @@
             let rtc = SkyRTC();
             let user = reactive({ uid: null,  uname:null });
             let activeUserList = ref([]);
-            let sockets = null;
-            let isStartWebRtc = ref(false)
+            let callConfig = reactive({
+                //是否初始化了webrtc
+                isStartWebRtc:false,
+                //是否在通话中
+                isCall:false,
+                // 是否呼叫方
+                isCaller:false,
+                callMobile:null,
+                callName:null
+            })
+           
+
             resetName()
             /**********************************************************/
             /*                   webrtc通信                           */
@@ -78,11 +101,10 @@
             rtc.on("connected", function (socket) {
                 //创建本地视频流
                 rtc.createStream({ "video": true, "audio": true });
-                sockets = socket;
             });
             //创建本地视频流成功
             rtc.on("stream_created", function (stream) {
-                isStartWebRtc.value = true;
+                callConfig.isStartWebRtc = true;
                 let me_video = local_video_dom.value;
                 rtc.attachStream(stream, me_video, true)
                 //生成PeerConnection
@@ -101,7 +123,13 @@
                 }
                 console.log('消息',serve_data)
             });
+            //新的通话邀请
+            rtc.on('call', data =>{
+                const { switch_status, uid, uname } = data;
+                switch_status && startCall(uid,uname);
 
+                console.log('通话邀请',data)
+            })
 
             rtc.on("remote_streams", function (stream) {
                 let remote_video = remote_video_dom.value;
@@ -129,10 +157,11 @@
             
             //methds
             function callUser(userInfo){
-                const { uid, _is_me } = userInfo;
-                if( _is_me ) return ;
-                rtc.sendOffers(uid);
-                rtc.sendIceData(uid,rtc.ICE)
+                const { uid, _is_me, uname } = userInfo;
+                if( _is_me ) return;
+                startCall(uid, uname, true);
+                rtc.call(uid)
+                
             }
             function webrtcStarter(){
                 const { uid, uname } = user;
@@ -141,12 +170,27 @@
             function webrtcClose(){
                 rtc.closePeerConnection();
                 rtc.closeVideoConnection()
-                isStartWebRtc.value = false;
+                callConfig.isStartWebRtc = false;
             }
             function resetName(){
                 user.uid = getRandomMoble();
                 user.uname = getRandomName()
             }
+            function endCall(){
+
+            }
+            function startCall(uid,uname,isCaller = false){
+                callConfig.callMobile = uid;
+                callConfig.callName = uname;
+                callConfig.isCaller = isCaller;
+                callConfig.isCall = true;
+            }
+            function answerCall(){
+                const { callMobile } = callConfig;
+                rtc.sendOffers(callMobile);
+                rtc.sendIceData(callMobile,rtc.ICE);
+            }
+
             function submit(){
                 webrtcStarter();
             }
@@ -155,11 +199,12 @@
                 remote_video_dom,
                 activeUserList,
                 user,
-                isStartWebRtc,
+                callConfig,
                 //methods
                 callUser,
                 resetName,
-                submit
+                submit,
+                answerCall
             }
         }
     }
@@ -183,6 +228,14 @@
     }
 
     .facetime-content-right{flex: 1;height: 100%;position: relative;border-left: 1px solid rgba(204,204,204,0.4);
+        .call_btn{position: absolute;bottom: 80px;left:50%; transform: translate(-50%);z-index: 999;box-shadow: 0 4px 12px #ebedf0;padding:30px 70px; border-radius: 20px;background:#fff;
+            .call-info{font-size: 12px;color: #898989;margin-bottom: 20px;}
+            .call_btns{display:flex; 
+                .call_btn_common{width: 30px;height: 30px;border-radius: 100%;display: block;display: flex;align-items: center;justify-content: center;color: #fff;cursor: pointer;}
+                .macos-guaduan{background: red;}
+                .macos-shipindianhua{background: #5bc24f;}
+            }
+        }
         .facetime-content-right-userInfo{position: absolute;width: 100%;height: 100%;left: 0;top: 0;background: #fff;z-index: 100;
             .userInfo{ width: 100%;height: 450px;display: flex;align-items: center;
                 img{height: 450px;width: auto;filter: grayscale(30%);}
@@ -191,30 +244,29 @@
                         i{font-size: 15px;margin-right:3px;}
                     }
                     .inputs{width: 100%;display: flex;align-items: center;margin: 20px 0;
-                    .title{font-size: 12px;display: block;width: 40px;}
-                    .inputs-content{height: 40px;position: relative;
-                        input{ box-sizing: border-box;  width: 260px;  height:100%; border: 1px solid #cccccc; border-radius: 6px; background: #fff; resize: none; outline: none;text-indent: 20px;
-                            color: #898989;
-                            &:focus {  border-color: #5bc24f; color: #5bc24f;}
-                            &:focus + label[placeholder]:before{color: #5bc24f;}
-                            &:focus + .title{color: #5bc24f;}
-                            &:focus + label[placeholder]:before, &:valid + label[placeholder]:before {  transition-duration: .2s; transform: translate(0, -20px) scale(0.9, 0.9); }
-                            //&:invalid + label[placeholder][alt]:before{content: attr(alt);}
-                            &:label[placeholder]{ display: block;  pointer-events: none;  line-height: 40px;}
-                            & + label[placeholder]:before {
-                                content: attr(placeholder); display: inline-block; color: #898989; white-space: nowrap;
-                                transition: 0.3s ease-in-out;  background-image: linear-gradient(to bottom, #ffffff, #ffffff);
-                                background-size: 100% 5px; background-repeat: no-repeat; background-position: center;
+                        .title{font-size: 12px;display: block;width: 40px;}
+                        .inputs-content{height: 40px;position: relative;
+                            input{ box-sizing: border-box;  width: 260px;  height:100%; border: 1px solid #cccccc; border-radius: 6px; background: #fff; resize: none; outline: none;text-indent: 20px;
+                                color: #898989;
+                                &:focus {  border-color: #5bc24f; color: #5bc24f;}
+                                &:focus + label[placeholder]:before{color: #5bc24f;}
+                                &:focus + .title{color: #5bc24f;}
+                                &:focus + label[placeholder]:before, &:valid + label[placeholder]:before {  transition-duration: .2s; transform: translate(0, -20px) scale(0.9, 0.9); }
+                                //&:invalid + label[placeholder][alt]:before{content: attr(alt);}
+                                &:label[placeholder]{ display: block;  pointer-events: none;  line-height: 40px;}
+                                & + label[placeholder]:before {
+                                    content: attr(placeholder); display: inline-block; color: #898989; white-space: nowrap;
+                                    transition: 0.3s ease-in-out;  background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+                                    background-size: 100% 5px; background-repeat: no-repeat; background-position: center;
+                                }
                             }
+                            label{ position: absolute;left: 20px;top: 50%;transform:translate(0,-50%);font-size: 12px;text-align: left;}
                         }
-                        label{ position: absolute;left: 20px;top: 50%;transform:translate(0,-50%);font-size: 12px;text-align: left;}
+                    }
+                    .submit{ border: 1px solid #5bc24f;padding: 0 50px;display: inline-block;line-height: 35px;border-radius: 10px;font-size: 12px;background: #5bc24f;
+                        color:#fff;margin:0 100px;
                     }
                 }
-                .submit{ border: 1px solid #5bc24f;padding: 0 50px;display: inline-block;line-height: 35px;border-radius: 10px;font-size: 12px;background: #5bc24f;
-                    color:#fff;margin:0 100px;
-                }
-                }
-                
             }
         }
         .remote-video{width: 100%;height: 100%;object-fit: cover;}

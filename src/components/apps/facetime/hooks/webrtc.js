@@ -101,9 +101,11 @@ const SkyRTC = function () {
                 that.receiveUser.uid = call_uid;
                 that.receiveUser.uname = call_uname;
                 //添加远端offer
-                exc_type === "sdp" && that.receiveOffer(data)
+                exc_type === "sdp" && that.receiveOffer(data);
                 //添加IEC
                 exc_type === "ice" && that.receiveIce(data);
+                //呼叫监听
+                exc_type === 'call' && that.emit('call',data)
             }
             that.emit("socket_receive_message", message, socket );
         });
@@ -166,7 +168,6 @@ const SkyRTC = function () {
         }
     };
 
-
     // 将流绑定到video标签上用于输出
     skyrtc.prototype.attachStream = function (stream, dom, isSound = false) {
         if (navigator.mediaDevices.getUserMedia) {
@@ -205,12 +206,11 @@ const SkyRTC = function () {
     /****** ICE 信息交换 *****/
     //向用户发送ICE信息后将对方的ice描述写入PeerConnection中返回answer类型信令
     skyrtc.prototype.sendIceData = function (uid,ice){
-        this.sendMessage(uid,ice, 'ice')
+        this.sendMessage( uid, ice, 'ice' )
     }
     //接收answer类型信令
     skyrtc.prototype.receiveIce = function (ice){
         const { uid } = this.receiveUser;
-        console.log('收到ice',ice)
         let candidate = new nativeRTCIceCandidate(ice);
         this.localPeer.addIceCandidate(candidate);
         //判断是否是接收方
@@ -219,6 +219,12 @@ const SkyRTC = function () {
    
 
     /***********************点对点连接部分*****************************/
+    // 呼叫  
+    skyrtc.prototype.call = function(call_uid){
+        const { uid, uname } = this.user;
+        call_uid && this.sendMessage(call_uid, { switch_status:true, uid,uname },'call')
+    }
+
     //创建单个PeerConnection
     skyrtc.prototype.createPeerConnection = function () {
         let that = this;
@@ -239,7 +245,7 @@ const SkyRTC = function () {
         };
         
         this.localPeer.onnegotiationneeded = function(e){
-            that.localPeer.createOffer().then( offer =>{
+            that.localPeer.createOffer().then( offer => {
                 //设置连接的本地描述发送到信令服务器以便传送到远程方。
                 that.localPeer.setLocalDescription(offer,() =>{
                     console.log('设置成功desc',offer)
