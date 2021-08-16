@@ -20,6 +20,7 @@
                     </div>
                 </div>
                 <div class="facetime-content-right">
+                    <!-- 初始化姓名-->
                     <div class="facetime-content-right-userInfo" v-show="!callConfig.isStartWebRtc">
                         <div class="userInfo">
                             <img class="userInfo_img" draggable="false" src="../../../assets/images/facetime/login.png" alt="">
@@ -46,9 +47,29 @@
                             </div>
                         </div>
                     </div>
-                    <video class="remote-video" ref="remote_video_dom"></video>
-                    <video class="local-video" ref="local_video_dom"></video>
+                    <div class="videos">
+                        <video class="remote-video" ref="remote_video_dom"></video>
+                        <video class="local-video" ref="local_video_dom"></video>
+                    </div>
 
+                    <div class="leave">
+                        <div class="leave-area">
+
+                        </div>
+                        <div class="input-area">
+                            <div class="input-area-content">
+                                <div class="phiz">
+                                    <i class="iconfont macos-biaoqing"></i>
+                                    <i class="iconfont macos-wenjian"></i>
+                                </div>
+                                <div class="textareas"  contenteditable="true"> </div>
+                            </div>
+                            <div class="send-btn">
+                                <span>发送</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 是否有人拨号-->
                     <div class="call_btn" v-if="callConfig.isCall">
                         <div class="call-info">
                             <span v-if="callConfig.isCaller">正在呼叫：</span>
@@ -83,7 +104,7 @@
             let activeUserList = ref([]);
             let callConfig = reactive({
                 //是否初始化了webrtc
-                isStartWebRtc:false,
+                isStartWebRtc:true,
                 //是否在通话中
                 isCall:false,
                 // 是否呼叫方
@@ -200,7 +221,7 @@
                 activeUserList,
                 user,
                 callConfig,
-                //methods
+
                 callUser,
                 resetName,
                 submit,
@@ -227,7 +248,27 @@
         }
     }
 
-    .facetime-content-right{flex: 1;height: 100%;position: relative;border-left: 1px solid rgba(204,204,204,0.4);
+    .facetime-content-right{flex: 1;height: 100%;position: relative;border-left: 1px solid rgba(204,204,204,0.4);display: flex;width: 100%;
+        .leave{
+            min-width: 300px;height: 100%;position: relative;display: flex;flex-wrap: wrap;border-left: 1px solid rgba(204, 204, 204, 0.4);;
+            .leave-area{
+                width: 100%;height: 70%;
+            }
+            .input-area{width: 100%;height: 30%;border-top: 1px solid rgba(204, 204, 204, 0.4); display: flex;padding-bottom: 30px;box-sizing:border-box;
+                .input-area-content{display: flex;flex-wrap: wrap;align-content: flex-start;flex-direction: column;width: 100%;
+                    .phiz{height: 35px;width: 100%;display: flex;align-items: center;padding: 0 5px;color: #898989;font-size: 20px;
+                        .iconfont{font-size: 20px;margin: 0 5px; cursor: pointer;}
+                    }
+                    .textareas{width: 236px;flex: 1;overflow-y:auto;outline: none;color: #898989;padding-top: 5px;font-size: 12px;padding-left: 10px;box-sizing:border-box; word-break: break-all;line-height: 17px;
+                        &::-webkit-scrollbar{ display:none;}
+                    }
+                }
+                .send-btn{display: flex;justify-content: flex-end;flex: 0 0 auto;
+                    span{font-size: 12px;color: #fff;background:rgba(91, 194, 79,0.7);padding: 10px 20px; border-radius: 2px;line-height: 64px;cursor:pointer;}
+                    span:active {  position:relative; top:2px; }
+                }
+            }
+        }
         .call_btn{position: absolute;bottom: 80px;left:50%; transform: translate(-50%);z-index: 999;box-shadow: 0 4px 12px #ebedf0;padding:30px 70px; border-radius: 20px;background:#fff;
             .call-info{font-size: 12px;color: #898989;margin-bottom: 20px;}
             .call_btns{display:flex; 
@@ -269,8 +310,11 @@
                 }
             }
         }
-        .remote-video{width: 100%;height: 100%;object-fit: cover;}
-        .local-video{ width: 150px;height: 150px;bottom: 40px;right: 10px;z-index: 99;position: absolute;border-radius: 5px;border: 2px solid rgba(91,194,79,0.5); object-fit: cover; }
+        .videos{
+            position: relative;width: 100%;
+            .remote-video{width: 100%;height: 100%;object-fit: cover;}
+            .local-video{ width: 150px;height: 150px;bottom: 40px;right: 10px;z-index: 99;position: absolute;border-radius: 5px;border: 2px solid rgba(91,194,79,0.5); object-fit: cover; }
+        }
     }
     .closure{position: absolute; left: 50%;bottom: 60px; transform: translate(-50%); z-index: 2; background: crimson;width: 40px;height:40px; border-radius:100%; display: flex; justify-content: center; align-items: center;
         .iconfont{ color:#fff; font-size: 25px;  cursor: pointer;  }
