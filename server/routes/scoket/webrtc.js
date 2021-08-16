@@ -10,9 +10,7 @@ router.ws('/webrtc/user', function( ws, req ){
     console.log('enter',uname);
     if(uid && uname){
         active_user[uid] = {  ws,uid,uname  }
-        //通知所有人有新成员加入
-        let activeUser = gteSendData('system',getActiveUserList() );
-        dispatchAllUserMessage( activeUser )
+        updateActiveUser()
     };
     //接收消息、【保存用户信息】
     ws.on("message", function(mes){
@@ -23,8 +21,8 @@ router.ws('/webrtc/user', function( ws, req ){
     });
     //监听关闭、【删除内存中用户】
     ws.on("close", function(w) {
-        console.log('end',uname)
         delete active_user[uid];
+        updateActiveUser()
     });
 })
 
@@ -33,6 +31,11 @@ router.get('/getActiveUserList',(req,res)=>{
     res.send({ status:true,result:Object.values(active_user) })
 })
 
+//通知最新活跃用户
+function updateActiveUser(){
+    let activeUser = gteSendData('system',getActiveUserList() );
+    dispatchAllUserMessage( activeUser )
+}
 
 //发送数据
 function dispatchMessage(ws,data){
