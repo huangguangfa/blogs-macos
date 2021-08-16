@@ -18,6 +18,7 @@
 .flex-row { flex-direction: row;}
 .flex-column{ flex-direction: column;}
 .justify-between { justify-content: space-between;}
+.justify-space-around{justify-content: space-around;}
 .justify-flex-end{ justify-content: flex-end;}
 .justify-center { justify-content: center; }
 .align-items-center{align-items: center;}
