@@ -1,20 +1,21 @@
 <template>
     <div class="chatroom">
         <div class="chatroom-area">
-            <div class="chatroom-area-list">
+            <div class="chatroom-area-list" v-if="MessageList.length">
                 <div class="user-common" :class="{ 'justify-flex-end':row.type === 'right' }" v-for="( row, index ) in MessageList" :key="index">
-                    <img v-if="row.type === 'left'" class="user-avatar" src="https://www.huangguangfa.cn/static/media/user.f7e06438.png" alt="">
+                    <img v-if="row.type === 'left'" class="user-avatar" src="@/assets/images/common/avatar_defult.png" alt="">
                     <div class="content" :class="row.type === 'left' ? 'left-mark' : 'right-mark' "> {{ row.mes_content }} </div>
-                    <img v-if="row.type === 'right'" class="user-avatar" src="https://www.huangguangfa.cn/static/media/user.f7e06438.png" alt="">
+                    <img v-if="row.type === 'right'" class="user-avatar me" src="@/assets/images/common/avatar_defult.png" alt="">
                 </div>
             </div>
+            <vm-empty v-else text="暂无消息"></vm-empty>
         </div>
         <div class="input-area">
             <div class="input-area-content">
                 <div class="phiz">
-                    <i v-for="(item) in options_config.icon_list" class="iconfont" :class="item.name"></i>
+                    <i v-for="(item,index) in options_config.icon_list" class="iconfont" :class="item.name" :key="index"></i>
                 </div>
-                <div class="textareas" @input="changeText" id="textareas" contenteditable="true"></div>
+                <div class="textareas" @keyup.enter="sendMes" @input="changeText" id="textareas" contenteditable="true"></div>
             </div>
             <div class="send-btn">
                 <span @click="sendMes">发送</span>
@@ -44,7 +45,7 @@
                     mes_content:mes_text.value,
                     isHaveRead:true
                 }
-                emit('newMessage',mes_data);
+                emit('newMessage',mes_data,true);
                 mes_text.value = null;
                 document.getElementById("textareas").innerText = "";
             }
@@ -72,6 +73,7 @@
                 .user-common{
                     display: flex;margin: 15px 0;
                     .user-avatar{width: 35px;height: 35px;border-radius: 3px;padding-top: 2px;}
+                    .me{filter: grayscale(50%);}
                     .content{padding: 10px;box-sizing:border-box; font-size: 12px;border-radius: 3px;line-height: 15px;}
                     .left-mark{ margin-left: 15px; background: #fff;border: 1px solid #eee;position: relative;
                         &:hover{background: rgb(246,246,246);cursor:text;}

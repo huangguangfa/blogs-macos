@@ -2,7 +2,7 @@
     <div class="facetime">
         <window v-model:show="show" title="Facetime" width="1000" height="450">
             <div class="facetime-content" v-if="show">
-                <div class="facetime-content-left" v-show="false">
+                <div class="facetime-content-left">
                     <vm-active-user :activeUserList="activeUserList" @callUser="callUser"></vm-active-user>
                 </div>
                 <div class="facetime-content-right">
@@ -24,7 +24,9 @@
                             <div class="call_btns justify-space-around">
                                 <i class="iconfont macos-guaduan call_btn_common"></i>
                                 <i v-if="showCallInfo.isShowAnswer" class="iconfont macos-shipindianhua call_btn_common" @click="answerCall"></i>
-                                <i v-if="callConfig.isStartCall" class="iconfont macos-liaotian call_btn_common" @click="handleChatroomStatus"></i>
+                                <i v-if="callConfig.isStartCall" class="iconfont macos-liaotian call_btn_common" @click="handleChatroomStatus">
+                                    <span v-show="callConfig.unreadMesNumber > 0" class="unreadMesNumber">{{ callConfig.unreadMesNumber }}</span>
+                                </i>
                             </div>
                         </div>
                     </div>
@@ -38,6 +40,7 @@
 
 <script>
     import { ref, watch, reactive, computed  } from "vue";
+    import { deepClone } from "@/utils/utils.js"
     import SkyRTC from "./hooks/webrtc.js"
     import chatroom from "./chatroom.vue"
     import activeUser from "./activeUser.vue"
@@ -58,13 +61,7 @@
             let user = reactive({ uid: null,  uname:null });
             let activeUserList = ref([]);
             let chatroomConfig = reactive({
-                messageList:[
-                    {
-                        type:'left',
-                        mes_content:'我是测试聊天数据',
-                        isHaveRead:true
-                    }
-                ]
+                messageList:[]
             })
             let callConfig = reactive({
                 //是否初始化了webrtc
@@ -78,7 +75,8 @@
                 callMobile:null,
                 callName:null,
                 //是否显示聊天
-                showChatroom:true
+                showChatroom:false,
+                unreadMesNumber:0
             })
            
             /**********************************************************/
@@ -97,20 +95,18 @@
                 rtc.createPeerConnection()
             });
             //接收scoket消息
-            rtc.on("socket_receive_message", function (serve_data,socket) {
+            rtc.on("socket_receive_message", function (serve_data) {
                 const { sender, data } = serve_data;
-                //目前系统只会派发当前活跃用户列表
-                if( sender === 'system' ){
-                    data.forEach( item => {
-                        item._is_me = false
-                        if( item.uid === user.uid ){  item._is_me = true }
-                    })
-                    activeUserList.value = data;
-                }
-                console.log('消息',serve_data)
+                //派发当前活跃用户列表
+                sender === 'system' && getActiveUserList(data);
+                sender === 'exc' && data.exc_type === "communication" && newMessage(data);
+                console.log('消息',sender,data)
             });
             //新的通话邀请
             rtc.on('call', data =>{
+                const { isOpenCall } = callConfig;
+                //正在通话中
+                if( isOpenCall ) return;
                 const { switch_status, uid, uname } = data;
                 switch_status && startCall(uid,uname);
                 console.log('通话邀请',data)
@@ -186,13 +182,40 @@
                 rtc.sendOffers(callMobile);
                 rtc.sendIceData(callMobile,rtc.ICE);
             }
-
+            function getActiveUserList(data){
+                data.forEach( item => {
+                    item._is_me = false
+                    if( item.uid === user.uid ){  item._is_me = true }
+                })
+                activeUserList.value = data;
+            }
             function handleChatroomStatus(){
                 const { showChatroom } = callConfig;
-                callConfig.showChatroom = !showChatroom
+                callConfig.showChatroom = !showChatroom;
+                callConfig.unreadMesNumber = 0;
             }
-            function newMessage(data){
-                chatroomConfig.messageList.push(data)
+            function newMessage(data, islocal = false){
+                const { callMobile, showChatroom, unreadMesNumber } = callConfig;
+                //本地消息推送
+                if( islocal ){
+                    chatroomConfig.messageList.push(data);
+                    //远端推送
+                    let clone_data = deepClone(data);
+                    clone_data.type = 'left';
+                    rtc.sendMessage(callMobile,clone_data, 'communication')
+                }else{
+                    const { call_uid, call_uname } = data;
+                    const { mes_content, type } = data.data
+                    let newMes = {
+                        isHaveRead:showChatroom,
+                        uid:call_uid,
+                        uname:call_uname,
+                        mes_content,
+                        type
+                    }
+                    chatroomConfig.messageList.push(newMes);
+                    callConfig.unreadMesNumber += showChatroom === false ? 1 : 0
+                }
             }
 
             return {
@@ -225,7 +248,20 @@
                 .call_btn_common{width: 30px;height: 30px;border-radius: 100%;display: block;display: flex;align-items: center;justify-content: center;color: #fff;cursor: pointer;}
                 .macos-guaduan{background: red;}
                 .macos-shipindianhua{background: #5bc24f;}
-                .macos-liaotian{background: #5bc24f;}
+                .macos-liaotian{background: #5bc24f; position: relative;
+                    .unreadMesNumber{position: absolute; right: -3px; top: -4px; color: #fff;
+                        z-index: 2;
+                        width: 15px;
+                        height: 15px;
+                        display: block;
+                        line-height: 15px;
+                        background: red;
+                        font-size: 12px;
+                        font-weight: bold;
+                        text-align: center;
+                        border-radius: 100%;
+                    }
+                }
             }
         }
         .videos{

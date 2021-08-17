@@ -45,3 +45,15 @@ export function getRandomName() {
     ]
     return names[index]
 }
+
+export function deepClone(source) {
+    const targetObj = source.constructor === Array ? [] : {}; 
+    for (let keys in source) { 
+        if (source[keys] && typeof source[keys] === 'object') { 
+            targetObj[keys] = deepClone(source[keys]);
+        } else { 
+            targetObj[keys] = source[keys];
+        }
+    }
+    return targetObj;
+}
