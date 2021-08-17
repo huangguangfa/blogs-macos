@@ -2,7 +2,7 @@
     <div class="facetime">
         <window v-model:show="show" title="Facetime" width="1000" height="450">
             <div class="facetime-content" v-if="show">
-                <div class="facetime-content-left">
+                <div class="facetime-content-left" v-show="false">
                     <vm-active-user :activeUserList="activeUserList" @callUser="callUser"></vm-active-user>
                 </div>
                 <div class="facetime-content-right">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <!-- 聊天室 -->
-                    <vm-chatroom v-show="callConfig.showChatroom"></vm-chatroom>
+                    <vm-chatroom v-show="callConfig.showChatroom" @newMessage="newMessage" :MessageList="chatroomConfig.messageList"></vm-chatroom>
                 </div>
             </div>
         </window>
@@ -57,6 +57,15 @@
             let rtc = SkyRTC();
             let user = reactive({ uid: null,  uname:null });
             let activeUserList = ref([]);
+            let chatroomConfig = reactive({
+                messageList:[
+                    {
+                        type:'left',
+                        mes_content:'我是测试聊天数据',
+                        isHaveRead:true
+                    }
+                ]
+            })
             let callConfig = reactive({
                 //是否初始化了webrtc
                 isStartWebRtc:false,
@@ -69,7 +78,7 @@
                 callMobile:null,
                 callName:null,
                 //是否显示聊天
-                showChatroom:false
+                showChatroom:true
             })
            
             /**********************************************************/
@@ -123,7 +132,7 @@
 
 
             /**********************************************************/
-            /*                   业务逻辑                               */
+            /*                   业务逻辑                              */
             /**********************************************************/
 
             watch( () => props.show ,status => {
@@ -182,6 +191,9 @@
                 const { showChatroom } = callConfig;
                 callConfig.showChatroom = !showChatroom
             }
+            function newMessage(data){
+                chatroomConfig.messageList.push(data)
+            }
 
             return {
                 local_video_dom,
@@ -190,12 +202,14 @@
                 user,
                 callConfig,
                 showCallInfo,
+                chatroomConfig,
 
                 callUser,
                 getCurrentSystemUserInfo,
                 answerCall,
                 webrtcStarter,
-                handleChatroomStatus
+                handleChatroomStatus,
+                newMessage
             }
         }
     }
