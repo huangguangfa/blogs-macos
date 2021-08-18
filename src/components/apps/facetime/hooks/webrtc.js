@@ -105,7 +105,7 @@ const SkyRTC = function () {
                 //添加IEC
                 exc_type === "ice" && that.receiveIce(data);
                 //呼叫监听
-                exc_type === 'call' && that.emit('call',data)
+                exc_type === 'call' && that.emit('call',data);
             }
             that.emit("socket_receive_message", message, socket );
         });
@@ -270,8 +270,9 @@ const SkyRTC = function () {
     };
     //关闭视频流
     skyrtc.prototype.closeVideoConnection = function () {
-        console.log(gThat.localMediaStream)
-        gThat && gThat.localMediaStream.removeTrack()
+        gThat && gThat.localMediaStream.getTracks().forEach( track => {
+            track.stop();
+        });
     };
 
     /***********************数据通道连接部分*****************************/

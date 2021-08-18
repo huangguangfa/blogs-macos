@@ -12,9 +12,9 @@
                         @getUserInfo="getCurrentSystemUserInfo">
                     </vm-get-user>
                     <div class="videos">
-                        <video class="remote-video" ref="remote_video_dom"></video>
+                        <video class="remote-video" poster="https://www.huangguangfa.cn/static/media/user.f7e06438.png" ref="remote_video_dom"></video>
                         <video class="local-video" ref="local_video_dom"></video>
-                        <!-- 是否有人拨号-->
+                        <!-- 是否有人拨号 -->
                         <div class="call_btn" v-if="callConfig.isOpenCall">
                             <div class="call-info">
                                 <span v-if="showCallInfo.isShowDes">正在呼叫：</span>
@@ -22,7 +22,7 @@
                                 <span>{{ callConfig.callMobile }}</span>
                             </div>
                             <div class="call_btns justify-space-around">
-                                <i class="iconfont macos-guaduan call_btn_common"></i>
+                                <i class="iconfont macos-guaduan call_btn_common" @click="endCall"></i>
                                 <i v-if="showCallInfo.isShowAnswer" class="iconfont macos-shipindianhua call_btn_common" @click="answerCall"></i>
                                 <i v-if="callConfig.isStartCall" class="iconfont macos-liaotian call_btn_common" @click="handleChatroomStatus">
                                     <span v-show="callConfig.unreadMesNumber > 0" class="unreadMesNumber">{{ callConfig.unreadMesNumber }}</span>
@@ -159,9 +159,8 @@
                 rtc.connect(uid, uname);
             }
             function webrtcClose(){
-                rtc.closePeerConnection();
+                // rtc.closePeerConnection();
                 rtc.closeVideoConnection()
-                callConfig.isStartWebRtc = false;
             }
             function getCurrentSystemUserInfo(userInfo){
                 const { uid, uname } = userInfo;
@@ -169,7 +168,7 @@
                 user.uname = uname;
             }
             function endCall(){
-
+                webrtcClose()
             }
             function startCall(uid,uname,isCaller = false){
                 callConfig.callMobile = uid;
@@ -232,7 +231,8 @@
                 answerCall,
                 webrtcStarter,
                 handleChatroomStatus,
-                newMessage
+                newMessage,
+                endCall
             }
         }
     }
