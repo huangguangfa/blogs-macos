@@ -12,8 +12,8 @@
                         @getUserInfo="getCurrentSystemUserInfo">
                     </vm-get-user>
                     <div class="videos">
-                        <video class="remote-video" poster="https://www.huangguangfa.cn/static/media/user.f7e06438.png" ref="remote_video_dom"></video>
-                        <video class="local-video" ref="local_video_dom"></video>
+                        <video class="remote-video" poster="../../../assets/images/facetime/video_default.png" ref="remote_video_dom"></video>
+                        <video class="local-video" poster="../../../assets/images/facetime/video_default.png" ref="local_video_dom"></video>
                         <!-- 是否有人拨号 -->
                         <div class="call_btn" v-if="callConfig.isOpenCall">
                             <div class="call-info">
@@ -99,6 +99,7 @@
                 const { sender, data } = serve_data;
                 //派发当前活跃用户列表
                 sender === 'system' && getActiveUserList(data);
+                //接收文字消息
                 sender === 'exc' && data.exc_type === "communication" && newMessage(data);
                 console.log('消息',sender,data)
             });
@@ -109,7 +110,11 @@
                 if( isOpenCall ) return;
                 const { switch_status, uid, uname } = data;
                 switch_status && startCall(uid,uname);
-                console.log('通话邀请',data)
+            })
+            //挂断电话
+            rtc.on('endCall', data =>{
+                console.log('挂断电话');
+                endCall( false );
             })
             //收到对方音频/视频流数据
             rtc.on("remote_streams", function (stream) {
@@ -119,13 +124,10 @@
                     rtc.attachStream(stream, remote_video, false)
                 }
             });
-
             //创建本地视频流失败
             rtc.on("stream_create_error", function () {
                 console.log("创建视频流失败");
             });
-
-
 
             /**********************************************************/
             /*                   业务逻辑                              */
@@ -159,16 +161,19 @@
                 rtc.connect(uid, uname);
             }
             function webrtcClose(){
-                // rtc.closePeerConnection();
-                rtc.closeVideoConnection()
+                rtc.closePeerConnection();
+                rtc.closeVideoConnection();
             }
             function getCurrentSystemUserInfo(userInfo){
                 const { uid, uname } = userInfo;
                 user.uid = uid;
                 user.uname = uname;
             }
-            function endCall(){
-                webrtcClose()
+            function endCall( isNotify = true ){
+                const { callMobile } = callConfig;
+                isNotify && rtc.closePeerConnection();
+                isNotify && rtc.sendMessage(callMobile,null, 'endCall');
+                initPageStatus();
             }
             function startCall(uid,uname,isCaller = false){
                 callConfig.callMobile = uid;
@@ -176,6 +181,17 @@
                 callConfig.isCaller = isCaller;
                 callConfig.isOpenCall = true;
             }
+            function initPageStatus(){
+                remote_video_dom.value.load();
+                callConfig.isOpenCall = false;
+                callConfig.isStartCall = false;
+                callConfig.isCaller = false;
+                callConfig.callMobile = null;
+                callConfig.callName = null;
+                callConfig.showChatroom = false;
+                callConfig.unreadMesNumber = 0;
+            }
+
             function answerCall(){
                 const { callMobile } = callConfig;
                 rtc.sendOffers(callMobile);

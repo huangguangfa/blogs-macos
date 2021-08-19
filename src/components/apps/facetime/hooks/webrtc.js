@@ -106,6 +106,7 @@ const SkyRTC = function () {
                 exc_type === "ice" && that.receiveIce(data);
                 //呼叫监听
                 exc_type === 'call' && that.emit('call',data);
+                exc_type === 'endCall' && that.emit('endCall',data);
             }
             that.emit("socket_receive_message", message, socket );
         });
@@ -159,7 +160,8 @@ const SkyRTC = function () {
         let that = this;
         gThat = this;
         options.video = !!options.video;
-        options.audio = !!options.audio;
+        // options.audio = !!options.audio;
+        options.audio = false;
         if (getUserMedia) {
             // 调用用户媒体设备, 访问摄像头
             getUserMediaFun(options, createStreamSuccess, createStreamError);
@@ -236,7 +238,6 @@ const SkyRTC = function () {
             let candidate = evt.candidate
             if( candidate ){
                 that.ICE = candidate;
-                // console.log("ICE信息",that.ICE);
             }
         };
         //rtc连接状态变化
@@ -247,9 +248,7 @@ const SkyRTC = function () {
         this.localPeer.onnegotiationneeded = function(e){
             that.localPeer.createOffer().then( offer => {
                 //设置连接的本地描述发送到信令服务器以便传送到远程方。
-                that.localPeer.setLocalDescription(offer,() =>{
-                    console.log('设置成功desc',offer)
-                })
+                that.localPeer.setLocalDescription(offer,() =>{})
             });
         }
 
@@ -267,6 +266,8 @@ const SkyRTC = function () {
         let peer = this.localPeer;
         if (!peer) return;
         peer.close();
+
+        console.log('111',peer.iceConnectionState)
     };
     //关闭视频流
     skyrtc.prototype.closeVideoConnection = function () {
