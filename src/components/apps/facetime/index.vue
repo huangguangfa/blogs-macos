@@ -157,17 +157,18 @@
             }
             function webrtcStarter(){
                 callConfig.isStartWebRtc = true;
-                const { uid, uname } = user;
-                rtc.connect(uid, uname);
+                const { uid, uname, uavatar } = user;
+                rtc.connect(uid, uname, uavatar );
             }
             function webrtcClose(){
                 rtc.closePeerConnection();
                 rtc.closeVideoConnection();
             }
             function getCurrentSystemUserInfo(userInfo){
-                const { uid, uname } = userInfo;
+                const { uid, uname, uavatar } = userInfo;
                 user.uid = uid;
                 user.uname = uname;
+                user.uavatar = uavatar;
             }
             function endCall( isNotify = true ){
                 const { callMobile } = callConfig;
@@ -211,8 +212,10 @@
             }
             function newMessage(data, islocal = false){
                 const { callMobile, showChatroom, unreadMesNumber } = callConfig;
+                const { uavatar } = user;
                 //本地消息推送
                 if( islocal ){
+                    data.uavatar = uavatar;
                     chatroomConfig.messageList.push(data);
                     //远端推送
                     let clone_data = deepClone(data);
@@ -220,11 +223,12 @@
                     rtc.sendMessage(callMobile,clone_data, 'communication')
                 }else{
                     const { call_uid, call_uname } = data;
-                    const { mes_content, type } = data.data
+                    const { mes_content, type ,uavatar} = data.data
                     let newMes = {
                         isHaveRead:showChatroom,
                         uid:call_uid,
                         uname:call_uname,
+                        uavatar,
                         mes_content,
                         type
                     }

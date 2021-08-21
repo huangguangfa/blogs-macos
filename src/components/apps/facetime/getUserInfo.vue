@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import { getRandomMoble, getRandomName } from "@/utils/utils.js"
+    import { getRandomMoble, getRandomName, getRandomuAvatar } from "@/utils/utils.js"
     import { reactive } from 'vue';
     export default{
         setup(props, { emit }){
@@ -37,6 +37,7 @@
             function resetName(){
                 user.uid = getRandomMoble();
                 user.uname = getRandomName();
+                user.uavatar = getRandomuAvatar();
                 emit('getUserInfo',user)
             }
             function submit(){

@@ -3,9 +3,9 @@
         <div class="chatroom-area">
             <div class="chatroom-area-list" v-if="MessageList.length">
                 <div class="user-common" :class="{ 'justify-flex-end':row.type === 'right' }" v-for="( row, index ) in MessageList" :key="index">
-                    <img v-if="row.type === 'left'" class="user-avatar" src="@/assets/images/common/avatar_defult.png" alt="">
+                    <img v-if="row.type === 'left'" class="user-avatar" :src="row.uavatar" alt="">
                     <div class="content" :class="row.type === 'left' ? 'left-mark' : 'right-mark' "> {{ row.mes_content }} </div>
-                    <img v-if="row.type === 'right'" class="user-avatar me" src="@/assets/images/common/avatar_defult.png" alt="">
+                    <img v-if="row.type === 'right'" class="user-avatar me" :src="row.uavatar" alt="">
                 </div>
             </div>
             <vm-empty v-else text="暂无消息"></vm-empty>

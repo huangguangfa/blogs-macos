@@ -46,6 +46,14 @@ export function getRandomName() {
     return names[index]
 }
 
+/*
+*@param Number NameLength 随机获取头像
+*/
+export function getRandomuAvatar(){
+    let index = Math.floor(Math.random() * (20 - 0)) + 0;
+    return `https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/generateAvatar/${index}.png`
+}
+
 export function deepClone(source) {
     const targetObj = source.constructor === Array ? [] : {}; 
     for (let keys in source) { 

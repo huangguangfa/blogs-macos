@@ -6,10 +6,10 @@ expressWs(router);
 
 const active_user = {};
 router.ws('/webrtc/user', function( ws, req ){
-    const { uid, uname } = req.query;
+    const { uid, uname, uavatar } = req.query;
     console.log('enter',uname);
     if(uid && uname){
-        active_user[uid] = {  ws,uid,uname  }
+        active_user[uid] = {  ws,uid,uname ,uavatar }
         updateActiveUser()
     };
     //接收消息、【保存用户信息】
@@ -46,8 +46,8 @@ function dispatchMessage(ws,data){
 //获取当前活跃人数
 function getActiveUserList(){
     let userList = Object.values(active_user).map( item => {
-        const { uid, uname } = item;
-        return { uid, uname }
+        const { uid, uname, uavatar } = item;
+        return { uid, uname, uavatar }
     })
     return userList;
 }

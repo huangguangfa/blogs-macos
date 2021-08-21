@@ -73,7 +73,8 @@ const SkyRTC = function () {
         };
         this.receiveUser = {
             uid:null,
-            uname:null
+            uname:null,
+            uAvatar:null
         }
     }
 
@@ -82,11 +83,12 @@ const SkyRTC = function () {
 
     /*************************服务器连接部分***************************/
 
-    skyrtc.prototype.connect = function (uid,uname) {
+    skyrtc.prototype.connect = function (uid,uname,uavatar) {
         let socket, that = this; 
-        socket = this.socket = initScoket(uid,uname);
+        socket = this.socket = initScoket(uid,uname,uavatar);
         this.user.uid = uid;
         this.user.uname = uname;
+        this.user.uAvatar = uavatar;
         socket.onopen(function () {
             that.emit("socket_opened", socket);
             that.emit('connected', socket);
