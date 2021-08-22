@@ -11,8 +11,6 @@ export function getRandomMoble() {
 }
 
 
-
-
 /*
 *@param Number NameLength 随机获取名字
 */

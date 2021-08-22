@@ -56,10 +56,6 @@ const SkyRTC = function () {
 
     /*******************基础部分*********************/
     function skyrtc() {
-        //本地media stream
-        this.localMediaStream = null;
-        //所在房间
-        this.room = "";
         //本地WebSocket连接
         this.socket = null;
         //本地相连的peer connection， 
@@ -82,7 +78,6 @@ const SkyRTC = function () {
     skyrtc.prototype = new EventEmitter();
 
     /*************************服务器连接部分***************************/
-
     skyrtc.prototype.connect = function (uid,uname,uavatar) {
         let socket, that = this; 
         socket = this.socket = initScoket(uid,uname,uavatar);
@@ -118,10 +113,8 @@ const SkyRTC = function () {
         });
 
         socket.onclose(function (data) {
-            that.localMediaStream.close();
             that.emit('socket_closed', socket);
         })
-        
     };
 
 
@@ -157,7 +150,7 @@ const SkyRTC = function () {
             gThat.emit("stream_create_error", error);
         }
     }
-
+    //创建本地视频流
     skyrtc.prototype.createStream = function (options) {
         let that = this;
         gThat = this;
@@ -172,7 +165,7 @@ const SkyRTC = function () {
         }
     };
 
-    // 将流绑定到video标签上用于输出
+    //将流绑定到video标签上用于输出
     skyrtc.prototype.attachStream = function (stream, dom, isSound = false) {
         if (navigator.mediaDevices.getUserMedia) {
             dom.srcObject = stream;
@@ -185,7 +178,7 @@ const SkyRTC = function () {
 
 
     /***********************信令交换部分*******************************/
-    /******* SDP 信息交换 ******/
+    /******* SDP信息交换 ******/
     //向用户发送Offer类型信令
     skyrtc.prototype.sendOffers = function ( uid ) {
         this.isCalls = true;
@@ -220,10 +213,9 @@ const SkyRTC = function () {
         //判断是否是接收方
         this.isCalls === false && this.sendIceData(uid,this.ICE)
     }
-   
-
+    
     /***********************点对点连接部分*****************************/
-    // 呼叫  
+    //呼叫
     skyrtc.prototype.call = function(call_uid){
         const { uid, uname } = this.user;
         call_uid && this.sendMessage(call_uid, { switch_status:true, uid,uname },'call')
@@ -234,7 +226,7 @@ const SkyRTC = function () {
         let that = this;
         this.localPeer = new PeerConnection(iceServer);
         //本地数据流添加到PeerConnection
-        gThat && this.localPeer.addStream(gThat.localMediaStream);
+        gThat?.localMediaStream.getTracks().forEach(track => this.localPeer.addTrack(track, gThat.localMediaStream));
         //ICE信息
         this.localPeer.onicecandidate = function (evt) {
             let candidate = evt.candidate
@@ -244,12 +236,12 @@ const SkyRTC = function () {
         };
         //rtc连接状态变化
         this.localPeer.oniceconnectionstatechange = (evt) => {
-            console.log('ICE connection state change: ' + evt.target.iceConnectionState);
+            console.log('ICE连接状态: ' + evt.target.iceConnectionState);
         };
         
         this.localPeer.onnegotiationneeded = function(e){
             that.localPeer.createOffer().then( offer => {
-                //设置连接的本地描述发送到信令服务器以便传送到远程方。
+                //设置连接的本地描述发送到信令服务器以便传送到远程方
                 that.localPeer.setLocalDescription(offer,() =>{})
             });
         }
@@ -264,18 +256,27 @@ const SkyRTC = function () {
     };
 
     //关闭PeerConnection连接
-    skyrtc.prototype.closePeerConnection = function () {
-        let peer = this.localPeer;
-        if (!peer) return;
-        peer.close();
-
-        console.log('111',peer.iceConnectionState)
+    skyrtc.prototype.closePeerConnection = function ( restart = false ) {
+        if (!this.localPeer) return;
+        this.localPeer.close();
+        this.initStatus();
+        restart && this.createPeerConnection()
     };
+    skyrtc.prototype.initStatus = function(){
+        this.localPeer = null;
+        this.isCalls = false;
+        this.receiveUser = {
+            uid:null,
+            uname:null,
+            uAvatar:null
+        }
+    }
     //关闭视频流
     skyrtc.prototype.closeVideoConnection = function () {
         gThat && gThat.localMediaStream.getTracks().forEach( track => {
             track.stop();
         });
+        gThat = null;
     };
 
     /***********************数据通道连接部分*****************************/

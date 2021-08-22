@@ -41,10 +41,10 @@
 <script>
     import { ref, watch, reactive, computed  } from "vue";
     import { deepClone } from "@/utils/utils.js"
-    import SkyRTC from "./hooks/webrtc.js"
-    import chatroom from "./chatroom.vue"
-    import activeUser from "./activeUser.vue"
-    import getUser from "./getUserInfo.vue"
+    import SkyRTC from "./hooks/webrtc.js";
+    import chatroom from "./chatroom.vue";
+    import activeUser from "./activeUser.vue";
+    import getUser from "./getUserInfo.vue";
     export default{
         components:{
             vmChatroom:chatroom,
@@ -58,7 +58,7 @@
             let local_video_dom = ref(null)
             let remote_video_dom = ref(null)
             let rtc = SkyRTC();
-            let user = reactive({ uid: null,  uname:null });
+            let user = reactive({ uid: null,  uname:null, uavatar:null });
             let activeUserList = ref([]);
             let chatroomConfig = reactive({
                 messageList:[]
@@ -97,11 +97,11 @@
             //接收scoket消息
             rtc.on("socket_receive_message", function (serve_data) {
                 const { sender, data } = serve_data;
+                console.log('消息',sender,data)
                 //派发当前活跃用户列表
                 sender === 'system' && getActiveUserList(data);
                 //接收文字消息
                 sender === 'exc' && data.exc_type === "communication" && newMessage(data);
-                console.log('消息',sender,data)
             });
             //新的通话邀请
             rtc.on('call', data =>{
@@ -113,16 +113,15 @@
             })
             //挂断电话
             rtc.on('endCall', data =>{
-                console.log('挂断电话');
-                endCall( false );
+                console.log('对方挂断电话');
+                endCall(false);
             })
             //收到对方音频/视频流数据
             rtc.on("remote_streams", function (stream) {
                 let remote_video = remote_video_dom.value;
-                if (!remote_video.srcObject || remote_video.srcObject.id !== stream.id) {
-                    callConfig.isStartCall = true;
-                    rtc.attachStream(stream, remote_video, false)
-                }
+                callConfig.isStartCall = true;
+                rtc.attachStream(stream, remote_video, false)
+                remote_video.play();
             });
             //创建本地视频流失败
             rtc.on("stream_create_error", function () {
@@ -161,8 +160,8 @@
                 rtc.connect(uid, uname, uavatar );
             }
             function webrtcClose(){
-                rtc.closePeerConnection();
                 rtc.closeVideoConnection();
+                rtc.closePeerConnection();
             }
             function getCurrentSystemUserInfo(userInfo){
                 const { uid, uname, uavatar } = userInfo;
@@ -172,9 +171,10 @@
             }
             function endCall( isNotify = true ){
                 const { callMobile } = callConfig;
-                isNotify && rtc.closePeerConnection();
                 isNotify && rtc.sendMessage(callMobile,null, 'endCall');
                 initPageStatus();
+                //关闭 && 重置 peer
+                rtc.closePeerConnection(true);
             }
             function startCall(uid,uname,isCaller = false){
                 callConfig.callMobile = uid;
@@ -269,18 +269,7 @@
                 .macos-guaduan{background: red;}
                 .macos-shipindianhua{background: #5bc24f;}
                 .macos-liaotian{background: #5bc24f; position: relative;
-                    .unreadMesNumber{position: absolute; right: -3px; top: -4px; color: #fff;
-                        z-index: 2;
-                        width: 15px;
-                        height: 15px;
-                        display: block;
-                        line-height: 15px;
-                        background: red;
-                        font-size: 12px;
-                        font-weight: bold;
-                        text-align: center;
-                        border-radius: 100%;
-                    }
+                    .unreadMesNumber{position: absolute; right: -3px; top: -4px; color: #fff; z-index: 2; width: 15px; height: 15px; display: block; line-height: 15px;background: red; font-size: 12px; font-weight: bold; text-align: center; border-radius: 100%;}
                 }
             }
         }

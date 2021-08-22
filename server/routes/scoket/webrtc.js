@@ -7,7 +7,7 @@ expressWs(router);
 const active_user = {};
 router.ws('/webrtc/user', function( ws, req ){
     const { uid, uname, uavatar } = req.query;
-    console.log('enter',uname);
+    console.log('连接',uname);
     if(uid && uname){
         active_user[uid] = {  ws,uid,uname ,uavatar }
         updateActiveUser()
@@ -21,6 +21,7 @@ router.ws('/webrtc/user', function( ws, req ){
     });
     //监听关闭、【删除内存中用户】
     ws.on("close", function(w) {
+        console.log('断开',uname)
         delete active_user[uid];
         updateActiveUser()
     });
