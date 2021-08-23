@@ -29,9 +29,9 @@ export const initPageConfig = [
                 web_url:"https://www.bilibili.com"
             },
             {
-                img_url:"/src/assets/images/safari-img/bilibili.png",
-                name:"TinyPNG",
-                web_url:"https://tinypng.com"
+                img_url:"/src/assets/images/safari-img/nodejs.jpeg",
+                name:"NodeJS",
+                web_url:"https://nodejs.org/docs/latest-v15.x/api/"
             }
         ]
     }
