@@ -26,6 +26,7 @@
     import facetime from "@/components/apps/facetime/index.vue";
     import termial from "@/components/apps/Terminal/index.vue";
     import maps from "@/components/apps/maps/index.vue";
+    import { useStore } from 'vuex'
     export default{
         components:{
             appSafari:safari,
@@ -35,6 +36,8 @@
             appMpas:maps
         },
         setup(){
+            const store = useStore();
+            console.log('store',store)
             const TABABR_NAVIGATIONS = reactive(TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(TABABR_NAVIGATIONS.length).fill(50));
             const dockStyle = computed( () =>{

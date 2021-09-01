@@ -134,7 +134,12 @@
 
             watch( () => props.show ,status => {
                 emit('update:show',status)
-                status === false && webrtcClose()
+                if(status === false){
+                    webrtcClose()
+                }else{
+                    callConfig.isStartWebRtc = false;
+                }
+                console.log(status,'--------')
             });
 
             let showCallInfo = computed( () =>{
