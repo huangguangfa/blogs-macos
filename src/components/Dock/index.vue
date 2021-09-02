@@ -19,7 +19,6 @@
 </template>
 
 <script>
-    import { TABABR_NAVIGATION } from "@/config/dock.config.js";
     import { reactive, computed } from "vue";
     import safari from "@/components/apps/safari/index.vue";
     import vscode from "@/components/apps/vscode/index.vue";
@@ -37,8 +36,7 @@
         },
         setup(){
             const store = useStore();
-            console.log('store',store)
-            const TABABR_NAVIGATIONS = reactive(TABABR_NAVIGATION);
+            const TABABR_NAVIGATIONS = reactive(store.getters.TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(TABABR_NAVIGATIONS.length).fill(50));
             const dockStyle = computed( () =>{
                 return function(index){

@@ -2,7 +2,8 @@
     <div class="github">
         <window v-model:show="show" title="GitHub">
             <div class="github-content wh100" v-if="show">
-                <iframe style="width:100%;height:100%" src="https://github1s.com/huanggungfa/blogs-macos" frameborder="0"></iframe>
+                <vm-iframe webUrl="https://github1s.com/huanggungfa/blogs-macos"></vm-iframe>
+                <!-- <iframe style="width:100%;height:100%" src="https://github1s.com/huanggungfa/blogs-macos" frameborder="0"></iframe> -->
             </div>
         </window>
     </div>

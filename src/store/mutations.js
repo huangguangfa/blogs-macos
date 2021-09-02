@@ -3,7 +3,8 @@ import {
     SET_FULL_SCREENBAR,
     SET_START_GLOBAL_SEARCH,
     SET_SYSTEM_MINIMIZE_LIST,
-    SET_TABABR_NAVIGATION
+    SET_TABABR_NAVIGATION,
+    SET_SYSTEM_CONFIG
 } from "@/config/store.config.js";
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
     },
     [SET_TABABR_NAVIGATION](state, list){
         state.TABABR_NAVIGATION = list;
+    },
+    [SET_SYSTEM_CONFIG](state, data){
+        state.SYSTEM_CONFIG = data;
     }
 }
 

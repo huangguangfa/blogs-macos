@@ -28,9 +28,9 @@
                                     <i class="iconfont macos-wifi" ></i>
                                     <p>Keyboard Brightness</p>
                                 </div>
-                                <div class="right-mode-bottom-item bg-radius-com">
-                                    <i class="iconfont macos-wifi" ></i>
-                                    <p>Keyboard Brightness</p>
+                                <div @click="handleFullScreens" class="right-mode-bottom-item bg-radius-com" :class="{'select':isFullscreen}">
+                                    <i class="iconfont macos-quanping1" ></i>
+                                    <p>Enter Fullscreen</p>
                                 </div>
                             </div>
                         </div>
@@ -50,10 +50,14 @@
 </template>
 
 <script>
-    import { reactive, computed, onUnmounted  } from "vue"
+    import { reactive, computed, onUnmounted, onMounted } from "vue";
+    import { useStore } from "vuex"
+    import { handleFullScreen } from "@/utils/index";
+    import { SET_SYSTEM_CONFIG } from "@/config/store.config.js"
     let intervalId = null;
     export default{
         setup(){
+            const store = useStore()
             let dates = reactive({
                 date:new Date()
             })
@@ -96,12 +100,33 @@
             intervalId = setInterval(() => {
                 dates.date = new Date()
             }, 60 * 1000);
+            let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
             //销毁
             onUnmounted( () =>{ clearInterval(intervalId) })
+            onMounted( () =>{
+                //监听全屏变化
+                document.addEventListener('fullscreenchange',() =>{
+                    //取消全屏的时候
+                    if ( !document.fullscreenElement ){
+                        handleFullScreens();
+                    }
+                })
+            })
+            //全屏
+            function handleFullScreens(){
+                handleFullScreen(isFullscreen.value).then( res =>{
+                    store.commit(SET_SYSTEM_CONFIG,{
+                        ...store.getters.SYSTEM_CONFIG,
+                        isFullscreen:!res
+                    })
+                });
+            }
             return {
                 dates,
                 datesResult,
-                options
+                options,
+                isFullscreen,
+                handleFullScreens
             }
         },
         
@@ -132,6 +157,7 @@
                 background: #fff;
                 box-shadow: 0 0 5px 0 rgba(0, 0, 0,.25);
                 border-radius: 12px;
+                cursor: pointer;
             }
             .controlcenter-content{
                 position: fixed;
@@ -202,5 +228,8 @@
         .systemTime{
             font-size: 12px;color: #fff;
         }
+    }
+    .select{
+        background: rgb(59,130,246) !important;color: #FFF;
     }
 </style>

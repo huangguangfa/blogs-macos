@@ -5,7 +5,6 @@ export function initGlobalDirectives(app){
         clickoutside, //v-clickoutside
     };
     Object.keys(directivesList).map( key => {
-        console.log(key)
         app.directive( key, directivesList[ key ] );
     })
 }

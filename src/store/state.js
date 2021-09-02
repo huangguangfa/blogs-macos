@@ -4,7 +4,10 @@ const state = {
     FULLSCREENBAR:false, //是否全屏以及显示bar和最顶部topbar
     STARTGLOBALSEARCH:false , //开启全局搜索
     SYSTEMMINIMIZELIST:['1'], // 当前系统最小化窗口列表、存放的是窗口ID
-    TABABR_NAVIGATION:TABABR_NAVIGATION
+    TABABR_NAVIGATION:TABABR_NAVIGATION,
+    SYSTEM_CONFIG:{  //系统配置
+        isFullscreen:false
+    }
 }
 
 export default state;
