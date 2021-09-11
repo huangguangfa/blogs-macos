@@ -1,7 +1,7 @@
-import vmwindow from "./window/index.vue";
-import vmloading from "./loading/index.vue";
-import vmiframe from "./iframe/index.vue";
-import vmempty from "./empty/index.vue";
+import vmwindow from "./globalComponents/window/index.vue";
+import vmloading from "./globalComponents/loading/index.vue";
+import vmiframe from "./globalComponents/iframe/index.vue";
+import vmempty from "./globalComponents/empty/index.vue";
 export const initGlobalComponent = function (app){
     let compnentsList = [ vmwindow, vmloading, vmiframe, vmempty ];
     for(let i=0,len=compnentsList.length; i<len; i++){
