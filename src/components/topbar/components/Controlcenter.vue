@@ -107,7 +107,7 @@
                 //监听全屏变化
                 document.addEventListener('fullscreenchange',() =>{
                     //取消全屏的时候
-                    if ( !document.fullscreenElement ){
+                    if ( !document.fullscreenElement && isFullscreen.value === true ){
                         handleFullScreens();
                     }
                 })
