@@ -1,8 +1,8 @@
 <template>
     <div class="controlcenter">
-        <div class="controlcenter-img">
-            <img src="@/assets/images/topbar/controlcenter.png" alt="">
-            <div class="controlcenter-content">
+        <div class="controlcenter-img" :class="{ 'selectControlcenter':isShowControlcenter }">
+            <img src="@/assets/images/topbar/controlcenter.png" alt="" @click="handleShowControlcenter(true)" v-clickoutside="handleShowControlcenter">
+            <div class="controlcenter-content" v-show="isShowControlcenter">
                 <div class="controlcenter-content-options">
                     <div class="options-content">
                         <div class="options-left bg-radius-com">
@@ -101,6 +101,7 @@
                 dates.date = new Date()
             }, 60 * 1000);
             let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
+            let isShowControlcenter = computed(() => store.getters.SYSTEM_CONFIG.isShowControlcenter)
             //销毁
             onUnmounted( () =>{ clearInterval(intervalId) })
             onMounted( () =>{
@@ -112,6 +113,7 @@
                     }
                 })
             })
+            // methods
             //全屏
             function handleFullScreens(){
                 handleFullScreen(isFullscreen.value).then( res =>{
@@ -121,12 +123,21 @@
                     })
                 });
             }
+            function handleShowControlcenter(status){
+                store.commit(SET_SYSTEM_CONFIG,{
+                    ...store.getters.SYSTEM_CONFIG,
+                    isShowControlcenter:status
+                })
+            }
+
             return {
                 dates,
                 datesResult,
                 options,
                 isFullscreen,
-                handleFullScreens
+                handleFullScreens,
+                isShowControlcenter,
+                handleShowControlcenter
             }
         },
         
@@ -218,10 +229,10 @@
                         padding-top: 10px;
                         box-sizing: border-box;
                     }
-                    
                 }
             }
         }
+        .selectControlcenter{background-color: rgba(255,255,255,0.3);}
         .siri{
             width: 15px;height: 15px;
         }
