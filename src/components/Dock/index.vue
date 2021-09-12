@@ -68,6 +68,9 @@
             },
             openWindows(index){
                 this.TABABR_NAVIGATIONS[index].desktop = true;
+                if( [5].includes(index) ){
+                    this.$message()
+                }
             }
         }
     }

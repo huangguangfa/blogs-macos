@@ -11,7 +11,7 @@ import Topbar from "@/components/topbar/index.vue";
 export default{
     components:{
         VmDock:Dock,
-        VmTopbar:Topbar
+        VmTopbar:Topbar,
     }
 }
 </script>
