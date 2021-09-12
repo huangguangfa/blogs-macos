@@ -1,7 +1,7 @@
 <template>
-    <transition name="el-message-fade" @after-leave="handleAfterLeave" appear>
-        <div class="windowTips" v-show="isShow">
-            操作失败！
+    <transition name="tips-message-fade" @after-leave="handleAfterLeave" appear>
+        <div class="windowTips" :class="[ `windowTips-${type}` ]" v-show="isShow">
+            {{ content }}
         </div>
     </transition>
 </template>
@@ -10,9 +10,6 @@
 import { getCurrentInstance, ref } from 'vue'
 export default {
     props: {
-        message: {
-            type: [String, Object]
-        },
         type: {
             type: String,
             defalut: 'info',
@@ -20,12 +17,12 @@ export default {
                 return ['success', 'warning', 'info', 'error'].includes(val)
             }
         },
-        duration: Number
+        duration: Number,
+        content:String
     },
     setup(props,{ emit }) {
         const instance = getCurrentInstance()
         const isShow = ref(true)
-
         let timer
         function delayClose() {
             if (props.duration > 0) {
@@ -39,14 +36,10 @@ export default {
             emit('close', instance)
             isShow.value = false
         }
-
-
         function handleAfterLeave() {
             instance.vnode.el.parentElement?.removeChild(instance.vnode.el)
         }
-
         delayClose()
-        
         return {
             isShow,
 
@@ -63,6 +56,10 @@ export default {
         width: 100vw;height: 40px;top: 0;left:0;position: fixed;z-index: 9999999;background: red;text-align: center;line-height: 40px;
         font-size: 14px;color: #fff;transition: opacity 0.5s; overflow: hidden;
     }
-    .el-message-fade-enter-from,
-    .el-message-fade-leave-to { opacity: 0; }
+    .windowTips-info{background: rgb(64, 158, 255);}
+    .windowTips-success{background: #529b2e;}
+    .windowTips-warning{background: #e6a23c;}
+    .windowTips-error{background: #f56c6c;}
+    .tips-message-fade-enter-from,
+    .tips-message-fade-leave-to { opacity: 0; }
 </style>

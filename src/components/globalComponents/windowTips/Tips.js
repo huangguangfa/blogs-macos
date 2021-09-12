@@ -30,7 +30,7 @@ function createMessageComponentByOpts(opts) {
 
 function mergeOptions(opts, type = 'info') {
     const defaultOptions = {
-      duration: 3000,
+      duration: 2000,
       type
     }
     return Object.assign({}, defaultOptions, opts)

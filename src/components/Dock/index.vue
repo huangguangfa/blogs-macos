@@ -68,8 +68,10 @@
             },
             openWindows(index){
                 this.TABABR_NAVIGATIONS[index].desktop = true;
-                if( [5].includes(index) ){
-                    this.$message()
+                if( [0,1,2,5].includes(index) ){
+                    this.$message.error({
+                        content:'正在开发中....😊'
+                    })
                 }
             }
         }
