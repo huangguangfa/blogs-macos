@@ -5,7 +5,7 @@ const SkyRTC = function () {
     let PeerConnection = (window.PeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection ||
         window.mozRTCPeerConnection);
     let getUserMedia = (navigator.getUserMedia ||//旧版API
-        navigator.mediaDevices.getUserMedia ||//最新的标准API
+        navigator.mediaDevices?.getUserMedia ||//最新的标准API
         navigator.webkitGetUserMedia ||  //webkit核心浏览器
         navigator.mozGetUserMedia ||     //firfox浏览器
         navigator.msGetUserMedia
