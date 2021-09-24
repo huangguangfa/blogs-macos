@@ -34,30 +34,14 @@
 <script>
 import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
 import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
-import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
-import store from "@/store/index"
 import { SET_WINDOW_ID, SET_SYSTEM_MINIMIZE_LIST, SET_FULL_SCREENBAR } from "@/config/store.config.js";
+import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
+import { props } from "./props";
+import store from "@/store/index";
 let id = 0;
 export default{
     name:"window",
-    props: {
-        show: {
-            type:Boolean,
-            default:true
-        },
-        title:{
-            type:String,
-            default:'bar'
-        },
-        width:{
-            type:[Number,String],
-            default:635,
-        },
-        height:{
-            type:[Number,String],
-            default:400,
-        }
-    },
+    props,
     setup(props,{ emit }){
         let ref_windows = reactive({ dom:null });
         let ref_bar = ref(null);

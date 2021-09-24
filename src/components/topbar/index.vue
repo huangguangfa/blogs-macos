@@ -19,7 +19,7 @@
     import Wifi from "./components/Wifi.vue";
     import Search from "./components/Search.vue";
     import Controlcenter from "./components/Controlcenter.vue";
-    import globalSearch from "@/components/global-search/index.vue"
+    import globalSearch from "@/components/search/index.vue"
     import { useStore } from "vuex";
     import { computed } from "vue"
     export default{
