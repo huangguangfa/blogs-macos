@@ -8,7 +8,7 @@ const cors = function(req,res,next){
     if (req.method.toLowerCase() == 'options')
         res.send(200);  //让options尝试请求快速结束
     else
-        next();
+    next();
 }
 
 module.exports = cors;

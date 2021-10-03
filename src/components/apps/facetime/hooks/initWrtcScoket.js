@@ -1,8 +1,7 @@
 import scoket from "@/services/scoket/index.js";
-import { wrtcScoketHost } from "@/config/service.config.js";
+import { scoketHost } from "@/config/service.config.js";
 export function initScoket(uid, uname, uavatar){
-    const url = `${wrtcScoketHost}?uid=${uid}&uname=${uname}&uavatar=${uavatar}`
-
+    const url = `${scoketHost}/scoket/webrtc/user?uid=${uid}&uname=${uname}&uavatar=${uavatar}`
     return new scoket({
         //网址
         url,

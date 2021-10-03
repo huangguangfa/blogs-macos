@@ -1,7 +1,7 @@
 import { Terminal } from 'xterm';
 import { AttachAddon } from 'xterm-addon-attach'
-import axios from "axios";
-const socketURL = "ws://106.54.70.48:4000/socket/";
+import { getTtermId } from "@/services/api/xterm.js"
+import { scoketHost } from "@/config/service.config.js";
 const xtermConfig = {
     cols: 92,
     rows: 22,
@@ -12,7 +12,7 @@ const xtermConfig = {
     screenKeys: true//
 }
 let xterms = null;
-const getSysId = async () => await axios.post("http://106.54.70.48:4000/terminal").then((res) => res.data) .catch((err) => { throw new Error(err); });
+const getSysId = async () => await getTtermId().catch((err) => { throw new Error(err); });
 export async function initXterm(){
     xterms = new Terminal(xtermConfig);
     let terminalContainer = document.getElementById('xterm');
@@ -24,7 +24,7 @@ export async function initXterm(){
     xterms.writeln('[root@VM-0-8-centos ~]# ');
     xterms.writeln('');
     const pid = await getSysId(),
-          ws = new WebSocket(socketURL + pid),
-          attachAddon = new AttachAddon(ws);
+        ws = new WebSocket(`${scoketHost}/xterm/app/${pid}`),
+        attachAddon = new AttachAddon(ws);
     xterms.loadAddon(attachAddon);
 }   

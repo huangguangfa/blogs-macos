@@ -1,6 +1,6 @@
 <template>
     <div class="empty">
-        <img draggable="false" src="../../assets/images/empty/empty.png" alt="">
+        <img draggable="false" src="@/assets/images/empty/empty.png" alt="">
         <div class="empyt-text">{{  empytText }}</div>
     </div>
 </template>
