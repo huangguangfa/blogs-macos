@@ -114,6 +114,7 @@
             //挂断电话
             rtc.on('endCall', data =>{
                 console.log('对方挂断电话');
+                chatroomConfig.messageList = []
                 endCall(false);
             })
             //收到对方音频/视频流数据
@@ -177,6 +178,7 @@
             function endCall( isNotify = true ){
                 const { callMobile } = callConfig;
                 isNotify && rtc.sendMessage(callMobile,null, 'endCall');
+                chatroomConfig.messageList = []
                 initPageStatus();
                 //关闭 && 重置 peer
                 rtc.closePeerConnection(true);

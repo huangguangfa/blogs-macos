@@ -1,6 +1,6 @@
 <template>
     <div class="chatroom">
-        <div class="chatroom-area">
+        <div class="chatroom-area" ref="chatroomArea">
             <div class="chatroom-area-list" v-if="MessageList.length">
                 <div class="user-common" :class="{ 'justify-flex-end':row.type === 'right' }" v-for="( row, index ) in MessageList" :key="index">
                     <img v-if="row.type === 'left'" class="user-avatar" :src="row.uavatar" alt="">
@@ -25,13 +25,14 @@
 </template>
 
 <script>
-    import { watch, reactive, ref } from "vue";
+    import { reactive, ref, nextTick } from "vue";
     export default {
         props:{
             MessageList:Array
         },
         setup(props, { emit } ){
             let mes_text = ref(null)
+            const chatroomArea = ref(null)
             let options_config = reactive({
                 icon_list:[
                     {name:'macos-biaoqing'},
@@ -39,7 +40,7 @@
                 ]
             })
             function sendMes(){
-                if( !mes_text.value ) return;
+                if( !mes_text.value.trim() ) return;
                 let mes_data = {
                     type:'right',
                     mes_content:mes_text.value,
@@ -47,7 +48,11 @@
                 }
                 emit('newMessage',mes_data,true);
                 mes_text.value = null;
-                document.getElementById("textareas").innerText = "";
+                document.getElementById("textareas").inner = "";
+                nextTick( () =>{
+                    const chatroomAreaDom = chatroomArea.value;
+                    chatroomAreaDom.scrollTop = chatroomAreaDom.scrollHeight;
+                })
             }
             function changeText(val){
                 mes_text.value = val.target.innerText;
@@ -56,7 +61,8 @@
             return {
                 options_config,
                 mes_text,
-
+                chatroomArea,
+                // methods
                 sendMes,
                 changeText,
             }
