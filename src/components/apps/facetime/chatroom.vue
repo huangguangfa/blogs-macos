@@ -48,7 +48,7 @@
                 }
                 emit('newMessage',mes_data,true);
                 mes_text.value = null;
-                document.getElementById("textareas").inner = "";
+                document.getElementById("textareas").innerText = "";
                 nextTick( () =>{
                     const chatroomAreaDom = chatroomArea.value;
                     chatroomAreaDom.scrollTop = chatroomAreaDom.scrollHeight;

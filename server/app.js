@@ -6,7 +6,6 @@ const indexRouter = require("./routes/index");
 const wbrtcRouter = require("./routes/scoket/webrtc");
 const xtermRouter = require("./routes/scoket/xterm");
 
-
 const app = express();
 app.all("*",cors);
 expressWs(app);

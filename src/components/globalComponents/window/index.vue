@@ -5,6 +5,7 @@
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
         <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
+        
         <div class="window-bar" ref="ref_bar" :class="[ page_config.isFullScreen ? 'barFullScreen barFadeInDownBig box-shadow' : '' ]" v-show="isBarShow">
             <div class="window-bars">
                 <div class="round" 
@@ -19,6 +20,7 @@
                 <div class="bar-title"> {{ title }} </div>
             </slot>
         </div>
+
         <div class="window-content">
             <slot></slot>
         </div>

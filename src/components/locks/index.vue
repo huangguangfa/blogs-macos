@@ -64,10 +64,9 @@
     }
 </script>
 
-
 <style lang="less" scoped>
     .facetime-content-right-userInfo{position: absolute;width: 100%;height: 100%;left: 0;top: 0;background: #fff;z-index: 100;
-        .userInfo{ width: 100%;height: 450px;display: flex;align-items: center;
+        .userInfo{ width: 100%;height: 100%;display: flex;align-items: center;
             img{height: 450px;width: auto;filter: grayscale(30%);}
             .input-userInfo{position: relative;cursor: pointer;
                 .reset-name{position: absolute;right: 30px;top: -10px;font-size: 12px;display:flex;align-items:center;color:#898989;
@@ -90,7 +89,7 @@
                                 background-size: 100% 5px; background-repeat: no-repeat; background-position: center;
                             }
                         }
-                        label{ position: absolute;left: 20px;top: 50%;transform:translate(0,-50%);font-size: 12px;text-align: left;}
+                        label{ position: absolute;left: 20px;top: 50%;transform:translate(0,-50%);font-size: 12px;text-align: left;width: 0;}
                     }
                 }
                 .submit{ border: 1px solid #5bc24f;padding: 0 50px;display: inline-block;line-height: 35px;border-radius: 10px;font-size: 12px;background: #5bc24f;
