@@ -8,7 +8,7 @@
                 <div class="facetime-content-right">
                     <vm-get-user 
                         v-show="!callConfig.isStartWebRtc" 
-                        @webrtcStarter="webrtcStarter"
+                        @submit="webrtcStarter"
                         @getUserInfo="getCurrentSystemUserInfo">
                     </vm-get-user>
                     <div class="videos">
@@ -44,7 +44,7 @@
     import SkyRTC from "./hooks/webrtc.js";
     import chatroom from "./chatroom.vue";
     import activeUser from "./activeUser.vue";
-    import getUser from "./getUserInfo.vue";
+    import getUser from "../../locks/index.vue";
     export default{
         components:{
             vmChatroom:chatroom,

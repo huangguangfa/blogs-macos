@@ -1,27 +1,27 @@
 <template>
     <div class="facetime-content-right-userInfo">
         <div class="userInfo">
-            <img class="userInfo_img" draggable="false" src="../../../assets/images/facetime/login.png" alt="">
+            <img class="userInfo_img" draggable="false" src="@/assets/images/facetime/login.png" alt="">
             <div class="input-userInfo">
-                <div class="reset-name" @click="resetName">
+                <div class="reset-name" @click="resetName" v-if="configInfo.isShowReset">
                     <i class="iconfont macos-zhongzhi"></i>
                     <span>换一个</span>
                 </div>
                 <div class="inputs">
-                    <span class="title">姓名：</span>
+                    <div class="title">{{ configInfo.userLabel }}：</div>
                     <div class="inputs-content">
                         <input v-model="user.uname" type="text">
-                        <label alt="请输入名称" placeholder="请输入名称"></label>
+                        <label :alt="`请输入${configInfo.userLabel}`" :placeholder="`请输入${configInfo.userLabel}`"></label>
                     </div>
                 </div>
                 <div class="inputs">
-                    <span class="title">手机：</span>
+                    <div class="title">{{ configInfo.phoneLabel }}：</div>
                     <div class="inputs-content">
                         <input v-model="user.uid" type="text">
-                        <label alt="请输入手机号" placeholder="请输入手机号"></label>
+                        <label :alt="`请输入${configInfo.phoneLabel}`" :placeholder="`请输入${configInfo.phoneLabel}`"></label>
                     </div>
                 </div>
-                <div class="submit" @click="submit">  提交 </div>
+                <div class="submit" @click="submit"> {{ configInfo.submitText }} </div>
             </div>
         </div>
     </div>
@@ -30,10 +30,20 @@
 <script>
     import { getRandomMoble, getRandomName, getRandomuAvatar } from "@/utils/utils.js"
     import { reactive } from 'vue';
+    import { props } from "./props"
     export default{
+        props,
         setup(props, { emit }){
+            const { isInit, isShowReset, submitText, userLabel, phoneLabel } = props;
             let user = reactive({ uid: null,  uname:null });
-            resetName()
+            const configInfo = {
+                submitText,
+                isShowReset,
+                isInit,
+                userLabel,
+                phoneLabel
+            }
+            isInit && resetName()
             function resetName(){
                 user.uid = getRandomMoble();
                 user.uname = getRandomName();
@@ -41,9 +51,11 @@
                 emit('getUserInfo',user)
             }
             function submit(){
-                emit('webrtcStarter',true)
+                emit('submit',true, user)
             }
             return {
+                configInfo,
+
                 resetName,
                 submit,
                 user
@@ -53,7 +65,7 @@
 </script>
 
 
-<style lang="less">
+<style lang="less" scoped>
     .facetime-content-right-userInfo{position: absolute;width: 100%;height: 100%;left: 0;top: 0;background: #fff;z-index: 100;
         .userInfo{ width: 100%;height: 450px;display: flex;align-items: center;
             img{height: 450px;width: auto;filter: grayscale(30%);}
@@ -62,7 +74,7 @@
                     i{font-size: 15px;margin-right:3px;}
                 }
                 .inputs{width: 100%;display: flex;align-items: center;margin: 20px 0;
-                    .title{font-size: 12px;display: block;width: 40px;}
+                    .title{font-size: 12px;width: 60px;flex-shrink: 0;}
                     .inputs-content{height: 40px;position: relative;
                         input{ box-sizing: border-box;  width: 260px;  height:100%; border: 1px solid #cccccc; border-radius: 6px; background: #fff; resize: none; outline: none;text-indent: 20px;
                             color: #898989;
