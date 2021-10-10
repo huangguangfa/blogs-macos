@@ -14,7 +14,7 @@
 
 .barFadeInDownBig {
   animation-name: fadeInDownBig;
-  animation-duration: 0s;
+  animation-duration: 0.4s;
 }
 
 @keyframes fadeInUp {

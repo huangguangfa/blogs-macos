@@ -1,5 +1,5 @@
 <template>
-    <div class="topbar" :class="{ 'barFadeInDownBig zIndexTop': FULLSCREENBAR === true }">
+    <div class="topbar" :class="[FULLSCREENBAR === true ? 'barFadeInDownBig zIndexTop theme-desktop-bg': 'nofull' ]">
         <div class="topbar-left">
             <vm-about></vm-about>
         </div>
@@ -19,9 +19,9 @@
     import Wifi from "./components/Wifi.vue";
     import Search from "./components/Search.vue";
     import Controlcenter from "./components/Controlcenter.vue";
-    import globalSearch from "@/components/search/index.vue"
+    import globalSearch from "@/components/search/index.vue";
     import { useStore } from "vuex";
-    import { computed } from "vue"
+    import { computed } from "vue";
     export default{
         components:{
             VmAbout:About,
@@ -46,7 +46,6 @@
 <style lang="less">
     .topbar{
         width: 100vw;height: 24px;
-        background: rgba(24,48,87, 0.1);
         backdrop-filter: blur(40px);
         display: flex;
         align-items: center;
@@ -64,4 +63,5 @@
             align-items: center;
         }
     }
+    .nofull{background: rgba(24,48,87, 0.1);}
 </style>
