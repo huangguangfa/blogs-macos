@@ -1,6 +1,6 @@
 <template>
     <div class="iframe_page">
-        <iframe v-show="!loading" ref="iframes" frameborder="0"></iframe>
+        <iframe v-show="!loading" :id="ids" ref="iframes" frameborder="0"></iframe>
         <vm-loading v-if="loading"></vm-loading>
     </div>
 </template>
@@ -10,7 +10,8 @@
     export default{
         name:"vmIframe",
         props:{
-            webUrl:String
+            webUrl:String,
+            ids:String
         },
         setup(props){
             let iframes = ref(null);

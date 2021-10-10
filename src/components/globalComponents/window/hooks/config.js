@@ -68,9 +68,9 @@ export function initWindowStaus(dom,width,height){
     dom.setAttribute('style',newStyle)
 }
 //鼠标松开、清除状态
-export function mouseups(pageConfig){
-    let iframe = document.querySelector('iframe')
-    iframe && (iframe.style['pointer-events'] = 'auto')
+export function mouseups(pageConfig, iframeId){
+    let iframe = document.getElementById(iframeId);
+    iframe && (iframe.style['pointer-events'] = 'auto');
     pageConfig.winBarConfig.winBarStart = false;
     pageConfig.sticksConfig.sticksStart = false;
 }

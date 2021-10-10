@@ -44,7 +44,7 @@ let id = 0;
 export default{
     name:"window",
     props,
-    setup(props,{ emit }){
+    setup(props,{ emit, slots }){
         let ref_windows = reactive({ dom:null });
         let ref_bar = ref(null);
         let page_config = reactive({
@@ -98,13 +98,16 @@ export default{
             props.show && nextTick(() =>{ initWindowStaus( getByIdDom( windowId ),props.width, props.height) })
             //web页面移动
             domEvents.set('mousemove',ev =>{
+                const { winBarConfig:{winBarStart}, sticksConfig:{sticksStart} } = page_config;
                 const { clientY } = ev;
                 page_config.cursorPointerY = clientY < page_config.barHeight;
-                documentMoves(windom,ev,page_config)
+                if( winBarStart ||  sticksStart) {
+                    documentMoves(windom,ev,page_config)
+                };
             });
             //鼠标松开、清除状态
             domEvents.set('mouseup',() =>{
-                mouseups(page_config)
+                mouseups(page_config,props.title)
             })
             addEvents(domEvents)
         })
@@ -139,7 +142,7 @@ export default{
         }
         function windowBarDowStart(e){
             const { clientX, clientY } = e;
-            let iframe = document.querySelector('iframe')
+            let iframe = document.getElementById(props.title);
             iframe && (iframe.style['pointer-events'] = 'none')
             //算出鼠标相对元素的位置
             let disX = clientX - ref_windows.dom.offsetLeft;
@@ -152,8 +155,8 @@ export default{
         }
         function stickDownStart(type,ev){
             const { pageX, pageY } = ev;
-            let iframe = document.querySelector('iframe')
-            iframe && (iframe.style['pointer-events'] = 'none')
+            let iframe = document.getElementById(props.title);
+            iframe && (iframe.style['pointer-events'] = 'none');
             page_config.sticksConfig.sticksStart = true;
             page_config.sticksConfig.pointerX = pageX;
             page_config.sticksConfig.pointerY = pageY;
