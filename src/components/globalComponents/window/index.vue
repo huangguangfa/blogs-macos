@@ -6,7 +6,12 @@
         @mousedown="windowBarDowStart">
         <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
         
-        <div class="window-bar" ref="ref_bar" :class="[ page_config.isFullScreen ? 'barFullScreen barFadeInDownBig box-shadow' : '' ]" v-show="isBarShow">
+        <div class="window-bar" ref="ref_bar" 
+            :class="[ 
+                page_config.isFullScreen && 'barFadeInDownBig box-shadow', 
+                page_config.isFullScreen && isBarShow && 'barFullScreen' 
+            ]" 
+            v-show="isBarShow">
             <div class="window-bars">
                 <div class="round" 
                     v-for="(item,index) in statusLists" 
