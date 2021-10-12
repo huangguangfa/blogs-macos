@@ -12,9 +12,10 @@
                 </li>
             </ul>
             <ul class="minimize justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white">
-                <li class="tabbar-item duration-150 ease-in flex align-items-center justify-flex-end flex-column relative" >
-                    <p class="tabbar-title absolute d-none">Trash</p>
-                    <img class="tabbar-img" src="/src/assets/images/tabbar-navigation/trash.png">
+                <li class="tabbar-item duration-150 ease-in flex align-items-center justify-flex-end flex-column relative" 
+                    v-for="(item,index) in TABABR_MINIMIZE" :key="index">
+                    <p class="tabbar-title absolute d-none">{{ item.title }}</p>
+                    <img class="tabbar-img" :src="item.img">
                 </li>
             </ul>
         </div>
@@ -46,6 +47,7 @@
         setup(){
             const store = useStore();
             const TABABR_NAVIGATIONS = reactive(store.getters.TABABR_NAVIGATION);
+            const TABABR_MINIMIZE = reactive(store.getters.TABABR_MINIMIZE)
             const TABABR_LIST_WIDTH = reactive(Array(TABABR_NAVIGATIONS.length).fill(50));
             const dockStyle = computed( () =>{
                 return function(index){
@@ -56,6 +58,8 @@
                 TABABR_NAVIGATIONS,
                 TABABR_LIST_WIDTH,
                 dockStyle,
+                TABABR_MINIMIZE
+                
             }
         },
         methods:{
@@ -134,6 +138,11 @@
                 position: absolute;
                 top: 7px;left: 10px;
                 border-radius: 10px;
+            }
+            .tabbar-item{
+                .tabbar-title{
+                    top: -40px;
+                }
             }
         }
     }

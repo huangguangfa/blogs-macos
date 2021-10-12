@@ -41,7 +41,7 @@
 <script>
 import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
 import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
-import { SET_WINDOW_ID, SET_SYSTEM_MINIMIZE_LIST, SET_FULL_SCREENBAR } from "@/config/store.config.js";
+import { SET_WINDOW_ID, SET_FULL_SCREENBAR } from "@/config/store.config.js";
 import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
 import { props } from "./props";
 import store from "@/store/index";
@@ -137,8 +137,6 @@ export default{
                 const { width, height, top, left } = ref_windows.dom.style;
                 //保存最小化状态
                 ref_windows.dom.minimize = {  width, height, top, left };
-                let current_minimize_list = [...store.getters.SYSTEMMINIMIZELIST, `window${id}`];
-                store.commit(SET_SYSTEM_MINIMIZE_LIST,current_minimize_list);
                 windowMinimize()
             }
         }
@@ -168,6 +166,7 @@ export default{
             page_config.sticksConfig.sticksType = type;
         }
         function windowMinimize(){
+            
             console.log('最小化')
         }
         function windowFullScreen(){

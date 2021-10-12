@@ -2,9 +2,9 @@ import {
     SET_WINDOW_ID,
     SET_FULL_SCREENBAR,
     SET_START_GLOBAL_SEARCH,
-    SET_SYSTEM_MINIMIZE_LIST,
     SET_TABABR_NAVIGATION,
-    SET_SYSTEM_CONFIG
+    SET_SYSTEM_CONFIG,
+    SET_TABABR_MINIMIZE
 } from "@/config/store.config.js";
 
 const mutations = {
@@ -17,8 +17,8 @@ const mutations = {
     [SET_START_GLOBAL_SEARCH](state, status){
         state.STARTGLOBALSEARCH = status;
     },
-    [SET_SYSTEM_MINIMIZE_LIST](state, list){
-        state.SYSTEMMINIMIZELIST = list;
+    [SET_TABABR_MINIMIZE](state, list){
+        state.TABABR_MINIMIZE = list;
     },
     [SET_TABABR_NAVIGATION](state, list){
         state.TABABR_NAVIGATION = list;
