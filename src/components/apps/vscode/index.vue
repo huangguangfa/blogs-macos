@@ -13,9 +13,9 @@
 </template>
 
 <script>
-    import { watch  } from "vue"
+    import { watch  } from "vue";
     import login from "../../locks/index.vue";
-    import { ref, getCurrentInstance } from "vue"
+    import { ref, getCurrentInstance } from "vue";
     export default{
         components:{
             vmlogin:login
@@ -30,7 +30,7 @@
 
             function loginVscode(_,info){
                 const { uid, uname } = info;
-                if( uid === 'guangfa1234' && uname === 'gf' ){
+                if( uid === 'guangfa123' && uname === 'gf' ){
                     localStorage.setItem("isLoginVscode",true)
                     isLoginVscode.value = true;
                 }else{

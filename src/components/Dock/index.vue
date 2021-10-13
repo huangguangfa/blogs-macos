@@ -125,7 +125,7 @@
             border-bottom: transparent;
             backdrop-filter: blur(0px);
             position: relative;
-            img{width: 50px;height: 50px;}
+            .tabbar-img{width: 40px;height: 50px; transition-timing-function: cubic-bezier(0.4, 0, 1, 1);}
             &::after{
                 content:"";
                 width: 2px;
