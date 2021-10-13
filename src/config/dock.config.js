@@ -62,3 +62,13 @@ export const TABABR_NAVIGATION = [
         img: "/src/assets/images/tabbar-navigation/github.png"
     }
 ]
+
+// 最小化活动列表
+export const TABABR_MINIMIZE = [
+    {
+        id: "Trash",
+        title: "Trash",
+        desktop: false,
+        img:"/src/assets/images/tabbar-navigation/trash.png"
+    },
+]
