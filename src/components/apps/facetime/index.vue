@@ -1,6 +1,6 @@
 <template>
     <div class="facetime">
-        <window v-model:show="show" title="Facetime" width="1000" height="450">
+        <window v-model:show="show" title="Facetime" width="1000" height="450" :appInfo="appInfo">
             <div class="facetime-content" v-if="show">
                 <div class="facetime-content-left">
                     <vm-active-user :activeUserList="activeUserList" @callUser="callUser"></vm-active-user>
@@ -52,7 +52,8 @@
             vmGetUser:getUser
         },
         props:{
-            show:Boolean
+            show:Boolean,
+            appInfo:Object
         },
         setup(props, { emit }){
             let local_video_dom = ref(null)

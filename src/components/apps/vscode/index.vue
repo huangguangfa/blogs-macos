@@ -1,6 +1,6 @@
 <template>
     <div class="vscode">
-        <window v-model:show="show" title="VSCode" width="800">
+        <window v-model:show="show" title="VSCode" width="800" :appInfo="appInfo">
             <div class="vscode-content wh100" v-if="show">
                 <vm-iframe ids="VSCode" v-if="isLoginVscode" webUrl="http://vscode.huangguangfa.cn:6689"></vm-iframe>
                 <div class="login_locks" v-else>
@@ -21,7 +21,8 @@
             vmlogin:login
         },
         props:{
-            show:Boolean
+            show:Boolean,
+            appInfo:Object
         },
         setup(props, { emit }){
             const { proxy } = getCurrentInstance();

@@ -1,6 +1,6 @@
 <template>
     <div class="Terminal">
-        <window v-model:show="show" title="Terminal">
+        <window v-model:show="show" title="Terminal" :appInfo="appInfo">
             <div class="terminal-content" v-if="show">
                 <div class="xterm" id="xterm"></div>
             </div>
@@ -14,7 +14,8 @@ import 'xterm/css/xterm.css';
 import { initXterm } from "./index";
 export default{
     props:{
-        show:Boolean
+        show:Boolean,
+        appInfo:Object
     },
     setup(props, { emit }){
         onMounted( () =>{

@@ -41,7 +41,7 @@
 <script>
 import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
 import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
-import { SET_WINDOW_ID, SET_FULL_SCREENBAR } from "@/config/store.config.js";
+import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_MINIMIZE } from "@/config/store.config.js";
 import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
 import { props } from "./props";
 import store from "@/store/index";
@@ -50,6 +50,7 @@ export default{
     name:"window",
     props,
     setup(props,{ emit, slots }){
+        const { appInfo } = props;
         let ref_windows = reactive({ dom:null });
         let ref_bar = ref(null);
         let page_config = reactive({
@@ -166,8 +167,20 @@ export default{
             page_config.sticksConfig.sticksType = type;
         }
         function windowMinimize(){
-            
-            console.log('最小化')
+            // 保存最小化应用
+            const { id, img, title, desktop } = appInfo;
+            if( !store.getters.TABABR_MINIMIZE.map( i => i.id).includes(id)){
+                 let appDes = {
+                    id,
+                    img,
+                    title,
+                    desktop
+                }
+                store.commit(SET_TABABR_MINIMIZE,[
+                    ...store.getters.TABABR_MINIMIZE ,
+                    appDes
+                ]);
+            }
         }
         function windowFullScreen(){
             page_config.isFullScreen = !page_config.isFullScreen;

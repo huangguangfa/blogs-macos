@@ -18,6 +18,7 @@ const mutations = {
         state.STARTGLOBALSEARCH = status;
     },
     [SET_TABABR_MINIMIZE](state, list){
+        console.log('修改',list)
         state.TABABR_MINIMIZE = list;
     },
     [SET_TABABR_NAVIGATION](state, list){

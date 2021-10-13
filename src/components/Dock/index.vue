@@ -20,11 +20,11 @@
             </ul>
         </div>
         
-        <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop"></app-facetime>
-        <app-mpas v-model:show="TABABR_NAVIGATIONS[4].desktop"></app-mpas>
-        <app-safari v-model:show="TABABR_NAVIGATIONS[6].desktop"></app-safari>
-        <app-termial v-model:show="TABABR_NAVIGATIONS[7].desktop"></app-termial>
-        <app-vscode v-model:show="TABABR_NAVIGATIONS[8].desktop"></app-vscode>
+        <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop" :appInfo="TABABR_NAVIGATIONS[3]"></app-facetime>
+        <app-mpas v-model:show="TABABR_NAVIGATIONS[4].desktop" :appInfo="TABABR_NAVIGATIONS[4]"></app-mpas>
+        <app-safari v-model:show="TABABR_NAVIGATIONS[6].desktop" :appInfo="TABABR_NAVIGATIONS[6]"></app-safari>
+        <app-termial v-model:show="TABABR_NAVIGATIONS[7].desktop" :appInfo="TABABR_NAVIGATIONS[7]"></app-termial>
+        <app-vscode v-model:show="TABABR_NAVIGATIONS[8].desktop" :appInfo="TABABR_NAVIGATIONS[8]"></app-vscode>
     </div>
 </template>
 
@@ -47,12 +47,14 @@
         setup(){
             const store = useStore();
             const TABABR_NAVIGATIONS = reactive(store.getters.TABABR_NAVIGATION);
-            const TABABR_MINIMIZE = reactive(store.getters.TABABR_MINIMIZE)
             const TABABR_LIST_WIDTH = reactive(Array(TABABR_NAVIGATIONS.length).fill(50));
             const dockStyle = computed( () =>{
                 return function(index){
                     return `width:${TABABR_LIST_WIDTH[index]}px;height:${TABABR_LIST_WIDTH[index]}px;`
                 }
+            })
+            const TABABR_MINIMIZE = computed( () =>{
+                return store.getters.TABABR_MINIMIZE
             })
             return {
                 TABABR_NAVIGATIONS,
@@ -129,7 +131,7 @@
             border-bottom: transparent;
             backdrop-filter: blur(0px);
             position: relative;
-            .tabbar-img{width: 40px;height: 50px; transition-timing-function: cubic-bezier(0.4, 0, 1, 1);}
+            .tabbar-img{width: 46px;height: 50px; transition-timing-function: cubic-bezier(0.4, 0, 1, 1);}
             &::after{
                 content:"";
                 width: 2px;

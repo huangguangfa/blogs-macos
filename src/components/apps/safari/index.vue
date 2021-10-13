@@ -1,6 +1,6 @@
 <template>
     <div class="safari">
-        <window v-model:show="show" width="1000" height="600" title="Safari">
+        <window v-model:show="show" width="1000" height="600" title="Safari" :appInfo="appInfo">
             <template v-slot:bar-title>
                 <div class="bar-title-content">
                     <div class="bar-title-content-left">
@@ -36,7 +36,8 @@
             vmWebPage:webPage
         },
         props:{
-            show:Boolean
+            show:Boolean,
+            appInfo:Object
         },
         setup(props, { emit }){
             const isShowWeb = ref(false);

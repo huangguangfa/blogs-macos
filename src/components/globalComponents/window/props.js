@@ -14,5 +14,9 @@ export const props = {
     height:{
         type:[Number,String],
         default:400,
+    },
+    appInfo:{
+        type:Object,
+        default:{}
     }
 }
