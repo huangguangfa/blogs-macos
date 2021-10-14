@@ -16,7 +16,7 @@
                 <div class="round" 
                     v-for="(item,index) in statusLists" 
                     :key="index" 
-                    @click="statusSwitch(index)"
+                    @click.stop="statusSwitch(index)"
                     :class="[item.className, (index === 1 && page_config.isFullScreen) ? 'no-minimize' : '' ]">
                     <i class="iconfont" :class="item.icon"></i>
                 </div>
@@ -49,7 +49,7 @@ let id = 0;
 export default{
     name:"window",
     props,
-    setup(props,{ emit, slots }){
+    setup(props,{ emit }){
         const { appInfo } = props;
         let ref_windows = reactive({ dom:null });
         let ref_bar = ref(null);
@@ -72,6 +72,7 @@ export default{
             currentWindowStatus:'close',
             shows:false,
             isFullScreen:false,
+            isMinimize:false,
             barHeight:40
         });
         let domEvents = reactive(new Map());
@@ -89,12 +90,20 @@ export default{
             })
         })
         //computed
-        let initSzie = computed(() => `width:${props.width}px;height:${props.height}px;` );
+        let initSzie = computed(() => {
+            const w = props.width;
+            const h = props.height;
+            const scale = page_config.isMinimize ? 0.06 : 1 ;
+            const { top, left } = ref_windows.dom && ref_windows.dom.style || { top:0, left:0 };
+            console.log('ref_windows.dom.style',top, left)
+            return `width:${w}px;height:${h}px;transform:scale(${ scale });left:${left};top:${top};`
+        });
         const isScreenFacade = computed(() => store.getters.WINDOWID === windowId );
         const isBarShow = computed( () =>{
-            let status = page_config.isFullScreen === false || page_config.isFullScreen === true && page_config.cursorPointerY  === true;
+            const { isFullScreen, cursorPointerY, isMinimize } = page_config;
+            let status =  !isMinimize && ( isFullScreen === false || isFullScreen === true && cursorPointerY  === true );
             //barTop只需要判断全屏和是否到顶部
-            store.commit(SET_FULL_SCREENBAR,page_config.isFullScreen === true && page_config.cursorPointerY  === true);
+            store.commit(SET_FULL_SCREENBAR,isFullScreen === true && cursorPointerY  === true);
             return status;
         })
         onMounted( () =>{
@@ -142,6 +151,7 @@ export default{
             }
         }
         function setScreenFacade(){
+            page_config.isMinimize = false;
             store.commit(SET_WINDOW_ID,windowId)
         }
         function windowBarDowStart(e){
@@ -169,17 +179,29 @@ export default{
         function windowMinimize(){
             // 保存最小化应用
             const { id, img, title, desktop } = appInfo;
-            if( !store.getters.TABABR_MINIMIZE.map( i => i.id).includes(id)){
-                 let appDes = {
+            const { offsetHeight, offsetWidth  } = document.body;
+            const minimize_length = store.getters.TABABR_MINIMIZE.length;
+            if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id)){
+                const { top, left } = ref_windows.dom.style;
+                const tops = parseInt(offsetHeight - 32);
+                const lefts = parseInt(offsetWidth - 577 - ( minimize_length * 60 ))
+                let appDes = {
                     id,
                     img,
                     title,
-                    desktop
+                    desktop,
+                    app_top:top,
+                    app_left:left
                 }
                 store.commit(SET_TABABR_MINIMIZE,[
                     ...store.getters.TABABR_MINIMIZE ,
-                    appDes
-                ]);
+                    appDes,
+                ]); 
+                console.log('sxsax',tops, lefts)
+                // 计算到最小化底部的距离
+                // ref_windows.dom.style.top = `${tops}px`;
+                // ref_windows.dom.style.left = `${lefts}px`;
+                page_config.isMinimize = true;
             }
         }
         function windowFullScreen(){
