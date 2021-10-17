@@ -4,8 +4,8 @@
         v-show="page_config.shows" :id="windowId"
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
-        <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
-        
+        <div class="fullScreen-top" v-if="page_config.isFullScreen && !page_config.isMinimize"></div>
+        <div class="minimize_mark"  v-if="page_config.isMinimize" @click.stop="setScreenFacade"></div>
         <div class="window-bar" ref="ref_bar" 
             :class="[ 
                 page_config.isFullScreen && 'barFadeInDownBig box-shadow', 
@@ -96,7 +96,6 @@ export default{
             // const scale = page_config.isMinimize ? 0.06 : 1 ;
             const scale = 1 ;
             const { top, left } = ref_windows.dom && ref_windows.dom.style || { top:0, left:0 };
-            console.log('ref_windows.dom.style',top, left)
             return `width:${w}px;height:${h}px;transform:scale(${ scale });left:${left};top:${top};`
         });
         const isScreenFacade = computed(() => store.getters.WINDOWID === windowId );
@@ -153,6 +152,8 @@ export default{
         }
         function setScreenFacade(){
             page_config.isMinimize = false;
+            let updateMinimize = store.getters.TABABR_MINIMIZE.filter( i => props.appInfo.id !== i.id);
+            store.commit(SET_TABABR_MINIMIZE,updateMinimize); 
             store.commit(SET_WINDOW_ID,windowId)
         }
         function windowBarDowStart(e){
@@ -183,26 +184,29 @@ export default{
             const { offsetHeight, offsetWidth  } = document.body;
             const minimize_length = store.getters.TABABR_MINIMIZE.length;
             if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id)){
+                page_config.isMinimize = true;
                 const { top, left } = ref_windows.dom.style;
-                const tops = parseInt(offsetHeight - 32);
-                const lefts = parseInt(offsetWidth - 577 - ( minimize_length * 60 ))
+                const w_dom_top = Number(top.replace('px',""));
+                const w_dom_left = Number(left.replace('px',""));
+                const tops = parseInt(offsetHeight - 32 - w_dom_top);
+                const lefts = parseInt(offsetWidth - 577 - ( minimize_length * 60 ) - w_dom_left);
+                console.log(top, left)
                 let appDes = {
                     id,
                     img,
                     title,
                     desktop,
-                    app_top:top,
-                    app_left:left
+                    app_top:w_dom_top,
+                    app_left:w_dom_left
                 }
                 store.commit(SET_TABABR_MINIMIZE,[
                     ...store.getters.TABABR_MINIMIZE ,
                     appDes,
                 ]); 
                 console.log('sxsax',tops, lefts)
-                // 计算到最小化底部的距离
-                ref_windows.dom.style.top = `${tops}px`;
-                ref_windows.dom.style.left = `${lefts}px`;
-                page_config.isMinimize = true;
+                // 计算到最小化底部的距离 945 370
+                // ref_windows.dom.style.bottom = `60px`;
+                // ref_windows.dom.style.left = `${lefts}px`;
             }
         }
         function windowFullScreen(){
