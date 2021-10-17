@@ -93,7 +93,8 @@ export default{
         let initSzie = computed(() => {
             const w = props.width;
             const h = props.height;
-            const scale = page_config.isMinimize ? 0.06 : 1 ;
+            // const scale = page_config.isMinimize ? 0.06 : 1 ;
+            const scale = 1 ;
             const { top, left } = ref_windows.dom && ref_windows.dom.style || { top:0, left:0 };
             console.log('ref_windows.dom.style',top, left)
             return `width:${w}px;height:${h}px;transform:scale(${ scale });left:${left};top:${top};`
@@ -199,8 +200,8 @@ export default{
                 ]); 
                 console.log('sxsax',tops, lefts)
                 // 计算到最小化底部的距离
-                // ref_windows.dom.style.top = `${tops}px`;
-                // ref_windows.dom.style.left = `${lefts}px`;
+                ref_windows.dom.style.top = `${tops}px`;
+                ref_windows.dom.style.left = `${lefts}px`;
                 page_config.isMinimize = true;
             }
         }
