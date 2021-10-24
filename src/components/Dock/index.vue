@@ -19,7 +19,6 @@
                 </li>
             </ul>
         </div>
-        
         <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop" :appInfo="TABABR_NAVIGATIONS[3]"></app-facetime>
         <app-mpas v-model:show="TABABR_NAVIGATIONS[4].desktop" :appInfo="TABABR_NAVIGATIONS[4]"></app-mpas>
         <app-safari v-model:show="TABABR_NAVIGATIONS[6].desktop" :appInfo="TABABR_NAVIGATIONS[6]"></app-safari>

@@ -1,8 +1,14 @@
 <template>
 <!-- fixed -->
-    <div class="window noCopy  ov-hide" :class="{ 'isScreenFacade':isScreenFacade, 'bor-radius7':!page_config.isFullScreen}"
+    <div class="window noCopy ov-hide" 
+        :class="{ 
+            'isScreenFacade':isScreenFacade, 
+            'bor-radius7':!page_config.isFullScreen, 
+            'topLevel':page_config.isMinimize 
+        }"
         :style="initSzie"
-        v-show="page_config.shows" :id="windowId"
+        v-show="page_config.shows"
+        :id="windowId"
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
         <div class="fullScreen-top" v-if="page_config.isFullScreen && !page_config.isMinimize"></div>
@@ -41,11 +47,12 @@
 
 <script>
 import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
-import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
+import store from "@/store/index";
 import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_MINIMIZE } from "@/config/store.config.js";
 import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
+import htmlToImg from "@/utils/htmlTocanvas/htmlToImg.js";
+import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
 import { props } from "./props";
-import store from "@/store/index";
 let id = 0;
 export default{
     name:"window",
@@ -94,7 +101,6 @@ export default{
         let initSzie = computed(() => {
             const w = props.width;
             const h = props.height;
-            // const scale = page_config.isMinimize ? 0.06 : 1 ;
             const scale = 1 ;
             const { top, left } = ref_windows.dom && ref_windows.dom.style || { top:0, left:0 };
             return `width:${w}px;height:${h}px;transform:scale(${ scale });left:${left};top:${top};`
@@ -153,10 +159,22 @@ export default{
         }
         function setScreenFacade(){
             page_config.isMinimize = false;
-            ref_windows.dom.style.transform = `scale(1)`;
-            let updateMinimize = store.getters.TABABR_MINIMIZE.filter( i => props.appInfo.id !== i.id);
+            let updateMinimize = [];
+            let currentWin = {};
+            store.getters.TABABR_MINIMIZE.forEach( i => {
+                if( props.appInfo.id !== i.id  ){
+                    updateMinimize.push(i)
+                }else{
+                    currentWin = i
+                }
+            });
             store.commit(SET_TABABR_MINIMIZE,updateMinimize); 
-            store.commit(SET_WINDOW_ID,windowId)
+            store.commit(SET_WINDOW_ID,windowId);
+            const  { app_top, app_left } = currentWin;
+            ref_windows.dom.style.transform = `scale(1)`;
+            ref_windows.dom.style.top = `${app_top}px`;
+            ref_windows.dom.style.left = `${app_left}px`;
+            ref_windows.dom.style.bottom = `auto`;
         }
         function windowBarDowStart(e){
             const { clientX, clientY } = e;
@@ -180,39 +198,41 @@ export default{
             page_config.sticksConfig.pointerY = pageY;
             page_config.sticksConfig.sticksType = type;
         }
-        function windowMinimize(){
+        async function windowMinimize(){
             // 保存最小化应用
             const { id, img, title, desktop } = appInfo;
-            const { offsetHeight, offsetWidth  } = document.body;
-            const minimize_length = store.getters.TABABR_MINIMIZE.length;
             if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id) ){
                 page_config.isMinimize = true;
                 const { top, left } = ref_windows.dom.style;
                 const w_dom_top = Number(top.replace('px',""));
                 const w_dom_left = Number(left.replace('px',""));
-                
-                console.log('offsetWidth',offsetWidth)
+                const { base64 } = await htmlToImg(ref_windows.dom);
+                console.log('base64',base64)
                 let appDes = {
                     id,
-                    img,
+                    img:base64,
                     title,
                     desktop,
                     app_top:w_dom_top,
-                    app_left:w_dom_left
+                    app_left:w_dom_left,
+                    // app_mini_img:base64
                 }
                 store.commit(SET_TABABR_MINIMIZE,[
                     ...store.getters.TABABR_MINIMIZE ,
                     appDes,
                 ]); 
-                nextTick( () =>{
-                    let dock_w = document.getElementsByClassName('tabbars')[0].offsetWidth;
-                    let win_w = (ref_windows.dom.offsetWidth - (ref_windows.dom.offsetWidth * 0.06 / 2)) / 2
-                    const lefts = parseInt( offsetWidth - (dock_w + win_w));
-                    console.log(',,,',100 - win_w)
-                    ref_windows.dom.style.transform = `scale(0.06)`;
-                    ref_windows.dom.style.top = `auto`;
-                    ref_windows.dom.style.bottom = '-164px'
-                    ref_windows.dom.style.left = `${lefts}px`;
+                nextTick( async () =>{
+                    
+                    // let screen_width = document.getElementsByClassName('tabbars')[0].offsetWidth;
+                    // // let win_w = (ref_windows.dom.offsetWidth - (ref_windows.dom.offsetWidth * 0.06 / 2)) / 2;
+                    // let win_w = ref_windows.dom.offsetWidth / 2;
+                    // let dock_w = document.getElementsByClassName('dock')[0].offsetWidth;
+                    // console.log('dock_w',dock_w)
+                    // const lefts = parseInt( screen_width - ( dock_w + win_w ) );
+                    // ref_windows.dom.style.transform = `scale(0.06)`;
+                    // ref_windows.dom.style.top = `auto`;
+                    // ref_windows.dom.style.bottom = '-164px';
+                    // ref_windows.dom.style.left = `${lefts + 55}px`;
                 })
             }
         }
