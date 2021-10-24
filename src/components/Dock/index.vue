@@ -1,6 +1,6 @@
 <template>
     <div class="tabbars mx-auto fixed bottom-0 right-0 left-0 ">
-        <div class="flex">
+        <div class="flex dock">
             <ul class="tabbars-u justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white blur"
                 @mousemove="tabbarMove" @mouseout="tabbarMouseout">
                 <li 
@@ -99,53 +99,59 @@
         width: max-content;
         position: fixed;
         z-index: 99999;
-        .tabbars-u{
-            height: 65px;
-            box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.17);
-            border-top-left-radius: 0.5rem;
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-            box-sizing: border-box;
-            border: 1px solid #e5e7eb;
-            border-bottom: transparent;
-            border-right: none;
-            border-color: rgba(156,163,175,0.3);
-            display: flex;
-        }
-        .tabbar-item{ 
-            padding-bottom: 10px; 
-            will-change: width height; user-select: none;
-            &:hover .tabbar-title{display: block;}
-            .tabbar-title{ color: black; background-color: rgba(209,213,219,0.8);  padding:5px 10px; border-radius: .375rem; top: -80px;}
-            .tabbar-img{ transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; transition-duration: .15s;  will-change: width height;-webkit-user-drag: none; padding: 0 3px; }
-        }
-        .minimize{
-            min-width: 70px;
-            height: 65px;
-            border-top-right-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
-            border-color: rgba(156, 163, 175, 0.3);
-            border-left: none;
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-            border-bottom: transparent;
-            position: relative;
-            backdrop-filter: blur(40px);
-            .tabbar-img{width: 46px;height: 50px; transition-timing-function: cubic-bezier(0.4, 0, 1, 1);}
-            &::after{
-                content:"";
-                width: 2px;
-                height: 50px;
-                background: rgba(156,163,175,0.2);
-                position: absolute;
-                top: 7px;left: 10px;
-                border-radius: 10px;
+        width: 100vw;
+        height: 100vh;
+        .dock{
+            position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);z-index:999999999;
+            .tabbars-u{
+                height: 65px;
+                box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.17);
+                border-top-left-radius: 0.5rem;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                box-sizing: border-box;
+                border: 1px solid #e5e7eb;
+                border-bottom: transparent;
+                border-right: none;
+                border-color: rgba(156,163,175,0.3);
+                display: flex;
             }
-            .tabbar-item{
-                .tabbar-title{
-                    top: -40px;
+            .tabbar-item{ 
+                padding-bottom: 10px; 
+                will-change: width height; user-select: none;
+                &:hover .tabbar-title{display: block;}
+                .tabbar-title{ color: black; background-color: rgba(209,213,219,0.8);  padding:5px 10px; border-radius: .375rem; top: -80px;}
+                .tabbar-img{ transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; transition-duration: .15s;  will-change: width height;-webkit-user-drag: none; padding: 0 3px; }
+            }
+            .minimize{
+                min-width: 70px;
+                height: 65px;
+                border-top-right-radius: 0.5rem;
+                border: 1px solid #e5e7eb;
+                border-color: rgba(156, 163, 175, 0.3);
+                border-left: none;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                border-bottom: transparent;
+                position: relative;
+                backdrop-filter: blur(40px);
+                .tabbar-img{width: 46px;height: 50px; transition-timing-function: cubic-bezier(0.4, 0, 1, 1);}
+                &::after{
+                    content:"";
+                    width: 2px;
+                    height: 50px;
+                    background: rgba(156,163,175,0.2);
+                    position: absolute;
+                    top: 7px;left: 10px;
+                    border-radius: 10px;
+                }
+                .tabbar-item{
+                    .tabbar-title{
+                        top: -40px;
+                    }
                 }
             }
         }
+        
     }
 </style>

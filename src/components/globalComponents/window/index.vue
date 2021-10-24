@@ -1,5 +1,6 @@
 <template>
-    <div class="window noCopy fixed ov-hide" :class="{ 'isScreenFacade':isScreenFacade, 'bor-radius7':!page_config.isFullScreen}"
+<!-- fixed -->
+    <div class="window noCopy  ov-hide" :class="{ 'isScreenFacade':isScreenFacade, 'bor-radius7':!page_config.isFullScreen}"
         :style="initSzie"
         v-show="page_config.shows" :id="windowId"
         @click.stop="setScreenFacade"
@@ -152,6 +153,7 @@ export default{
         }
         function setScreenFacade(){
             page_config.isMinimize = false;
+            ref_windows.dom.style.transform = `scale(1)`;
             let updateMinimize = store.getters.TABABR_MINIMIZE.filter( i => props.appInfo.id !== i.id);
             store.commit(SET_TABABR_MINIMIZE,updateMinimize); 
             store.commit(SET_WINDOW_ID,windowId)
@@ -183,14 +185,13 @@ export default{
             const { id, img, title, desktop } = appInfo;
             const { offsetHeight, offsetWidth  } = document.body;
             const minimize_length = store.getters.TABABR_MINIMIZE.length;
-            if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id)){
+            if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id) ){
                 page_config.isMinimize = true;
                 const { top, left } = ref_windows.dom.style;
                 const w_dom_top = Number(top.replace('px',""));
                 const w_dom_left = Number(left.replace('px',""));
-                const tops = parseInt(offsetHeight - 32 - w_dom_top);
-                const lefts = parseInt(offsetWidth - 577 - ( minimize_length * 60 ) - w_dom_left);
-                console.log(top, left)
+                
+                console.log('offsetWidth',offsetWidth)
                 let appDes = {
                     id,
                     img,
@@ -203,10 +204,16 @@ export default{
                     ...store.getters.TABABR_MINIMIZE ,
                     appDes,
                 ]); 
-                console.log('sxsax',tops, lefts)
-                // 计算到最小化底部的距离 945 370
-                // ref_windows.dom.style.bottom = `60px`;
-                // ref_windows.dom.style.left = `${lefts}px`;
+                nextTick( () =>{
+                    let dock_w = document.getElementsByClassName('tabbars')[0].offsetWidth;
+                    let win_w = (ref_windows.dom.offsetWidth - (ref_windows.dom.offsetWidth * 0.06 / 2)) / 2
+                    const lefts = parseInt( offsetWidth - (dock_w + win_w));
+                    console.log(',,,',100 - win_w)
+                    ref_windows.dom.style.transform = `scale(0.06)`;
+                    ref_windows.dom.style.top = `auto`;
+                    ref_windows.dom.style.bottom = '-164px'
+                    ref_windows.dom.style.left = `${lefts}px`;
+                })
             }
         }
         function windowFullScreen(){
