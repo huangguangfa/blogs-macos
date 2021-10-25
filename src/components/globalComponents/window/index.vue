@@ -48,9 +48,8 @@
 <script>
 import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
 import store from "@/store/index";
-import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_MINIMIZE } from "@/config/store.config.js";
+import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_NAVIGATION } from "@/config/store.config.js";
 import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
-import htmlToImg from "@/utils/htmlTocanvas/htmlToImg.js";
 import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
 import { props } from "./props";
 let id = 0;
@@ -107,8 +106,8 @@ export default{
         });
         const isScreenFacade = computed(() => store.getters.WINDOWID === windowId );
         const isBarShow = computed( () =>{
-            const { isFullScreen, cursorPointerY, isMinimize } = page_config;
-            let status =  !isMinimize && ( isFullScreen === false || isFullScreen === true && cursorPointerY  === true );
+            const { isFullScreen, cursorPointerY } = page_config;
+            let status =  isFullScreen === false || isFullScreen === true && cursorPointerY  === true ;
             //barTop只需要判断全屏和是否到顶部
             store.commit(SET_FULL_SCREENBAR,isFullScreen === true && cursorPointerY  === true);
             return status;
@@ -158,23 +157,23 @@ export default{
             }
         }
         function setScreenFacade(){
-            page_config.isMinimize = false;
-            let updateMinimize = [];
-            let currentWin = {};
-            store.getters.TABABR_MINIMIZE.forEach( i => {
-                if( props.appInfo.id !== i.id  ){
-                    updateMinimize.push(i)
-                }else{
-                    currentWin = i
-                }
-            });
-            store.commit(SET_TABABR_MINIMIZE,updateMinimize); 
+            // page_config.isMinimize = false;
+            // let updateMinimize = [];
+            // let currentWin = {};
+            // store.getters.TABABR_MINIMIZE.forEach( i => {
+            //     if( props.appInfo.id !== i.id  ){
+            //         updateMinimize.push(i)
+            //     }else{
+            //         currentWin = i
+            //     }
+            // });
+            // store.commit(SET_TABABR_MINIMIZE,updateMinimize); 
             store.commit(SET_WINDOW_ID,windowId);
-            const  { app_top, app_left } = currentWin;
-            ref_windows.dom.style.transform = `scale(1)`;
-            ref_windows.dom.style.top = `${app_top}px`;
-            ref_windows.dom.style.left = `${app_left}px`;
-            ref_windows.dom.style.bottom = `auto`;
+            // const  { app_top, app_left } = currentWin;
+            // ref_windows.dom.style.transform = `scale(1)`;
+            // ref_windows.dom.style.top = `${app_top}px`;
+            // ref_windows.dom.style.left = `${app_left}px`;
+            // ref_windows.dom.style.bottom = `auto`;
         }
         function windowBarDowStart(e){
             const { clientX, clientY } = e;
@@ -199,42 +198,36 @@ export default{
             page_config.sticksConfig.sticksType = type;
         }
         async function windowMinimize(){
-            // 保存最小化应用
-            const { id, img, title, desktop } = appInfo;
-            if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id) ){
-                page_config.isMinimize = true;
-                const { top, left } = ref_windows.dom.style;
-                const w_dom_top = Number(top.replace('px',""));
-                const w_dom_left = Number(left.replace('px',""));
-                const { base64 } = await htmlToImg(ref_windows.dom);
-                console.log('base64',base64)
-                let appDes = {
-                    id,
-                    img:base64,
-                    title,
-                    desktop,
-                    app_top:w_dom_top,
-                    app_left:w_dom_left,
-                    // app_mini_img:base64
+            page_config.isMinimize = true;
+            const updateTababrData = store.getters.TABABR_NAVIGATION.map( i =>{
+                return {
+                    ...i,
+                    isMinimize: i.id === appInfo.id ? true : i.isMinimize
                 }
-                store.commit(SET_TABABR_MINIMIZE,[
-                    ...store.getters.TABABR_MINIMIZE ,
-                    appDes,
-                ]); 
-                nextTick( async () =>{
-                    
-                    // let screen_width = document.getElementsByClassName('tabbars')[0].offsetWidth;
-                    // // let win_w = (ref_windows.dom.offsetWidth - (ref_windows.dom.offsetWidth * 0.06 / 2)) / 2;
-                    // let win_w = ref_windows.dom.offsetWidth / 2;
-                    // let dock_w = document.getElementsByClassName('dock')[0].offsetWidth;
-                    // console.log('dock_w',dock_w)
-                    // const lefts = parseInt( screen_width - ( dock_w + win_w ) );
-                    // ref_windows.dom.style.transform = `scale(0.06)`;
-                    // ref_windows.dom.style.top = `auto`;
-                    // ref_windows.dom.style.bottom = '-164px';
-                    // ref_windows.dom.style.left = `${lefts + 55}px`;
-                })
-            }
+            })
+            store.commit(SET_TABABR_NAVIGATION,updateTababrData)
+            // // 保存最小化应用
+            // const { id, img, title, desktop } = appInfo;
+            // if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id) ){
+            //     page_config.isMinimize = true;
+            //     const { top, left } = ref_windows.dom.style;
+            //     const w_dom_top = Number(top.replace('px',""));
+            //     const w_dom_left = Number(left.replace('px',""));
+            //     const { base64 } = await htmlToImg(ref_windows.dom);
+            //     let appDes = {
+            //         id,
+            //         img:base64,
+            //         title,
+            //         desktop,
+            //         app_top:w_dom_top,
+            //         app_left:w_dom_left,
+            //         // app_mini_img:base64
+            //     }
+            //     store.commit(SET_TABABR_MINIMIZE,[
+            //         ...store.getters.TABABR_MINIMIZE ,
+            //         appDes,
+            //     ]); 
+            // }
         }
         function windowFullScreen(){
             page_config.isFullScreen = !page_config.isFullScreen;

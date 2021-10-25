@@ -28,7 +28,6 @@
             const { proxy } = getCurrentInstance();
             const isLoginVscode = ref(localStorage.getItem("isLoginVscode"));
             watch( () => props.show ,status => emit('update:show',status))
-
             function loginVscode(_,info){
                 const { uid, uname } = info;
                 if( uid === 'guangfa123' && uname === 'gf' ){

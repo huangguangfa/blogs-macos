@@ -8,6 +8,7 @@
                     v-for="(item,index) in TABABR_NAVIGATIONS"  
                     :key="index">
                     <p class="tabbar-title absolute d-none">{{ item.title }}</p>
+                    <span class="minimizes" v-if="item.isMinimize"></span>
                     <img @click="openWindows(index)" class="tabbar-img"  :style="dockStyle(index)"  :data-index="index" :src="item.img">
                 </li>
             </ul>
@@ -20,10 +21,10 @@
             </ul>
         </div>
         <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop" :appInfo="TABABR_NAVIGATIONS[3]"></app-facetime>
-        <app-mpas v-model:show="TABABR_NAVIGATIONS[4].desktop" :appInfo="TABABR_NAVIGATIONS[4]"></app-mpas>
-        <app-safari v-model:show="TABABR_NAVIGATIONS[6].desktop" :appInfo="TABABR_NAVIGATIONS[6]"></app-safari>
-        <app-termial v-model:show="TABABR_NAVIGATIONS[7].desktop" :appInfo="TABABR_NAVIGATIONS[7]"></app-termial>
-        <app-vscode v-model:show="TABABR_NAVIGATIONS[8].desktop" :appInfo="TABABR_NAVIGATIONS[8]"></app-vscode>
+        <app-mpas     v-model:show="TABABR_NAVIGATIONS[4].desktop" :appInfo="TABABR_NAVIGATIONS[4]"></app-mpas>
+        <app-safari   v-model:show="TABABR_NAVIGATIONS[6].desktop" :appInfo="TABABR_NAVIGATIONS[6]"></app-safari>
+        <app-termial  v-model:show="TABABR_NAVIGATIONS[7].desktop" :appInfo="TABABR_NAVIGATIONS[7]"></app-termial>
+        <app-vscode   v-model:show="TABABR_NAVIGATIONS[8].desktop" :appInfo="TABABR_NAVIGATIONS[8]"></app-vscode>
     </div>
 </template>
 
@@ -34,7 +35,7 @@
     import facetime from "@/components/apps/facetime/index.vue";
     import termial from "@/components/apps/Terminal/index.vue";
     import maps from "@/components/apps/maps/index.vue";
-    import { useStore } from 'vuex'
+    import { useStore } from 'vuex';
     export default{
         components:{
             appSafari:safari,
@@ -52,15 +53,13 @@
                     return `width:${TABABR_LIST_WIDTH[index]}px;height:${TABABR_LIST_WIDTH[index]}px;`
                 }
             })
-            const TABABR_MINIMIZE = computed( () =>{
-                return store.getters.TABABR_MINIMIZE
-            })
+
+            const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE )
             return {
                 TABABR_NAVIGATIONS,
                 TABABR_LIST_WIDTH,
                 dockStyle,
                 TABABR_MINIMIZE
-                
             }
         },
         methods:{
@@ -117,8 +116,9 @@
             }
             .tabbar-item{ 
                 padding-bottom: 10px; 
-                will-change: width height; user-select: none;
+                will-change: width height; user-select: none;position: relative;
                 &:hover .tabbar-title{display: block;}
+                .minimizes{width: 10px;height: 10px;border-radius: 100%;background: brown; position: absolute; top: 5px;right: 5px;}
                 .tabbar-title{ color: black; background-color: rgba(209,213,219,0.8);  padding:5px 10px; border-radius: .375rem; top: -80px;}
                 .tabbar-img{ transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; transition-duration: .15s;  will-change: width height;-webkit-user-drag: none; padding: 0 3px; }
             }
