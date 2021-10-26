@@ -1,6 +1,6 @@
 <template>
     <div class="Terminal">
-        <window v-model:show="show" title="Terminal" :appInfo="appInfo">
+        <window v-model:show="show" title="Terminal" v-model:appInfo="appInfo">
             <div class="terminal-content" v-if="show">
                 <div class="xterm" id="xterm"></div>
             </div>
@@ -17,10 +17,19 @@ export default{
         show:Boolean,
         appInfo:Object
     },
-    setup(props, { emit }){
+    setup( props, { emit } ){
         onMounted( () =>{
+            console.log('props',props.appInfo)
             props.show && initXterm();
         })
+
+        // watch( () => props.appInfo.desktop, () =>{
+        //     emit('update:show',status);
+        //     nextTick( () =>{
+        //         status && initXterm();
+        //     })
+        //     console.log('change le ...')
+        // })
         watch( () => props.show , status =>{
             emit('update:show',status);
             nextTick( () =>{

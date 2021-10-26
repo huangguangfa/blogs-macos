@@ -1,10 +1,10 @@
 <template>
 <!-- fixed -->
-    <div class="window noCopy ov-hide" 
-        :class="{ 
-            'isScreenFacade':isScreenFacade, 
-            'bor-radius7':!page_config.isFullScreen, 
-            'topLevel':page_config.isMinimize 
+    <div class="window noCopy ov-hide"
+        :class="{
+            'isScreenFacade':isScreenFacade,
+            'bor-radius7':!page_config.isFullScreen,
+            'topLevel':page_config.isMinimize
         }"
         :style="initSzie"
         v-show="page_config.shows"
@@ -96,6 +96,7 @@ export default{
                 initWindowStaus(getByIdDom( windowId ),props.width, props.height); 
             })
         })
+
         //computed
         let initSzie = computed(() => {
             const w = props.width;
@@ -167,7 +168,7 @@ export default{
             //         currentWin = i
             //     }
             // });
-            // store.commit(SET_TABABR_MINIMIZE,updateMinimize); 
+            // store.commit(SET_TABABR_MINIMIZE,updateMinimize);
             store.commit(SET_WINDOW_ID,windowId);
             // const  { app_top, app_left } = currentWin;
             // ref_windows.dom.style.transform = `scale(1)`;
@@ -205,7 +206,7 @@ export default{
                     isMinimize: i.id === appInfo.id ? true : i.isMinimize
                 }
             })
-            store.commit(SET_TABABR_NAVIGATION,updateTababrData)
+            store.commit(SET_TABABR_NAVIGATION,updateTababrData);
             // // 保存最小化应用
             // const { id, img, title, desktop } = appInfo;
             // if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id) ){
@@ -226,7 +227,7 @@ export default{
             //     store.commit(SET_TABABR_MINIMIZE,[
             //         ...store.getters.TABABR_MINIMIZE ,
             //         appDes,
-            //     ]); 
+            //     ]);
             // }
         }
         function windowFullScreen(){

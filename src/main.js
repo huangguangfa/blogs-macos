@@ -6,6 +6,6 @@ import { initGlobalMethods } from "./plugins/index";
 
 const app = createApp(App);
 initGlobalMethods(app);
-
+app.config.globalProperties.aaa = '11111'
 app.use(routes).use(store);
 app.mount('#app')

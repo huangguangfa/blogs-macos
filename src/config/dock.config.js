@@ -70,6 +70,13 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         img: "/src/assets/images/tabbar-navigation/github.png"
+    },
+    {
+        id: "Trash",
+        title: "Trash",
+        desktop: false,
+        isMinimize:false,
+        img: "/src/assets/images/tabbar-navigation/trash.png"
     }
 ]
 
