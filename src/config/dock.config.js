@@ -6,6 +6,7 @@ export const TABABR_NAVIGATION = [
         title: "Finder",
         desktop: false,
         isMinimize:false,
+        _index:0,
         img:"/src/assets/images/tabbar-navigation/Finder.png"
     },
     {
@@ -13,6 +14,7 @@ export const TABABR_NAVIGATION = [
         title: "Launchpad",
         desktop: false,
         isMinimize:false,
+        _index:1,
         img:"/src/assets/images/tabbar-navigation/launchpad.png"
     },
     {
@@ -20,6 +22,7 @@ export const TABABR_NAVIGATION = [
         title: "Brar",
         desktop: false,
         isMinimize:false,
+        _index:2,
         img: "/src/assets/images/tabbar-navigation/bear.png"
     },
     {
@@ -27,6 +30,7 @@ export const TABABR_NAVIGATION = [
         title: "Facetime",
         desktop: false,
         isMinimize:false,
+        _index:3,
         img: "/src/assets/images/tabbar-navigation/facetime.png"
     },
     {
@@ -34,6 +38,7 @@ export const TABABR_NAVIGATION = [
         title: "Maps",
         desktop: false,
         isMinimize:false,
+        _index:4,
         img: "/src/assets/images/tabbar-navigation/maps.png"
     },
     {
@@ -41,6 +46,7 @@ export const TABABR_NAVIGATION = [
         title: "Mail",
         desktop: false,
         isMinimize:false,
+        _index:5,
         img: "/src/assets/images/tabbar-navigation/mail.png"
     },
     {
@@ -48,6 +54,7 @@ export const TABABR_NAVIGATION = [
         title: "Safari",
         desktop: false,
         isMinimize:false,
+        _index:6,
         img: "/src/assets/images/tabbar-navigation/safari.png"
     },
     {
@@ -55,6 +62,7 @@ export const TABABR_NAVIGATION = [
         title: "Terminal",
         desktop: false,
         isMinimize:false,
+        _index:7,
         img: "/src/assets/images/tabbar-navigation/terminal.png"
     },
     {
@@ -62,6 +70,7 @@ export const TABABR_NAVIGATION = [
         title: "Vscode",
         desktop: false,
         isMinimize:false,
+        _index:8,
         img: "/src/assets/images/tabbar-navigation/vscode.png"
     },
     {
@@ -69,6 +78,7 @@ export const TABABR_NAVIGATION = [
         title: "Github",
         desktop: false,
         isMinimize:false,
+        _index:9,
         img: "/src/assets/images/tabbar-navigation/github.png"
     },
     {
@@ -76,6 +86,7 @@ export const TABABR_NAVIGATION = [
         title: "Trash",
         desktop: false,
         isMinimize:false,
+        _index:10,
         img: "/src/assets/images/tabbar-navigation/trash.png"
     }
 ]

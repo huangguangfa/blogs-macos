@@ -1,6 +1,6 @@
 <template>
     <div class="safari">
-        <window v-model:show="show" width="1000" height="600" title="Safari" :appInfo="appInfo">
+        <window v-model:show="appInfo.desktop" width="1000" height="600" title="Safari" :appInfo="appInfo">
             <template v-slot:bar-title>
                 <div class="bar-title-content">
                     <div class="bar-title-content-left">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import { watch, ref } from "vue";
+    import { ref } from "vue";
     import initPage from "./initPage.vue";
     import webPage from "./web.vue";
     export default{
@@ -36,14 +36,12 @@
             vmWebPage:webPage
         },
         props:{
-            show:Boolean,
             appInfo:Object
         },
         setup(props, { emit }){
             const isShowWeb = ref(false);
             const currentWebUrl = ref(null);
             const inputWebUrl = ref(null);
-            watch( () => props.show ,status => emit('update:show',status))
             // methods
             function openNewUrl(url){
                 if(!url) return ;

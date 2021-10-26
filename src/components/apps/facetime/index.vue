@@ -1,7 +1,7 @@
 <template>
     <div class="facetime">
-        <window v-model:show="show" title="Facetime" width="1000" height="450" :appInfo="appInfo">
-            <div class="facetime-content" v-if="show">
+        <window v-model:show="appInfo.desktop" @change="changes" title="Facetime" width="1000" height="450" :appInfo="appInfo">
+            <div class="facetime-content" v-if="appInfo.desktop">
                 <div class="facetime-content-left">
                     <vm-active-user :activeUserList="activeUserList" @callUser="callUser"></vm-active-user>
                 </div>
@@ -52,10 +52,9 @@
             vmGetUser:getUser
         },
         props:{
-            show:Boolean,
             appInfo:Object
         },
-        setup(props, { emit }){
+        setup( props ){
             let local_video_dom = ref(null)
             let remote_video_dom = ref(null)
             let rtc = SkyRTC();
@@ -65,67 +64,69 @@
                 messageList:[]
             })
             let callConfig = reactive({
-                //是否初始化了webrtc
+                // 是否初始化了webrtc
                 isStartWebRtc:false,
-                //是否开启通话
+                // 是否开启通话
                 isOpenCall:false,
-                //是否开始通话
+                // 是否开始通话
                 isStartCall:false,
                 // 是否呼叫方
                 isCaller:false,
                 callMobile:null,
                 callName:null,
-                //是否显示聊天
+                // 是否显示聊天
                 showChatroom:false,
                 unreadMesNumber:0
             })
+            let sockets = null;
            
             /**********************************************************/
             /*                   webrtc通信                           */
             /**********************************************************/
-            //成功创建WebSocket连接
+            // 成功创建WebSocket连接
             rtc.on("connected", function (socket) {
+                sockets = socket;
                 //创建本地视频流
                 rtc.createStream({ "video": true, "audio": true });
             });
-            //创建本地视频流成功
+            // 创建本地视频流成功
             rtc.on("stream_created", function (stream) {
                 let me_video = local_video_dom.value;
                 rtc.attachStream(stream, me_video, true)
                 //生成PeerConnection
                 rtc.createPeerConnection()
             });
-            //接收scoket消息
+            // 接收scoket消息
             rtc.on("socket_receive_message", function (serve_data) {
                 const { sender, data } = serve_data;
                 console.log('消息',sender,data)
-                //派发当前活跃用户列表
+                // 派发当前活跃用户列表
                 sender === 'system' && getActiveUserList(data);
-                //接收文字消息
+                // 接收文字消息
                 sender === 'exc' && data.exc_type === "communication" && newMessage(data);
             });
-            //新的通话邀请
+            // 新的通话邀请
             rtc.on('call', data =>{
                 const { isOpenCall } = callConfig;
-                //正在通话中
+                // 正在通话中
                 if( isOpenCall ) return;
                 const { switch_status, uid, uname } = data;
                 switch_status && startCall(uid,uname);
             })
-            //挂断电话
+            // 挂断电话
             rtc.on('endCall', data =>{
                 console.log('对方挂断电话');
                 chatroomConfig.messageList = []
                 endCall(false);
             })
-            //收到对方音频/视频流数据
+            // 收到对方音频/视频流数据
             rtc.on("remote_streams", function (stream) {
                 let remote_video = remote_video_dom.value;
                 callConfig.isStartCall = true;
                 rtc.attachStream(stream, remote_video, false)
                 remote_video.play();
             });
-            //创建本地视频流失败
+            // 创建本地视频流失败
             rtc.on("stream_create_error", function () {
                 console.log("创建视频流失败");
             });
@@ -134,14 +135,12 @@
             /*                   业务逻辑                              */
             /**********************************************************/
 
-            watch( () => props.show ,status => {
-                emit('update:show',status)
+            watch( () => props.appInfo.desktop ,status => {
                 if(status === false){
                     webrtcClose()
                 }else{
                     callConfig.isStartWebRtc = false;
                 }
-                console.log(status,'--------')
             });
 
             let showCallInfo = computed( () =>{
@@ -158,8 +157,7 @@
                 const { isStartCall } = callConfig;
                 if( _is_me || isStartCall ) return;
                 startCall(uid, uname, true);
-                rtc.call(uid)
-                
+                rtc.call(uid);
             }
             function webrtcStarter(){
                 callConfig.isStartWebRtc = true;
@@ -169,6 +167,10 @@
             function webrtcClose(){
                 rtc.closeVideoConnection();
                 rtc.closePeerConnection();
+                // 关闭scoket连接
+                sockets && sockets.close();
+                activeUserList.value = [];
+
             }
             function getCurrentSystemUserInfo(userInfo){
                 const { uid, uname, uavatar } = userInfo;
@@ -179,7 +181,7 @@
             function endCall( isNotify = true ){
                 const { callMobile } = callConfig;
                 isNotify && rtc.sendMessage(callMobile,null, 'endCall');
-                chatroomConfig.messageList = []
+                chatroomConfig.messageList = [];
                 initPageStatus();
                 //关闭 && 重置 peer
                 rtc.closePeerConnection(true);
@@ -200,7 +202,6 @@
                 callConfig.showChatroom = false;
                 callConfig.unreadMesNumber = 0;
             }
-
             function answerCall(){
                 const { callMobile } = callConfig;
                 rtc.sendOffers(callMobile);
@@ -244,6 +245,13 @@
                     callConfig.unreadMesNumber += showChatroom === false ? 1 : 0
                 }
             }
+            function changes({ type }){
+                if( type === 'close' && callConfig.isStartCall ){
+                    endCall()
+                }
+                // 关闭win弹窗
+                webrtcClose();
+            }
 
             return {
                 local_video_dom,
@@ -254,13 +262,15 @@
                 showCallInfo,
                 chatroomConfig,
 
+                // methods
                 callUser,
                 getCurrentSystemUserInfo,
                 answerCall,
                 webrtcStarter,
                 handleChatroomStatus,
                 newMessage,
-                endCall
+                endCall,
+                changes
             }
         }
     }

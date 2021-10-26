@@ -11,36 +11,32 @@
                     v-for="(item,index) in TABABR_NAVIGATIONS"  
                     :key="index">
                     <p class="tabbar-title absolute d-none">{{ item.title }}</p>
-                    <span class="minimizes" v-if="item.isMinimize"></span>
-                    <img @click="openWindows(index)" class="tabbar-img"  :style="dockStyle(index)"  :data-index="index" :src="item.img">
+                    <div class="dock-items" :style="dockStyle(index)" @click="openWindows(index)">
+                        <span class="minimizes-mark" v-if="item.isMinimize"></span>
+                        <img class="tabbar-img" :src="item.img" :data-index="index">
+                    </div>
                 </li>
             </ul>
 
-<!--            <ul class="minimize justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white">-->
-<!--                <li class="tabbar-item duration-150 ease-in flex align-items-center justify-flex-end flex-column relative" -->
-<!--                    v-for="(item,index) in TABABR_MINIMIZE" :key="index">-->
-<!--                    <p class="tabbar-title absolute d-none">{{ item.title }}</p>-->
-<!--                    <img class="tabbar-img" :src="item.img">-->
-<!--                </li>-->
-<!--            </ul>-->
-
         </div>
-
-        <app-facetime v-model:show="TABABR_NAVIGATIONS[3].desktop" :appInfo="TABABR_NAVIGATIONS[3]"></app-facetime>
-        <app-mpas     v-model:show="TABABR_NAVIGATIONS[4].desktop" :appInfo="TABABR_NAVIGATIONS[4]"></app-mpas>
-        <app-safari   v-model:show="TABABR_NAVIGATIONS[6].desktop" :appInfo="TABABR_NAVIGATIONS[6]"></app-safari>
-        <app-termial  v-model:show="TABABR_NAVIGATIONS[7].desktop" :appInfo="TABABR_NAVIGATIONS[7]"></app-termial>
-        <app-vscode   v-model:show="TABABR_NAVIGATIONS[8].desktop" :appInfo="TABABR_NAVIGATIONS[8]"></app-vscode>
+      
+        <app-facetime :appInfo="dockItesmInfo(3)"></app-facetime>
+        <app-mpas     :appInfo="dockItesmInfo(4)"></app-mpas>
+        <app-safari   :appInfo="dockItesmInfo(6)"></app-safari>
+        <app-termial  :appInfo="dockItesmInfo(7)"></app-termial>
+        <app-vscode   :appInfo="dockItesmInfo(8)"></app-vscode>
     </div>
 </template>
 
 <script>
     import { reactive, computed, getCurrentInstance } from "vue";
+    import { SET_TABABR_NAVIGATION } from "@/config/store.config.js";
     import safari from "@/components/apps/safari/index.vue";
     import vscode from "@/components/apps/vscode/index.vue";
     import facetime from "@/components/apps/facetime/index.vue";
     import termial from "@/components/apps/Terminal/index.vue";
     import maps from "@/components/apps/maps/index.vue";
+
     import { useStore } from 'vuex';
     export default{
         components:{
@@ -58,6 +54,11 @@
             const dockStyle = computed( () =>{
                 return function(index){
                     return `width:${TABABR_LIST_WIDTH[index]}px;height:${TABABR_LIST_WIDTH[index]}px;`
+                }
+            })
+            const dockItesmInfo = computed( () =>{
+                return function(index){
+                    return store.getters.TABABR_NAVIGATION[index];
                 }
             })
             const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE );
@@ -79,13 +80,12 @@
                 TABABR_LIST_WIDTH.fill(50)
             }
             function openWindows(index){
-                // TABABR_NAVIGATIONS[index].desktop = true;
-                console.log('ctx',proxy)
-                // if( [0,1,2,5].includes(index) ){
-                //     ctx.$message.error({
-                //         content:'正在开发中....😊'
-                //     })
-                // }
+                store.commit(SET_TABABR_NAVIGATION, { _index:index, dockData:{ desktop:true, isMinimize:false } });
+                if( [0,1,2,5].includes(index) ){
+                    proxy.$message.error({
+                        content:'正在开发中....😊'
+                    })
+                }
             }
 
             return {
@@ -93,6 +93,7 @@
                 TABABR_LIST_WIDTH,
                 dockStyle,
                 TABABR_MINIMIZE,
+                dockItesmInfo,
 
                 // methods
                 tabbarMove,
@@ -123,7 +124,6 @@
                 box-sizing: border-box;
                 border: 1px solid #e5e7eb;
                 border-bottom: transparent;
-                //border-right: none;
                 border-color: rgba(156,163,175,0.3);
                 display: flex;
             }
@@ -131,9 +131,19 @@
                 padding-bottom: 10px; 
                 will-change: width height; user-select: none;position: relative;
                 &:hover .tabbar-title{display: block;}
-                .minimizes{width: 10px;height: 10px;border-radius: 100%;background: brown; position: absolute; top: 5px;right: 5px;}
                 .tabbar-title{ color: black; background-color: rgba(209,213,219,0.8);  padding:5px 10px; border-radius: .375rem; top: -80px;}
-                .tabbar-img{ transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; transition-duration: .15s;  will-change: width height;-webkit-user-drag: none; padding: 0 3px; }
+                .dock-items{
+                    transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; 
+                    transition-duration: .15s;  will-change: width height;
+                    -webkit-user-drag: none; padding: 0 3px; 
+                    position: relative;
+                    .tabbar-img{ 
+                        width: 100%;height: 100%;
+                    }
+                    .minimizes-mark{
+                        width: 10px;height: 10px;border-radius: 100%;background: brown; position: absolute; top: 2px;right: 5px;
+                    }
+                }
             }
             .trash{
                 position: relative;padding-left: 20px;
@@ -147,35 +157,6 @@
                     border-radius: 10px;
                 }
             }
-            //.minimize{
-            //    min-width: 70px;
-            //    height: 65px;
-            //    border-top-right-radius: 0.5rem;
-            //    border: 1px solid #e5e7eb;
-            //    border-color: rgba(156, 163, 175, 0.3);
-            //    border-left: none;
-            //    padding-left: 0.5rem;
-            //    padding-right: 0.5rem;
-            //    border-bottom: transparent;
-            //    position: relative;
-            //    backdrop-filter: blur(40px);
-            //    .tabbar-img{width: 46px;height: 50px; transition-timing-function: cubic-bezier(0.4, 0, 1, 1);}
-            //    &::after{
-            //        content:"";
-            //        width: 2px;
-            //        height: 50px;
-            //        background: rgba(156,163,175,0.2);
-            //        position: absolute;
-            //        top: 7px;left: 10px;
-            //        border-radius: 10px;
-            //    }
-            //    .tabbar-item{
-            //        .tabbar-title{
-            //            top: -40px;
-            //        }
-            //    }
-            //}
         }
-        
     }
 </style>

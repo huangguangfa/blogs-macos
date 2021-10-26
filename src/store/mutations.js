@@ -20,9 +20,11 @@ const mutations = {
     [SET_TABABR_MINIMIZE](state, list){
         state.TABABR_MINIMIZE = list;
     },
-    [SET_TABABR_NAVIGATION](state, list){
-        console.log('修改了',list)
-        state.TABABR_NAVIGATION = list;
+    [SET_TABABR_NAVIGATION](state, { _index, dockData }){
+        for(let key in dockData){
+            let value = dockData[key]
+            state.TABABR_NAVIGATION[_index][key] = value;
+        }
     },
     [SET_SYSTEM_CONFIG](state, data){
         state.SYSTEM_CONFIG = data;

@@ -1,7 +1,7 @@
 <template>
     <div class="active-user-content">
-        <div class="active-user" v-show="activeUserList.length">
-            <div class="user" v-for="item in activeUserList" :key="item">
+        <div class="active-user" v-if="activeUserList.length">
+            <div class="user" v-for="item in activeUserList" :key="item.uid">
                 <div class="flex align-items-center">
                     <img class="icon user-avatar " :src="item.uavatar" alt="">
                     <div class="user_info" >
@@ -12,7 +12,7 @@
                 <i v-if="!item._is_me" class="iconfont macos-shipindianhua" @click="callUser(item)"></i>
             </div>
         </div>
-        <div class="no-data" v-show="!activeUserList.length">
+        <div class="no-data" v-else>
             <vm-empty text="暂无用户"></vm-empty>
         </div>
     </div>
@@ -27,6 +27,7 @@
             function callUser(userInfo){
                 emit('callUser',userInfo)
             }
+
             return {
                 callUser
             }

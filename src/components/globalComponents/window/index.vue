@@ -1,18 +1,16 @@
 <template>
-<!-- fixed -->
     <div class="window noCopy ov-hide"
         :class="{
             'isScreenFacade':isScreenFacade,
             'bor-radius7':!page_config.isFullScreen,
-            'topLevel':page_config.isMinimize
+            'topLevel':isMinimize
         }"
         :style="initSzie"
         v-show="page_config.shows"
         :id="windowId"
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
-        <div class="fullScreen-top" v-if="page_config.isFullScreen && !page_config.isMinimize"></div>
-        <div class="minimize_mark"  v-if="page_config.isMinimize" @click.stop="setScreenFacade"></div>
+        <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
         <div class="window-bar" ref="ref_bar" 
             :class="[ 
                 page_config.isFullScreen && 'barFadeInDownBig box-shadow', 
@@ -57,7 +55,6 @@ export default{
     name:"window",
     props,
     setup(props,{ emit }){
-        const { appInfo } = props;
         let ref_windows = reactive({ dom:null });
         let ref_bar = ref(null);
         let page_config = reactive({
@@ -79,7 +76,6 @@ export default{
             currentWindowStatus:'close',
             shows:false,
             isFullScreen:false,
-            isMinimize:false,
             barHeight:40
         });
         let domEvents = reactive(new Map());
@@ -87,7 +83,7 @@ export default{
         id ++;
         let windowId = `window${id}`;
         store.commit(SET_WINDOW_ID,windowId);
-        //watch
+        // watch
         watch( () => props.show, ( status ) => {
             page_config.shows = status;
             status === true && nextTick(() =>{ 
@@ -97,7 +93,7 @@ export default{
             })
         })
 
-        //computed
+        // computed
         let initSzie = computed(() => {
             const w = props.width;
             const h = props.height;
@@ -106,10 +102,11 @@ export default{
             return `width:${w}px;height:${h}px;transform:scale(${ scale });left:${left};top:${top};`
         });
         const isScreenFacade = computed(() => store.getters.WINDOWID === windowId );
+        const isMinimize = computed(() => props.appInfo.isMinimize );
         const isBarShow = computed( () =>{
             const { isFullScreen, cursorPointerY } = page_config;
             let status =  isFullScreen === false || isFullScreen === true && cursorPointerY  === true ;
-            //barTop只需要判断全屏和是否到顶部
+            // barTop只需要判断全屏和是否到顶部
             store.commit(SET_FULL_SCREENBAR,isFullScreen === true && cursorPointerY  === true);
             return status;
         })
@@ -134,14 +131,17 @@ export default{
             addEvents(domEvents)
         })
 
-        //methods
+        // methods
         function statusSwitch(index){
+            const { _index } = props.appInfo;
             let isContinue = [ index === 1 && page_config.isFullScreen ];
             if( isContinue.some( item => item === true ) ) return;
             const { type, status } = windowTbarConfig[index];
             page_config.currentWindowStatus = type;
             page_config.shows = status;
-            emit('update:show',status);
+
+            // 修改store的dokc状态
+            store.commit(SET_TABABR_NAVIGATION, { _index, dockData:{ desktop:status } });
             if( status === false ){
                 page_config.isFullScreen = false;
             }
@@ -156,34 +156,20 @@ export default{
                 ref_windows.dom.minimize = {  width, height, top, left };
                 windowMinimize()
             }
+
+            emit('change',{ type, status })
         }
         function setScreenFacade(){
-            // page_config.isMinimize = false;
-            // let updateMinimize = [];
-            // let currentWin = {};
-            // store.getters.TABABR_MINIMIZE.forEach( i => {
-            //     if( props.appInfo.id !== i.id  ){
-            //         updateMinimize.push(i)
-            //     }else{
-            //         currentWin = i
-            //     }
-            // });
-            // store.commit(SET_TABABR_MINIMIZE,updateMinimize);
             store.commit(SET_WINDOW_ID,windowId);
-            // const  { app_top, app_left } = currentWin;
-            // ref_windows.dom.style.transform = `scale(1)`;
-            // ref_windows.dom.style.top = `${app_top}px`;
-            // ref_windows.dom.style.left = `${app_left}px`;
-            // ref_windows.dom.style.bottom = `auto`;
         }
         function windowBarDowStart(e){
             const { clientX, clientY } = e;
             let iframe = document.getElementById(props.title);
             iframe && (iframe.style['pointer-events'] = 'none')
-            //算出鼠标相对元素的位置
+            // 算出鼠标相对元素的位置
             let disX = clientX - ref_windows.dom.offsetLeft;
             let disY = clientY - ref_windows.dom.offsetTop;
-            //只有顶部才支持被拖拽
+            // 只有顶部才支持被拖拽
             if(disX < 6 || disY < 6 || disY > 30) return;
             page_config.winBarConfig.winBarStart = true;
             page_config.winBarConfig.disX = disX;
@@ -199,36 +185,9 @@ export default{
             page_config.sticksConfig.sticksType = type;
         }
         async function windowMinimize(){
-            page_config.isMinimize = true;
-            const updateTababrData = store.getters.TABABR_NAVIGATION.map( i =>{
-                return {
-                    ...i,
-                    isMinimize: i.id === appInfo.id ? true : i.isMinimize
-                }
-            })
-            store.commit(SET_TABABR_NAVIGATION,updateTababrData);
-            // // 保存最小化应用
-            // const { id, img, title, desktop } = appInfo;
-            // if( !store.getters.TABABR_MINIMIZE.map( i => i.id ).includes(id) ){
-            //     page_config.isMinimize = true;
-            //     const { top, left } = ref_windows.dom.style;
-            //     const w_dom_top = Number(top.replace('px',""));
-            //     const w_dom_left = Number(left.replace('px',""));
-            //     const { base64 } = await htmlToImg(ref_windows.dom);
-            //     let appDes = {
-            //         id,
-            //         img:base64,
-            //         title,
-            //         desktop,
-            //         app_top:w_dom_top,
-            //         app_left:w_dom_left,
-            //         // app_mini_img:base64
-            //     }
-            //     store.commit(SET_TABABR_MINIMIZE,[
-            //         ...store.getters.TABABR_MINIMIZE ,
-            //         appDes,
-            //     ]);
-            // }
+            const { _index } = props.appInfo;
+            // 最小化保存状态
+            store.commit(SET_TABABR_NAVIGATION,{ _index, dockData:{ isMinimize:true } });
         }
         function windowFullScreen(){
             page_config.isFullScreen = !page_config.isFullScreen;
@@ -249,7 +208,7 @@ export default{
             }
             ref_windows.dom.setAttribute('style',newStyle)
         }
-        //销毁
+        // 销毁
         onUnmounted( () =>{
             removeEvents(page_config.domEvents)
         })
@@ -262,6 +221,7 @@ export default{
             isScreenFacade,
             initSzie,
             ref_bar,
+            isMinimize,
 
             //methods
             windowFullScreen,

@@ -1,7 +1,7 @@
 <template>
     <div class="vscode">
-        <window v-model:show="show" title="VSCode" width="800" :appInfo="appInfo">
-            <div class="vscode-content wh100" v-if="show">
+        <window v-model:show="appInfo.desktop" title="VSCode" width="800" :appInfo="appInfo">
+            <div class="vscode-content wh100" v-if="appInfo.desktop">
                 <vm-iframe ids="VSCode" v-if="isLoginVscode" webUrl="http://vscode.huangguangfa.cn:6689"></vm-iframe>
                 <div class="login_locks" v-else>
                     <p class="tips">登陆到云开发工具</p>
@@ -21,13 +21,11 @@
             vmlogin:login
         },
         props:{
-            show:Boolean,
             appInfo:Object
         },
-        setup(props, { emit }){
+        setup(){
             const { proxy } = getCurrentInstance();
             const isLoginVscode = ref(localStorage.getItem("isLoginVscode"));
-            watch( () => props.show ,status => emit('update:show',status))
             function loginVscode(_,info){
                 const { uid, uname } = info;
                 if( uid === 'guangfa123' && uname === 'gf' ){
