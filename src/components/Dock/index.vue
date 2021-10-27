@@ -25,6 +25,7 @@
         <app-safari   :appInfo="dockItesmInfo(6)"></app-safari>
         <app-termial  :appInfo="dockItesmInfo(7)"></app-termial>
         <app-vscode   :appInfo="dockItesmInfo(8)"></app-vscode>
+        <appMusic     :appInfo="dockItesmInfo(10)"></appMusic>
     </div>
 </template>
 
@@ -36,7 +37,7 @@
     import facetime from "@/components/apps/facetime/index.vue";
     import termial from "@/components/apps/Terminal/index.vue";
     import maps from "@/components/apps/maps/index.vue";
-
+    import music from "@/components/apps/music/index.vue"
     import { useStore } from 'vuex';
     export default{
         components:{
@@ -44,7 +45,8 @@
             appVscode:vscode,
             appFacetime:facetime,
             appTermial:termial,
-            appMpas:maps
+            appMpas:maps,
+            appMusic:music
         },
         setup(){
             const { proxy } = getCurrentInstance();
@@ -113,7 +115,7 @@
         width: 100vw;
         height: 100vh;
         .dock{
-            position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);z-index:999999999;
+            position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);z-index:99999;
             .tabbars-u{
                 height: 65px;
                 box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.17);

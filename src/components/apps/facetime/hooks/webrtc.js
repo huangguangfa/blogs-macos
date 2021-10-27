@@ -273,7 +273,7 @@ const SkyRTC = function () {
     }
     //关闭视频流
     skyrtc.prototype.closeVideoConnection = function () {
-        gThat && gThat.localMediaStream.getTracks().forEach( track => {
+        gThat && gThat.localMediaStream?.getTracks().forEach( track => {
             track.stop();
         });
         gThat = null;

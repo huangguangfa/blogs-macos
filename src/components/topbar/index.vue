@@ -54,6 +54,7 @@
         box-sizing: border-box;
         position: fixed;
         top:0;left:0;
+        z-index: 999;
         .topbar-left{
             height: 100%;
         }

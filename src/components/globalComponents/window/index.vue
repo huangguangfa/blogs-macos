@@ -3,6 +3,7 @@
         :class="{
             'isScreenFacade':isScreenFacade,
             'bor-radius7':!page_config.isFullScreen,
+            'isFullScreen':page_config.isFullScreen,
             'topLevel':isMinimize
         }"
         :style="initSzie"

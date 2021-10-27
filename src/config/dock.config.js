@@ -32,7 +32,7 @@ export const TABABR_NAVIGATION = [
         isMinimize:false,
         _index:3,
         img: "/src/assets/images/tabbar-navigation/facetime.png"
-    },
+    }, 
     {
         id: "Maps",
         title: "Maps",
@@ -82,11 +82,19 @@ export const TABABR_NAVIGATION = [
         img: "/src/assets/images/tabbar-navigation/github.png"
     },
     {
+        id: "Music",
+        title: "Music",
+        desktop: true,
+        isMinimize:false,
+        _index:10,
+        img: "/src/assets/images/tabbar-navigation/music.png"
+    },
+    {
         id: "Trash",
         title: "Trash",
         desktop: false,
         isMinimize:false,
-        _index:10,
+        _index:11,
         img: "/src/assets/images/tabbar-navigation/trash.png"
     }
 ]
