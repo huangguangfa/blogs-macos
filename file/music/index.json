@@ -1,0 +1,16 @@
+[
+    {
+        "name":"稻香",
+        "singer":"周杰伦",
+        "url":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/mp3/dx.mp3",
+        "cover":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/cover/dx-cover.jpeg",
+        "time":"03:32"
+    },
+    {
+        "name":"洋葱",
+        "singer":"杨宗纬",
+        "url":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/mp3/yc.mp3",
+        "cover":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/cover/yc-cover.jpeg",
+        "time":"04:32"
+    }
+]

@@ -5,10 +5,7 @@
                 <div class="song-list">
                     <div class="song-left">
                         <div class="music-btn">
-                            <span>正在播放</span>
-                            <span>正在播放</span>
-                            <span>正在播放</span>
-                            <span>正在播放</span>
+                            <span :class="{ 'active':index === 0 }" v-for="(item, index) in musicType" :key="item.name">{{ item.name }} </span>
                         </div>
                         
                         <div class="play-list music-list">
@@ -19,35 +16,61 @@
                                     <span class="list-time">歌曲</span>
                                 </div>
                                 <div class="music-list-content">
-                                    <div class="song-items" v-for="item in 20" :key="item">
-                                        <span class="song-items-num">1</span>
-                                        <span class="song-items-name">浪漫主义</span>
-                                        <span class="song-items-artist">姜云升</span>
-                                        <span class="song-items-time"> 03:36 </span>
+                                    <div class="song-items" v-for="(item, index) in palyConfig.musicLists" :key="item.url" @click="addPlay(item)">
+                                        <span class="song-items-num">{{ index + 1 }}</span>
+                                        <span class="song-items-name">{{ item.name }}</span>
+                                        <span class="song-items-artist">{{ item.singer }}</span>
+                                        <span class="song-items-time"> {{ item.time }} </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="music-bar-btns">
-                            <i class="iconfont macos-shangyishou"></i>
-                            <i class="iconfont macos-24gf-pauseCircle"></i>
-                            <i class="iconfont macos-xiayishou"></i>
+                            <audio ref="palyConfig.audio" :src="palyConfig.curPlay.url" controls></audio>
+                            <div class="right-round"></div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- 虚化背景 -->
-                <div class="mmPlayer-bg"></div>
+                <div class="mmPlayer-bg" :style="`background-image: url(${palyConfig.playBg})`"></div>
             </div>
         </window>
     </div>
 </template>
 
 <script>
+    import { reactive } from "vue";
+    import musicList from "../../../../file/music/index.json"
     export default{
         props:{
             appInfo:Object
+        },
+        setup(){
+            const musicType = reactive([
+                { name:"正在播放" },
+                { name:"我的歌单" }
+            ])
+            console.log(musicList)
+            const palyConfig = reactive({
+                musicLists:musicList,
+                curPlay:{},
+                playBg:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/ui/music-default-bg.jpeg"
+            })
+            // methods
+            function addPlay(item){
+                palyConfig.curPlay = item;
+                palyConfig.playBg = item.cover;
+            }
+
+            return {
+                musicType,
+                palyConfig,
+
+                // methods
+                addPlay
+            }
         }       
     }
 </script>
@@ -74,6 +97,11 @@
                         font-size: 12px;
                         line-height: 30px;
                         overflow: hidden;
+                        cursor: not-allowed;
+                    }
+                    .active{
+                        border-color: #fff;
+                        color: #fff;
                         cursor: pointer;
                     }
                 }
@@ -110,14 +138,13 @@
                 }
 
                 .music-bar-btns{
-                    color: #fff;height:15%;display:flex; align-items: center;
+                    color: #fff;height:15%;display:flex; align-items: center; justify-content: center;
                     i{
                         font-size: 30px;margin: 0 20px;cursor: pointer;
                     }
                 }
             }
         }
-
 
         .mmPlayer-bg{
             z-index: -2;
@@ -131,7 +158,6 @@
             transition: all .8s;
             -webkit-transform: scale(1.1);
             transform: scale(1.1);
-            background-image: url("../../../assets/apps/music/bg-2.a1183040.jpg");
             position: absolute;
             top: 0;
             right: 0;
@@ -139,4 +165,17 @@
             bottom: 0;
         }
     }
+</style>
+
+<style>
+audio::-webkit-media-controls {
+    overflow: hidden !important
+}
+audio::-webkit-media-controls-enclosure {
+    width: calc(100% + 32px);
+    margin-left: auto;
+}
+.right-round{
+    height: 54px;width: 30px;background: #eff1f2;border-top-right-radius: 30px;border-bottom-right-radius: 30px;
+}
 </style>
