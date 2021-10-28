@@ -28,6 +28,12 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="music-bar-btns">
+                            <i class="iconfont macos-shangyishou"></i>
+                            <i class="iconfont macos-24gf-pauseCircle"></i>
+                            <i class="iconfont macos-xiayishou"></i>
+                        </div>
                     </div>
                 </div>
                 
@@ -50,7 +56,9 @@
     .music-content{
         width: 100%;height:100%; padding: 0px 25px 25px 25px; box-sizing: border-box;
         .song-list{
+            height: 100%;
             .song-left{
+                height: 100%;
                 .music-btn{
                     margin-top: 20px;
                     span{
@@ -70,7 +78,9 @@
                     }
                 }
                 .play-list{
+                    height: 75%;overflow-y:auto ;
                     .music-list{
+                        height: 100%; 
                         .list-item{
                             display: flex;width: 100%;color: #fff;overflow: hidden;font-size: 12px;
                             height: 50px; border-bottom: 1px solid hsla(0,0%,100%,.1);line-height: 50px;
@@ -96,6 +106,13 @@
                                 .song-items-time{display: block;width: 60px;}
                             }
                         }
+                    }
+                }
+
+                .music-bar-btns{
+                    color: #fff;height:15%;display:flex; align-items: center;
+                    i{
+                        font-size: 30px;margin: 0 20px;cursor: pointer;
                     }
                 }
             }
