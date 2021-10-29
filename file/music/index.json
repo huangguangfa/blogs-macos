@@ -12,5 +12,19 @@
         "url":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/mp3/yc.mp3",
         "cover":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/cover/yc-cover.jpeg",
         "time":"04:32"
+    },
+    {
+        "name":"我的天空",
+        "singer":"南征北战",
+        "url":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/mp3/nzbz.mp3",
+        "cover":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/cover/nzbz-cover.jpeg",
+        "time":"04:32"
+    },
+    {
+        "name":"国王与乞丐",
+        "singer":"华晨宇",
+        "url":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/mp3/gwyqg.mp3",
+        "cover":"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/music/cover/gwyqg-cover.jpeg",
+        "time":"04:32"
     }
 ]

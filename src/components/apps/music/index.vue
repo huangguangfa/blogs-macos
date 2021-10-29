@@ -1,6 +1,6 @@
 <template>
     <div class="music">
-        <window v-model:show="appInfo.desktop" title="my Music" width="1000" height="600" :appInfo="appInfo">
+        <window v-model:show="appInfo.desktop" :title=" palyConfig.curPlay.name ? `正在播放-${palyConfig.curPlay.name}` : 'my Music'" width="1000" height="600" :appInfo="appInfo">
             <div class="music-content">
                 <div class="song-list">
                     <div class="song-left">
