@@ -16,7 +16,7 @@
                                     <span class="list-time">歌曲</span>
                                 </div>
                                 <div class="music-list-content">
-                                    <div class="song-items" v-for="(item, index) in palyConfig.musicLists" :key="item.url" @click="addPlay(item)">
+                                    <div class="song-items" :class="{ 'paly': item.name === palyConfig.curPlay.name }" v-for="(item, index) in palyConfig.musicLists" :key="item.url" @click="addPlay(item)">
                                         <span class="song-items-num">{{ index + 1 }}</span>
                                         <span class="song-items-name">{{ item.name }}</span>
                                         <span class="song-items-artist">{{ item.singer }}</span>
@@ -142,6 +142,9 @@
                                 .song-items-artist{width: 150px;}
                                 .song-items-time{display: block;width: 60px;}
                             }
+                            .paly{
+                                background: rgba(255,255,255,0.1);
+                            }
                         }
                     }
                 }
@@ -158,7 +161,7 @@
         .mmPlayer-bg{
             z-index: -2;
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: 100% 100%;
             background-position: 50%;
             -webkit-filter: blur(12px);
             filter: blur(12px);
