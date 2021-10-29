@@ -4,7 +4,7 @@ export function addEvents(events) {
     });
 }
 export function removeEvents(events) {
-    events.forEach((cb, eventName) => {
+    events && events.forEach((cb, eventName) => {
         document.documentElement.removeEventListener(eventName, cb);
     });
 }

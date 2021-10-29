@@ -143,7 +143,7 @@
                         width: 100%;height: 100%;
                     }
                     .minimizes-mark{
-                        width: 10px;height: 10px;border-radius: 100%;background: brown; position: absolute; top: 2px;right: 5px;
+                        width: 10px;height: 10px;border-radius: 100%;background: red; position: absolute; top: 2px;right: 5px;
                     }
                 }
             }

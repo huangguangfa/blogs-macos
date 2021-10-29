@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="music-bar-btns">
-                            <audio ref="palyConfig.audio" :src="palyConfig.curPlay.url" controls></audio>
+                            <audio id="audios" ref="audioDom" :src="palyConfig.curPlay.url" controls></audio>
                             <div class="right-round"></div>
                         </div>
                     </div>
@@ -41,32 +41,41 @@
 </template>
 
 <script>
-    import { reactive } from "vue";
+    import { nextTick, reactive, ref, watch } from "vue";
     import musicList from "../../../../file/music/index.json"
     export default{
         props:{
             appInfo:Object
         },
-        setup(){
+        setup(props){
             const musicType = reactive([
                 { name:"正在播放" },
                 { name:"我的歌单" }
             ])
-            console.log(musicList)
             const palyConfig = reactive({
                 musicLists:musicList,
                 curPlay:{},
                 playBg:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/ui/music-default-bg.jpeg"
             })
+            const audioDom = ref(null)
             // methods
             function addPlay(item){
                 palyConfig.curPlay = item;
                 palyConfig.playBg = item.cover;
+                nextTick( () =>{
+                    audioDom.value.play()
+                })
             }
+            watch( () => props.appInfo.desktop, (status) =>{
+                if( status === false && props.appInfo.isMinimize === false ){
+                    audioDom.value.pause()
+                }
+            })
 
             return {
                 musicType,
                 palyConfig,
+                audioDom,
 
                 // methods
                 addPlay
