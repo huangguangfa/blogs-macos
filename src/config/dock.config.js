@@ -28,7 +28,7 @@ export const TABABR_NAVIGATION = [
     {
         id: "Facetime",
         title: "Facetime",
-        desktop: false,
+        desktop: true,
         isMinimize:false,
         _index:3,
         img: "/src/assets/images/tabbar-navigation/facetime.png"
@@ -84,7 +84,7 @@ export const TABABR_NAVIGATION = [
     {
         id: "Music",
         title: "Music",
-        desktop: true,
+        desktop: false,
         isMinimize:false,
         _index:10,
         img: "/src/assets/images/tabbar-navigation/music.png"

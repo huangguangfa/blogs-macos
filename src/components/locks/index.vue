@@ -10,14 +10,14 @@
                 <div class="inputs">
                     <div class="title">{{ configInfo.userLabel }}：</div>
                     <div class="inputs-content">
-                        <input v-model="user.uname" type="text">
+                        <input v-model="user.uName" type="text">
                         <label :alt="`请输入${configInfo.userLabel}`" :placeholder="`请输入${configInfo.userLabel}`"></label>
                     </div>
                 </div>
                 <div class="inputs">
                     <div class="title">{{ configInfo.phoneLabel }}：</div>
                     <div class="inputs-content">
-                        <input v-model="user.uid" type="text">
+                        <input v-model="user.uId" type="text">
                         <label :alt="`请输入${configInfo.phoneLabel}`" :placeholder="`请输入${configInfo.phoneLabel}`"></label>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
         props,
         setup(props, { emit }){
             const { isInit, isShowReset, submitText, userLabel, phoneLabel } = props;
-            let user = reactive({ uid: null,  uname:null });
+            let user = reactive({ uId: null, uName:null, uAvatar:null });
             const configInfo = {
                 submitText,
                 isShowReset,
@@ -45,9 +45,9 @@
             }
             isInit && resetName()
             function resetName(){
-                user.uid = getRandomMoble();
-                user.uname = getRandomName();
-                user.uavatar = getRandomuAvatar();
+                user.uId = getRandomMoble();
+                user.uName = getRandomName();
+                user.uAvatar = getRandomuAvatar();
                 emit('getUserInfo',user)
             }
             function submit(){

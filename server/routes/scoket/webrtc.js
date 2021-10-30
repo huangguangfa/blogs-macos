@@ -6,23 +6,27 @@ expressWs(router);
 
 const active_user = {};
 router.ws('/webrtc/user', function( ws, req ){
-    const { uid, uname, uavatar } = req.query;
-    console.log('连接',uname);
-    if(uid && uname){
-        active_user[uid] = {  ws,uid,uname ,uavatar }
+    const { uId, uName, uAvatar, isStartCamera } = req.query;
+    console.log('连接',req.query);
+    if(uId && uName){
+        active_user[uId] = { ws, uId, uName, uAvatar, isStartCamera }
         updateActiveUser()
     };
     //接收消息、【保存用户信息】
     ws.on("message", function(mes){
         if(mes === "ping") return;
-        const { uid, data } = JSON.parse(mes);
-        const { ws } = active_user[uid];
-        ws && dispatchMessage(ws, gteSendData('exc',data));
+        try{
+            const { uId, data } = JSON.parse(mes);
+            const { ws } = active_user[uId];
+            ws && dispatchMessage(ws, gteSendData('exc',data));
+        }catch(e){
+            console.log(e)
+        }
     });
     //监听关闭、【删除内存中用户】
     ws.on("close", function(w) {
-        console.log('断开',uname)
-        delete active_user[uid];
+        console.log('断开',uName)
+        delete active_user[uId];
         updateActiveUser()
     });
 })
@@ -47,8 +51,8 @@ function dispatchMessage(ws,data){
 //获取当前活跃人数
 function getActiveUserList(){
     let userList = Object.values(active_user).map( item => {
-        const { uid, uname, uavatar } = item;
-        return { uid, uname, uavatar }
+        const { uId, uName, uAvatar, isStartCamera } = item;
+        return { uId, uName, uAvatar, isStartCamera }
     })
     return userList;
 }

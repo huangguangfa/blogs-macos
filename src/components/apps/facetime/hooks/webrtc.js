@@ -64,13 +64,16 @@ const SkyRTC = function () {
         //是否是呼叫方
         this.isCalls = false;
         this.user = {
-            uid:null,
-            uname:null
+            uId:null,
+            uName:null,
+            uAvatar:null,
+            isStartCamera:false
         };
         this.receiveUser = {
-            uid:null,
-            uname:null,
-            uAvatar:null
+            uId:null,
+            uName:null,
+            uAvatar:null,
+            isStartCamera:false
         }
     }
 
@@ -78,12 +81,14 @@ const SkyRTC = function () {
     skyrtc.prototype = new EventEmitter();
 
     /*************************服务器连接部分***************************/
-    skyrtc.prototype.connect = function (uid,uname,uavatar) {
+    skyrtc.prototype.connect = function ( uId, uName, uAvatar ) {
+        this.user.uId = uId;
+        this.user.uName = uName;
+        this.user.uAvatar = uAvatar;
+        this.user.isStartCamera = getUserMedia ? "1" : "0";
         let socket, that = this; 
-        socket = this.socket = initScoket(uid,uname,uavatar);
-        this.user.uid = uid;
-        this.user.uname = uname;
-        this.user.uAvatar = uavatar;
+        socket = this.socket = initScoket(this.user);
+        
         socket.onopen(function () {
             that.emit("socket_opened", socket);
             that.emit('connected', socket);
@@ -95,14 +100,17 @@ const SkyRTC = function () {
             let scoketData = message.data;
             if( sender === "exc" ){
                 const { data, call_uid, call_uname, exc_type  } = scoketData;
-                that.receiveUser.uid = call_uid;
+                that.receiveUser.uId = call_uid;
                 that.receiveUser.uname = call_uname;
-                //添加远端offer
+                // 添加远端offer
                 exc_type === "sdp" && that.receiveOffer(data);
-                //添加IEC
+                // 添加IEC
                 exc_type === "ice" && that.receiveIce(data);
-                //呼叫监听
+                // 呼叫监听
                 exc_type === 'call' && that.emit('call',data);
+                // 聊天
+                exc_type === 'chats' && that.emit('chats',data);
+                // 挂断
                 exc_type === 'endCall' && that.emit('endCall',data);
             }
             that.emit("socket_receive_message", message, socket );
@@ -180,9 +188,9 @@ const SkyRTC = function () {
     /***********************信令交换部分*******************************/
     /******* SDP信息交换 ******/
     //向用户发送Offer类型信令
-    skyrtc.prototype.sendOffers = function ( uid ) {
+    skyrtc.prototype.sendOffers = function ( uId ) {
         this.isCalls = true;
-        this.sendMessage(uid,this.localPeer.localDescription, 'sdp')
+        this.sendMessage(uId,this.localPeer.localDescription, 'sdp')
     };
     //接收到answer类型信令后将对方的sdp描述写入PeerConnection中返回answer类型信令
     skyrtc.prototype.receiveOffer = function (sdp) {
@@ -196,29 +204,29 @@ const SkyRTC = function () {
         this.localPeer.createAnswer().then( answerOffer =>{
             //设置下本地
             that.localPeer.setLocalDescription(answerOffer)
-            const { uid } = that.receiveUser;
-            that.sendMessage(uid, answerOffer, 'sdp')
+            const { uId } = that.receiveUser;
+            that.sendMessage(uId, answerOffer, 'sdp')
         });
     };
     /****** ICE 信息交换 *****/
     //向用户发送ICE信息后将对方的ice描述写入PeerConnection中返回answer类型信令
-    skyrtc.prototype.sendIceData = function (uid,ice){
-        this.sendMessage( uid, ice, 'ice' )
+    skyrtc.prototype.sendIceData = function (uId,ice){
+        this.sendMessage( uId, ice, 'ice' )
     }
     //接收answer类型信令
     skyrtc.prototype.receiveIce = function (ice){
-        const { uid } = this.receiveUser;
+        const { uId } = this.receiveUser;
         let candidate = new nativeRTCIceCandidate(ice);
         this.localPeer.addIceCandidate(candidate);
         //判断是否是接收方
-        this.isCalls === false && this.sendIceData(uid,this.ICE)
+        this.isCalls === false && this.sendIceData(uId,this.ICE)
     }
     
     /***********************点对点连接部分*****************************/
     //呼叫
-    skyrtc.prototype.call = function(call_uid){
-        const { uid, uname } = this.user;
-        call_uid && this.sendMessage(call_uid, { switch_status:true, uid,uname },'call')
+    skyrtc.prototype.call = function(call_uid, type){
+        const { uId, uName } = this.user;
+        call_uid && this.sendMessage(call_uid, { switch_status:true, uId,uName }, type)
     }
 
     //创建单个PeerConnection
@@ -266,7 +274,7 @@ const SkyRTC = function () {
         this.localPeer = null;
         this.isCalls = false;
         this.receiveUser = {
-            uid:null,
+            uId:null,
             uname:null,
             uAvatar:null
         }
@@ -282,12 +290,12 @@ const SkyRTC = function () {
     /***********************数据通道连接部分*****************************/
     //发送消息方法
     skyrtc.prototype.sendMessage = function (callId, message, exc_type) {
-        const { uid, uname } = this.user;
+        const { uId, uName } = this.user;
         let data = {
-            uid:callId,
+            uId:callId,
             data:{
-                call_uid:uid,
-                call_uname:uname,
+                call_uid:uId,
+                call_uname:uName,
                 exc_type,
                 data:message
             }

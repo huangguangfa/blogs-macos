@@ -3,7 +3,7 @@
         <window v-model:show="appInfo.desktop" @change="changes" title="Facetime" width="1000" height="450" :appInfo="appInfo">
             <div class="facetime-content" v-if="appInfo.desktop">
                 <div class="facetime-content-left">
-                    <vm-active-user :activeUserList="activeUserList" @callUser="callUser"></vm-active-user>
+                    <vm-active-user :activeUserList="activeUserList" @callUser="callUser" @chat="chats"></vm-active-user>
                 </div>
                 <div class="facetime-content-right">
                     <vm-get-user 
@@ -22,9 +22,9 @@
                                 <span>{{ callConfig.callMobile }}</span>
                             </div>
                             <div class="call_btns justify-space-around">
-                                <i class="iconfont macos-guaduan call_btn_common" @click="endCall"></i>
-                                <i v-if="showCallInfo.isShowAnswer" class="iconfont macos-shipindianhua call_btn_common" @click="answerCall"></i>
-                                <i v-if="callConfig.isStartCall" class="iconfont macos-liaotian call_btn_common" @click="handleChatroomStatus">
+                                <i v-if="callConfig.type === 'call'" class="iconfont macos-guaduan call_btn_common" @click="endCall"></i>
+                                <i v-if="showCallInfo.isShowAnswer && callConfig.type ==='call'" class="iconfont macos-shipindianhua call_btn_common" @click="answerCall"></i>
+                                <i v-if="callConfig.isStartCall || callConfig.type ==='chats'" class="iconfont macos-liaotian call_btn_common" @click="handleChatroomStatus">
                                     <span v-show="callConfig.unreadMesNumber > 0" class="unreadMesNumber">{{ callConfig.unreadMesNumber }}</span>
                                 </i>
                             </div>
@@ -40,7 +40,7 @@
 
 <script>
     import { ref, watch, reactive, computed  } from "vue";
-    import { deepClone } from "@/utils/utils.js"
+    import { deepClone } from "@/utils/utils.js";
     import SkyRTC from "./hooks/webrtc.js";
     import chatroom from "./chatroom.vue";
     import activeUser from "./activeUser.vue";
@@ -58,7 +58,7 @@
             let local_video_dom = ref(null)
             let remote_video_dom = ref(null)
             let rtc = SkyRTC();
-            let user = reactive({ uid: null,  uname:null, uavatar:null });
+            let user = reactive({ uId: null,  uName:null, uAvatar:null, isStartCamera:'0' });
             let activeUserList = ref([]);
             let chatroomConfig = reactive({
                 messageList:[]
@@ -74,12 +74,12 @@
                 isCaller:false,
                 callMobile:null,
                 callName:null,
+                type:null,
                 // 是否显示聊天
                 showChatroom:false,
                 unreadMesNumber:0
             })
             let sockets = null;
-            console.log('rtc',rtc)
             /**********************************************************/
             /*                   webrtc通信                           */
             /**********************************************************/
@@ -110,12 +110,16 @@
                 const { isOpenCall } = callConfig;
                 // 正在通话中
                 if( isOpenCall ) return;
-                const { switch_status, uid, uname } = data;
-                switch_status && startCall(uid,uname);
+                const { switch_status, uId, uName } = data;
+                switch_status && startCall(uId,uName, false, 'call');
+            })
+            rtc.on('chats', data =>{
+                console.log('chats', data)
+                const { switch_status, uId, uName } = data;
+                switch_status && startCall(uId,uName, false ,'chats');
             })
             // 挂断电话
             rtc.on('endCall', data =>{
-                console.log('对方挂断电话');
                 chatroomConfig.messageList = []
                 endCall(false);
             })
@@ -153,16 +157,22 @@
             
             //methds
             function callUser(userInfo){
-                const { uid, _is_me, uname } = userInfo;
+                const { uId, _is_me, uName } = userInfo;
                 const { isStartCall } = callConfig;
                 if( _is_me || isStartCall ) return;
-                startCall(uid, uname, true);
-                rtc.call(uid);
+                startCall(uId, uName, true, 'call');
+                rtc.call(uId, 'call');
+            }
+            function chats(userInfo){
+                callConfig.showChatroom = true;
+                const { uId, uName } = userInfo;
+                startCall(uId, uName, false, 'chats');
+                rtc.call(uId, 'chats');
             }
             function webrtcStarter(){
                 callConfig.isStartWebRtc = true;
-                const { uid, uname, uavatar } = user;
-                rtc.connect(uid, uname, uavatar );
+                const { uId, uName, uAvatar } = user;
+                rtc.connect(uId, uName, uAvatar );
             }
             function webrtcClose(){
                 rtc.closeVideoConnection();
@@ -173,10 +183,10 @@
 
             }
             function getCurrentSystemUserInfo(userInfo){
-                const { uid, uname, uavatar } = userInfo;
-                user.uid = uid;
-                user.uname = uname;
-                user.uavatar = uavatar;
+                const { uId, uName, uAvatar } = userInfo;
+                user.uId = uId;
+                user.uName = uName;
+                user.uAvatar = uAvatar;
             }
             function endCall( isNotify = true ){
                 const { callMobile } = callConfig;
@@ -186,11 +196,12 @@
                 //关闭 && 重置 peer
                 rtc.closePeerConnection(true);
             }
-            function startCall(uid,uname,isCaller = false){
-                callConfig.callMobile = uid;
-                callConfig.callName = uname;
+            function startCall(uId,uName,isCaller = false, type){
+                callConfig.callMobile = uId;
+                callConfig.callName = uName;
                 callConfig.isCaller = isCaller;
                 callConfig.isOpenCall = true;
+                callConfig.type = type;
             }
             function initPageStatus(){
                 remote_video_dom.value.load();
@@ -210,7 +221,7 @@
             function getActiveUserList(data){
                 data.forEach( item => {
                     item._is_me = false
-                    if( item.uid === user.uid ){  item._is_me = true }
+                    if( item.uId === user.uId ){  item._is_me = true }
                 })
                 activeUserList.value = data;
             }
@@ -220,11 +231,11 @@
                 callConfig.unreadMesNumber = 0;
             }
             function newMessage(data, islocal = false){
-                const { callMobile, showChatroom, unreadMesNumber } = callConfig;
-                const { uavatar } = user;
+                const { callMobile, showChatroom } = callConfig;
+                const { uAvatar } = user;
                 //本地消息推送
                 if( islocal ){
-                    data.uavatar = uavatar;
+                    data.uAvatar = uAvatar;
                     chatroomConfig.messageList.push(data);
                     //远端推送
                     let clone_data = deepClone(data);
@@ -232,12 +243,12 @@
                     rtc.sendMessage(callMobile,clone_data, 'communication')
                 }else{
                     const { call_uid, call_uname } = data;
-                    const { mes_content, type ,uavatar} = data.data
+                    const { mes_content, type ,uAvatar} = data.data
                     let newMes = {
                         isHaveRead:showChatroom,
-                        uid:call_uid,
+                        uId:call_uid,
                         uname:call_uname,
-                        uavatar,
+                        uAvatar,
                         mes_content,
                         type
                     }
@@ -270,7 +281,8 @@
                 handleChatroomStatus,
                 newMessage,
                 endCall,
-                changes
+                changes,
+                chats
             }
         }
     }

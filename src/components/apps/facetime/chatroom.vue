@@ -3,9 +3,9 @@
         <div class="chatroom-area" ref="chatroomArea">
             <div class="chatroom-area-list" v-if="MessageList.length">
                 <div class="user-common" :class="{ 'justify-flex-end':row.type === 'right' }" v-for="( row, index ) in MessageList" :key="index">
-                    <img v-if="row.type === 'left'" class="user-avatar" :src="row.uavatar" alt="">
+                    <img v-if="row.type === 'left'" class="user-avatar" :src="row.uAvatar" alt="">
                     <div class="content" :class="row.type === 'left' ? 'left-mark' : 'right-mark' "> {{ row.mes_content }} </div>
-                    <img v-if="row.type === 'right'" class="user-avatar me" :src="row.uavatar" alt="">
+                    <img v-if="row.type === 'right'" class="user-avatar me" :src="row.uAvatar" alt="">
                 </div>
             </div>
             <vm-empty v-else text="暂无消息"></vm-empty>
@@ -104,7 +104,7 @@
         .chatroom-area::-webkit-scrollbar { width : 5px;  height: 1px;  position: absolute;right: 10px;}
         .chatroom-area::-webkit-scrollbar-thumb { border-radius:10px; background-color: rgba(204,204,204,0.5);}
         .chatroom-area::-webkit-scrollbar-track { background: none;border-radius: 10px; }
-        .input-area{width: 100%;height: 30%;border-top: 1px solid rgba(204, 204, 204, 0.4); display: flex;padding-bottom: 30px;box-sizing:border-box;
+        .input-area{width: 100%;height: 30%;border-top: 1px solid rgba(204, 204, 204, 0.4); display: flex;box-sizing:border-box;
             .input-area-content{display: flex;flex-wrap: wrap;align-content: flex-start;flex-direction: column;width: 100%;
                 .phiz{height: 35px;width: 100%;display: flex;align-items: center;padding: 0 5px;color: #898989;font-size: 20px;
                     .iconfont{font-size: 20px;margin: 0 5px; cursor: pointer;}

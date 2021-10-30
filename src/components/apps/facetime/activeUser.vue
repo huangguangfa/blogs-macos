@@ -3,13 +3,16 @@
         <div class="active-user" v-if="activeUserList.length">
             <div class="user" v-for="item in activeUserList" :key="item.uid">
                 <div class="flex align-items-center">
-                    <img class="icon user-avatar " :src="item.uavatar" alt="">
+                    <img class="icon user-avatar " :src="item.uAvatar" alt="">
                     <div class="user_info" >
-                        <p class="user-phone">{{ item.uid }}</p>
-                        <p class="user-name">{{ item.uname }} </p>
+                        <p class="user-phone">{{ item.uId }}</p>
+                        <p class="user-name">{{ item.uName }} </p>
                     </div>
                 </div>
-                <i v-if="!item._is_me" class="iconfont macos-shipindianhua" @click="callUser(item)"></i>
+                <div v-if="!item._is_me" class="call_user">
+                    <i v-if="item.isStartCamera" class="iconfont macos-shipindianhua" @click="callUser(item, 'callUser')"></i>
+                    <i class="iconfont macos-liaotian" @click="callUser(item, 'chat')"></i>
+                </div>
             </div>
         </div>
         <div class="no-data" v-else>
@@ -24,8 +27,8 @@
             activeUserList:Array
         },
         setup(props,{ emit }){
-            function callUser(userInfo){
-                emit('callUser',userInfo)
+            function callUser(userInfo, type){
+                emit(type,userInfo)
             }
 
             return {
@@ -45,7 +48,12 @@
                     .user-phone{font-weight: bold;}
                     .user-name{ font-size: 12px;margin-top: 4px; }
                 }
-                .macos-shipindianhua{font-size:30px;color:#5bc24f;}
+                .call_user{
+                    display: flex; flex-wrap: wrap;width:30px; justify-content:center;
+                    .macos-shipindianhua{font-size:20px;color:#5bc24f;}
+                    .macos-liaotian{font-size:13px;color:#5bc24f;margin-top: 4px;}
+
+                }
             }
             .is-me{ filter: grayscale(100%);}
         }
