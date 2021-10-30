@@ -139,7 +139,8 @@
             /*                   业务逻辑                              */
             /**********************************************************/
 
-            watch( () => props.appInfo.desktop ,status => {
+            watch( () => props.appInfo.desktop, status => {
+                console.log('挂断了',status)
                 if(status === false){
                     webrtcClose()
                 }else{

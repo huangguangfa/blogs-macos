@@ -16,7 +16,10 @@
                                     <span class="list-time">歌曲</span>
                                 </div>
                                 <div class="music-list-content">
-                                    <div class="song-items" :class="{ 'paly': item.name === palyConfig.curPlay.name }" v-for="(item, index) in palyConfig.musicLists" :key="item.url" @click="addPlay(item)">
+                                    <div class="song-items" 
+                                        :class="{ 'paly': item.name === palyConfig.curPlay.name }" 
+                                        v-for="(item, index) in palyConfig.musicLists" :key="item.url" 
+                                        @click="addPlay(index)">
                                         <span class="song-items-num">{{ index + 1 }}</span>
                                         <span class="song-items-name">{{ item.name }}</span>
                                         <span class="song-items-artist">{{ item.singer }}</span>
@@ -41,7 +44,7 @@
 </template>
 
 <script>
-    import { nextTick, reactive, ref, watch } from "vue";
+    import { nextTick, reactive, ref, watch, onMounted } from "vue";
     import musicList from "../../../../file/music/index.json"
     export default{
         props:{
@@ -55,13 +58,30 @@
             const palyConfig = reactive({
                 musicLists:musicList,
                 curPlay:{},
+                curIndex:0,
                 playBg:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/ui/music-default-bg.jpeg"
             })
-            const audioDom = ref(null)
+            const audioDom = ref(null);
+
+            onMounted( () =>{
+                // 音乐结束了
+                audioDom.value.onended = function(){
+                    if( palyConfig.curIndex === palyConfig.musicLists.length - 1 ){
+                        addPlay(0)
+                    }else{
+                        addPlay(palyConfig.curIndex + 1)
+                    }
+                    console.log('播放玩了')
+                }
+            })
+
             // methods
-            function addPlay(item){
+            function addPlay(index){
+                console.log('index',index)
+                const item = musicList[index];
                 palyConfig.curPlay = item;
                 palyConfig.playBg = item.cover;
+                palyConfig.curIndex = index;
                 nextTick( () =>{
                     audioDom.value.play()
                 })
