@@ -1,5 +1,6 @@
 <template>
     <div class="tabbars mx-auto fixed bottom-0 right-0 left-0 ">
+        <vm-topbar></vm-topbar>
         <div class="flex dock">
             <ul class="tabbars-u justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white blur"
                 @mousemove="tabbarMove" @mouseout="tabbarMouseout">
@@ -32,6 +33,7 @@
 <script>
     import { reactive, computed, getCurrentInstance } from "vue";
     import { SET_TABABR_NAVIGATION } from "@/config/store.config.js";
+    import Topbar from "@/components/topbar/index.vue";
     import safari from "@/components/apps/safari/index.vue";
     import vscode from "@/components/apps/vscode/index.vue";
     import facetime from "@/components/apps/facetime/index.vue";
@@ -41,6 +43,7 @@
     import { useStore } from 'vuex';
     export default{
         components:{
+            vmTopbar:Topbar,
             appSafari:safari,
             appVscode:vscode,
             appFacetime:facetime,

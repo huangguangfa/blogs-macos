@@ -71,13 +71,11 @@
                     }else{
                         addPlay(palyConfig.curIndex + 1)
                     }
-                    console.log('播放玩了')
                 }
             })
 
             // methods
             function addPlay(index){
-                console.log('index',index)
                 const item = musicList[index];
                 palyConfig.curPlay = item;
                 palyConfig.playBg = item.cover;
