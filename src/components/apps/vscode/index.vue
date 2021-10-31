@@ -13,7 +13,6 @@
 </template>
 
 <script>
-    import { watch  } from "vue";
     import login from "../../locks/index.vue";
     import { ref, getCurrentInstance } from "vue";
     export default{
@@ -27,8 +26,8 @@
             const { proxy } = getCurrentInstance();
             const isLoginVscode = ref(localStorage.getItem("isLoginVscode"));
             function loginVscode(_,info){
-                const { uid, uname } = info;
-                if( uid === 'guangfa123' && uname === 'gf' ){
+                const { uId, uName } = info;
+                if( uId === 'guangfa123' && uName === 'guangfa' ){
                     localStorage.setItem("isLoginVscode",true)
                     isLoginVscode.value = true;
                 }else{

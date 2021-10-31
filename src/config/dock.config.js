@@ -90,11 +90,19 @@ export const TABABR_NAVIGATION = [
         img: "/src/assets/images/tabbar-navigation/music.png"
     },
     {
+        id: "Blogs",
+        title: "Blogs",
+        desktop: false,
+        isMinimize:false,
+        _index:11,
+        img: "/src/assets/images/tabbar-navigation/blogs.png"
+    },
+    {
         id: "Trash",
         title: "Trash",
         desktop: false,
         isMinimize:false,
-        _index:11,
+        _index:12,
         img: "/src/assets/images/tabbar-navigation/trash.png"
     }
 ]

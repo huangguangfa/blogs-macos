@@ -3,11 +3,11 @@ export const initPageConfig = [
         type_name:"Favorites",
         id:1,
         list:[
-            {
-                img_url:"/src/assets/images/safari-img/blogs.png",
-                name:"Blogs",
-                web_url:"https://www.huangguangfa.cn"
-            },
+            // {
+            //     img_url:"/src/assets/images/safari-img/blogs.png",
+            //     name:"Blogs",
+            //     web_url:"https://www.huangguangfa.cn"
+            // },
             {
                 img_url:"/src/assets/images/safari-img/juejin.png",
                 name:"技术掘金",
