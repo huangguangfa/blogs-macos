@@ -1,7 +1,8 @@
-import scoket from "@/services/scoket/index.js";
-import { scoketHost } from "@/config/service.config.js";
+import scoket from "@/services/socket/index.js";
+import { socketHost } from "@/config/service.config.js";
 export function initScoket({uId, uName, uAvatar, isStartCamera}){
-    const url = `${scoketHost}/scoket/webrtc/user?uId=${uId}&uName=${uName}&uAvatar=${uAvatar}&isStartCamera=${isStartCamera}`
+    const url = `${socketHost}/scoket/webrtc/user?uId=${uId}&uName=${uName}&uAvatar=${uAvatar}&isStartCamera=${isStartCamera}`
+    // const url = `${scoketHost}`
     return new scoket({
         //网址
         url,

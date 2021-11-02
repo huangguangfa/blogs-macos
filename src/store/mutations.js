@@ -4,7 +4,8 @@ import {
     SET_START_GLOBAL_SEARCH,
     SET_TABABR_NAVIGATION,
     SET_SYSTEM_CONFIG,
-    SET_TABABR_MINIMIZE
+    SET_TABABR_MINIMIZE,
+    SET_GLOABL_SOCKET_DATA
 } from "@/config/store.config.js";
 
 const mutations = {
@@ -28,6 +29,9 @@ const mutations = {
     },
     [SET_SYSTEM_CONFIG](state, data){
         state.SYSTEM_CONFIG = data;
+    },
+    [SET_GLOABL_SOCKET_DATA](state, data){
+        state.GLOABL_SOCKET_DATA = data;
     }
 }
 

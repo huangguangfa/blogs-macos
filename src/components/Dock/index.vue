@@ -4,6 +4,7 @@
         <div class="flex dock">
             <ul class="tabbars-u justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white blur"
                 @mousemove="tabbarMove" @mouseout="tabbarMouseout">
+                {{ GLOABL_SOCKET_DATA }}
                 <li 
                     class="tabbar-item duration-150 ease-in flex align-items-center justify-flex-end flex-column relative"
                     :class="{
@@ -68,6 +69,11 @@
             })
             const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE );
 
+            const GLOABL_SOCKET_DATA = computed( () => {
+                console.log('变化了')
+                return store.getters.GLOABL_SOCKET_DATA 
+            });
+
             // methods
             function tabbarMove(e){
                 const { target } = e;
@@ -99,6 +105,7 @@
                 dockStyle,
                 TABABR_MINIMIZE,
                 dockItesmInfo,
+                GLOABL_SOCKET_DATA,
 
                 // methods
                 tabbarMove,

@@ -96,14 +96,14 @@ class Socket{
         this.#reconnect_timer = setInterval(()=>{
             //限制重连次数
             if ( this.reconnectTimes <= 0 ) {
-            //关闭定时器
-            // this.#isReconnect = false
-            clearInterval( this.#reconnect_timer )
-            //跳出函数之间的循环
-            return;
+                //关闭定时器
+                // this.#isReconnect = false
+                clearInterval( this.#reconnect_timer )
+                //跳出函数之间的循环
+                return;
             }else{
-            //重连一次-1
-            this.reconnectTimes--
+                //重连一次-1
+                this.reconnectTimes--
             }
             //进入初始状态
             this.init()
@@ -132,7 +132,7 @@ class Socket{
     onmessage(func,all = false) {
         this.ws.onmessage = data => {
             this.#message_func = func
-            func(!all ? data.data : data)
+            func( !all ? data.data : data)
         }
     }
   

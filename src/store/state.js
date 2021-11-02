@@ -8,7 +8,7 @@ const state = {
     SYSTEM_CONFIG:{  //系统配置
         isFullscreen:false, //是否全屏
         isShowControlcenter:false, //显示控制
-    }
+    },
+    GLOABL_SOCKET_DATA:{}, // 全局socket消息
 }
-
 export default state;
