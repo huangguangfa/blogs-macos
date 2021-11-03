@@ -10,5 +10,8 @@ const state = {
         isShowControlcenter:false, //显示控制
     },
     GLOABL_SOCKET_DATA:{}, // 全局socket消息
+    USER_INFO:{
+        userId:null
+    }
 }
 export default state;

@@ -1,11 +1,18 @@
 import store from '@/store/index';
-import { SET_GLOABL_SOCKET_DATA } from "@/config/store.config.js";
+import { SET_GLOABL_SOCKET_DATA, SET_USER_INFO } from "@/config/store.config.js";
 import socket from "@/services/socket/index.js";
 import { socketHost } from "@/config/service.config.js";
-export function initScoket(){
+import { getTemporaryUser } from "@/services/api/user-api.js"
+export async function initScoket(){
+    const { result } = await getTemporaryUser();
+    const userInfo = {
+        userId:result.userId
+    }
+    // 初始化临时用户
+    store.commit(SET_USER_INFO, userInfo)
     let sockets = new socket({
         //网址
-        url:socketHost,
+        url:`${socketHost}/${result.userId}`,
         //心跳时间（单位:ms）
         'heartBeat':5000,
         //开起重连
@@ -20,14 +27,8 @@ export function initScoket(){
 }
 
 function handleGlobalSocketEvent( socket ){
-    socket.onopen(function(){
+    socket.onopen( function(){
         console.log('%cscoket_success', 'color: green;');
-        setTimeout( () =>{
-            socket.send({
-                event:"events",
-                data:'web端消息'
-            })
-        },1000)
     })
     socket.onmessage( function( data ){
         console.log('mes',data)
