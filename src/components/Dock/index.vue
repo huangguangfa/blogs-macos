@@ -70,7 +70,7 @@
             const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE );
 
             const GLOABL_SOCKET_DATA = computed( () => {
-                console.log('变化了')
+                // console.log('变化了')
                 return store.getters.GLOABL_SOCKET_DATA 
             });
 

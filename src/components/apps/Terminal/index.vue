@@ -9,28 +9,32 @@
 </template>
 
 <script>
-import { watch, onMounted, nextTick, getCurrentInstance,   } from "vue";
+import { watch, nextTick, getCurrentInstance,   } from "vue";
 import 'xterm/css/xterm.css';
 import { Terminal } from 'xterm';
-
+import { useStore } from 'vuex';
+import { AttachAddon } from "./xterm-addon-attach";
+import { initXterms } from "./index"
 export default{
     props:{
         appInfo:Object
     },
     setup( props ){
+        const store = useStore()
         const { proxy } = getCurrentInstance();
         let xterms = null;
         watch( () => props.appInfo.desktop, (status) =>{
             nextTick( () =>{
+                // status && initXterms();
                 status && startXterm();
             })
         })
+        
         // 结果写入终端
         watch( () => store.getters.GLOABL_SOCKET_DATA, (val, old) =>{
             const { event, data } = val;
             event === 'xterm' && xterms.writeln(data)
         })
-
 
         const xtermConfig = {
             cols: 92,
@@ -48,13 +52,11 @@ export default{
             xterms.open(terminalContainer,true);
             const initXtermTextList = ['\x1b[32m Welcome to gf cloud!!!\x1b[0m', '\x1B[1;3;31m个人五毛钱服务器、我相信你不会乱搞!!!\x1B[0m', '', '[root@VM-0-8-centos ~]# ', ''];
             initXtermTextList.forEach( text => xterms.writeln(text));
-            xterms.onData(function(data){
-                proxy.$scoket.send({
-                    event:"xterm",
-                    data
-                })
-            })
-        }  
+
+            const attachAddon = new AttachAddon(proxy.$scoket.ws);
+            console.log('attachAddon',attachAddon)
+            xterms.loadAddon(attachAddon);
+        }
         
         function startXterm(){
             initXterm()
