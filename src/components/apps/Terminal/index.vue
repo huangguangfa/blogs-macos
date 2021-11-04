@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { watch, onMounted, nextTick, getCurrentInstance  } from "vue";
+import { watch, onMounted, nextTick, getCurrentInstance,   } from "vue";
 import 'xterm/css/xterm.css';
 import { Terminal } from 'xterm';
 
@@ -19,17 +19,18 @@ export default{
     },
     setup( props ){
         const { proxy } = getCurrentInstance();
-        onMounted( () =>{
-            props.appInfo.desktop && initXterm();
-        })
-
+        let xterms = null;
         watch( () => props.appInfo.desktop, (status) =>{
             nextTick( () =>{
                 status && startXterm();
             })
         })
+        // 结果写入终端
+        watch( () => store.getters.GLOABL_SOCKET_DATA, (val, old) =>{
+            const { event, data } = val;
+            event === 'xterm' && xterms.writeln(data)
+        })
 
-        let xterms = null;
 
         const xtermConfig = {
             cols: 92,
@@ -48,19 +49,15 @@ export default{
             const initXtermTextList = ['\x1b[32m Welcome to gf cloud!!!\x1b[0m', '\x1B[1;3;31m个人五毛钱服务器、我相信你不会乱搞!!!\x1B[0m', '', '[root@VM-0-8-centos ~]# ', ''];
             initXtermTextList.forEach( text => xterms.writeln(text));
             xterms.onData(function(data){
-                console.log(data)
+                proxy.$scoket.send({
+                    event:"xterm",
+                    data
+                })
             })
         }  
         
         function startXterm(){
-            proxy.$scoket.send({
-                event:"xterm",
-                data:{
-                    user:''
-                }
-            })
-            console.log('ctx.$scoket',proxy.$scoket)
-            
+            initXterm()
         }
 
         function closeXterm(){
