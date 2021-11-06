@@ -28,7 +28,7 @@ export const TABABR_NAVIGATION = [
     {
         id: "Facetime",
         title: "Facetime",
-        desktop: false,
+        desktop: true,
         isMinimize:false,
         _index:3,
         img: "/src/assets/images/tabbar-navigation/facetime.png"

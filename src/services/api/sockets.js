@@ -8,6 +8,7 @@ export async function initScoket(){
     const userInfo = {
         userId:result.userId
     }
+    sessionStorage.setItem('userId',`/${result.userId}`)
     // 初始化临时用户
     store.commit(SET_USER_INFO, userInfo)
     let sockets = new socket({

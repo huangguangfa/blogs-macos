@@ -3,7 +3,11 @@
         <window v-model:show="appInfo.desktop" @change="changes" title="Facetime" width="1000" height="450" :appInfo="appInfo">
             <div class="facetime-content" v-if="appInfo.desktop">
                 <div class="facetime-content-left">
-                    <vm-active-user :activeUserList="activeUserList" @callUser="callUser" @chat="chats"></vm-active-user>
+                    <vm-active-user 
+                        :activeUserList="activeUserList" 
+                        @callUser="callUser" 
+                        @chat="chats">
+                    </vm-active-user>
                 </div>
                 <div class="facetime-content-right">
                     <vm-get-user 
@@ -39,7 +43,7 @@
 </template>
 
 <script>
-    import { ref, watch, reactive, computed  } from "vue";
+    import { ref, watch, reactive, computed, getCurrentInstance  } from "vue";
     import { deepClone } from "@/utils/utils.js";
     import SkyRTC from "./hooks/webrtc.js";
     import chatroom from "./chatroom.vue";
@@ -55,10 +59,11 @@
             appInfo:Object
         },
         setup( props ){
+            const { proxy } = getCurrentInstance();
             let local_video_dom = ref(null)
             let remote_video_dom = ref(null)
             let rtc = SkyRTC();
-            let user = reactive({ uId: null,  uName:null, uAvatar:null, isStartCamera:'0' });
+            let user = reactive({ wsId: null, uName:null, uAvatar:null, isStartCamera:'0' });
             let activeUserList = ref([]);
             let chatroomConfig = reactive({
                 messageList:[]
@@ -79,16 +84,15 @@
                 showChatroom:false,
                 unreadMesNumber:0
             })
-            let sockets = null;
             /**********************************************************/
             /*                   webrtc通信                           */
             /**********************************************************/
             // 成功创建WebSocket连接
-            rtc.on("connected", function (socket) {
-                sockets = socket;
+            rtc.on("connected", function () {
                 //创建本地视频流
                 rtc.createStream({ "video": true, "audio": true });
             });
+            
             // 创建本地视频流成功
             rtc.on("stream_created", function (stream) {
                 let me_video = local_video_dom.value;
@@ -110,13 +114,13 @@
                 const { isOpenCall } = callConfig;
                 // 正在通话中
                 if( isOpenCall ) return;
-                const { switch_status, uId, uName } = data;
-                switch_status && startCall(uId,uName, false, 'call');
+                const { switch_status, wsId, uName } = data;
+                switch_status && startCall(wsId,uName, false, 'call');
             })
             rtc.on('chats', data =>{
                 console.log('chats', data)
-                const { switch_status, uId, uName } = data;
-                switch_status && startCall(uId,uName, false ,'chats');
+                const { switch_status, wsId, uName } = data;
+                switch_status && startCall(wsId,uName, false ,'chats');
             })
             // 挂断电话
             rtc.on('endCall', data =>{
@@ -140,7 +144,6 @@
             /**********************************************************/
 
             watch( () => props.appInfo.desktop, status => {
-                console.log('挂断了',status)
                 if(status === false){
                     webrtcClose()
                 }else{
@@ -158,34 +161,31 @@
             
             //methds
             function callUser(userInfo){
-                const { uId, _is_me, uName } = userInfo;
+                const { _is_me, uName, wsId } = userInfo;
                 const { isStartCall } = callConfig;
                 if( _is_me || isStartCall ) return;
-                startCall(uId, uName, true, 'call');
-                rtc.call(uId, 'call');
+                startCall(wsId, uName, true, 'call');
+                rtc.call(wsId, 'call');
             }
             function chats(userInfo){
                 callConfig.showChatroom = true;
-                const { uId, uName } = userInfo;
-                startCall(uId, uName, false, 'chats');
-                rtc.call(uId, 'chats');
+                const { uName, wsId } = userInfo;
+                startCall(wsId, uName, false, 'chats');
+                rtc.call(wsId, 'chats');
             }
             function webrtcStarter(){
                 callConfig.isStartWebRtc = true;
-                const { uId, uName, uAvatar } = user;
-                rtc.connect(uId, uName, uAvatar );
+                const { wsId, uName, uAvatar } = user;
+                rtc.connect(wsId, uName, uAvatar, proxy.$scoket.ws );
             }
             function webrtcClose(){
                 rtc.closeVideoConnection();
                 rtc.closePeerConnection();
-                // 关闭scoket连接
-                sockets && sockets.close();
                 activeUserList.value = [];
-
             }
             function getCurrentSystemUserInfo(userInfo){
-                const { uId, uName, uAvatar } = userInfo;
-                user.uId = uId;
+                const { uName, uAvatar } = userInfo;
+                user.wsId = sessionStorage.getItem('userId');
                 user.uName = uName;
                 user.uAvatar = uAvatar;
             }
@@ -197,8 +197,8 @@
                 //关闭 && 重置 peer
                 rtc.closePeerConnection(true);
             }
-            function startCall(uId,uName,isCaller = false, type){
-                callConfig.callMobile = uId;
+            function startCall(wsId,uName,isCaller = false, type){
+                callConfig.callMobile = wsId;
                 callConfig.callName = uName;
                 callConfig.isCaller = isCaller;
                 callConfig.isOpenCall = true;
@@ -221,8 +221,8 @@
             }
             function getActiveUserList(data){
                 data.forEach( item => {
-                    item._is_me = false
-                    if( item.uId === user.uId ){  item._is_me = true }
+                    item._is_me = false;
+                    if( item.wsId === user.wsId ){ item._is_me = true }
                 })
                 activeUserList.value = data;
             }
@@ -247,7 +247,7 @@
                     const { mes_content, type ,uAvatar} = data.data
                     let newMes = {
                         isHaveRead:showChatroom,
-                        uId:call_uid,
+                        wsId:call_uid,
                         uname:call_uname,
                         uAvatar,
                         mes_content,

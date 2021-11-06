@@ -12,13 +12,11 @@
     import vscode from "@/components/apps/vscode/index.vue"
     import Terminal from "@/components/apps/Terminal/index.vue"
     import facetime from "@/components/apps/facetime/index.vue"
-    import globalSearch from "@/components/global-search/index.vue"
     export default {
         components:{
             safari,
             vscode,
             Terminal,
-            globalSearch,
             facetime
         },
         setup(){

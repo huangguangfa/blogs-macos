@@ -63,13 +63,13 @@ const SkyRTC = function () {
         //是否是呼叫方
         this.isCalls = false;
         this.user = {
-            uId:null,
+            wsId:null,
             uName:null,
             uAvatar:null,
             isStartCamera:false
         };
         this.receiveUser = {
-            uId:null,
+            wsId:null,
             uName:null,
             uAvatar:null,
             isStartCamera:false
@@ -80,50 +80,79 @@ const SkyRTC = function () {
     skyrtc.prototype = new EventEmitter();
 
     /*************************服务器连接部分***************************/
-    skyrtc.prototype.connect = function ( uId, uName, uAvatar ) {
-        this.user.uId = uId;
+    skyrtc.prototype.connect = function ( wsId, uName, uAvatar, socket ) {
+        this.user.wsId = wsId;
         this.user.uName = uName;
         this.user.uAvatar = uAvatar;
         this.user.isStartCamera = getUserMedia ? "1" : "0";
-        let socket, that = this; 
-        socket = this.socket = initScoket(this.user);
-        
-        socket.onopen(function () {
-            that.emit("socket_opened", socket);
-            that.emit('connected', socket);
-        });
+        socket = this.socket = socket;
+        socket.send(JSON.stringify({
+            event:'webrtc',
+            data:{
+                type:'user',
+                wsId:sessionStorage.getItem('userId'),
+                data:this.user
+            }
+        }));
+        this.emit('connected', this.user);
 
-        socket.onmessage( function (message) {
-            typeof message === 'string' ? message = JSON.parse(message) : message
+        socket.addEventListener( 'message', this.receiveSocketMessage)
+        socket.webrtc = this;
+
+        // removeEventListener
+        // socket.onopen(function () {
+        //     that.emit('connected', socket);
+        // });
+
+        // socket.onmessage( function (message) {
+            // typeof message === 'string' ? message = JSON.parse(message) : message
+            // const { sender } = message;
+            // let scoketData = message.data;
+            // if( sender === "exc" ){
+            //     const { data, call_uid, call_uname, exc_type  } = scoketData;
+            //     that.receiveUser.uId = call_uid;
+            //     that.receiveUser.uname = call_uname;
+            //     // 添加远端offer
+            //     exc_type === "sdp" && that.receiveOffer(data);
+            //     // 添加IEC
+            //     exc_type === "ice" && that.receiveIce(data);
+            //     // 呼叫监听
+            //     exc_type === 'call' && that.emit('call',data);
+            //     // 聊天
+            //     exc_type === 'chats' && that.emit('chats',data);
+            //     // 挂断
+            //     exc_type === 'endCall' && that.emit('endCall',data);
+            // }
+            // that.emit("socket_receive_message", message, socket );
+        // });
+    };
+
+    skyrtc.prototype.receiveSocketMessage = function(mes){
+        const { event, data } = JSON.parse(mes.data);
+        if( event === 'webrtc' ){
+            let message = null;
+            typeof data === 'string' ? message = JSON.parse(data) : message = data;
             const { sender } = message;
             let scoketData = message.data;
             if( sender === "exc" ){
                 const { data, call_uid, call_uname, exc_type  } = scoketData;
-                that.receiveUser.uId = call_uid;
-                that.receiveUser.uname = call_uname;
+                console.log('exc_type', exc_type, data)
+                this.webrtc.receiveUser.wsId = call_uid;
+                this.webrtc.receiveUser.uname = call_uname;
                 // 添加远端offer
-                exc_type === "sdp" && that.receiveOffer(data);
+                exc_type === "sdp" && this.webrtc.receiveOffer(data);
                 // 添加IEC
-                exc_type === "ice" && that.receiveIce(data);
+                exc_type === "ice" && this.webrtc.receiveIce(data);
                 // 呼叫监听
-                exc_type === 'call' && that.emit('call',data);
+                exc_type === 'call' && this.webrtc.emit('call',data);
                 // 聊天
-                exc_type === 'chats' && that.emit('chats',data);
+                exc_type === 'chats' && this.webrtc.emit('chats',data);
                 // 挂断
-                exc_type === 'endCall' && that.emit('endCall',data);
+                exc_type === 'endCall' && this.webrtc.emit('endCall',data);
             }
-            that.emit("socket_receive_message", message, socket );
-        });
-
-        socket.onerror(function (error) {
-            that.emit("socket_error", error, socket);
-        });
-
-        socket.onclose(function (data) {
-            that.emit('socket_closed', socket);
-        })
-    };
-
+            this.webrtc.emit("socket_receive_message", message);
+        }
+    }
 
     /*************************流处理部分*******************************/
     //访问用户媒体设备的兼容方法
@@ -187,9 +216,9 @@ const SkyRTC = function () {
     /***********************信令交换部分*******************************/
     /******* SDP信息交换 ******/
     //向用户发送Offer类型信令
-    skyrtc.prototype.sendOffers = function ( uId ) {
+    skyrtc.prototype.sendOffers = function ( wsId ) {
         this.isCalls = true;
-        this.sendMessage(uId,this.localPeer.localDescription, 'sdp')
+        this.sendMessage(wsId,this.localPeer.localDescription, 'sdp')
     };
     //接收到answer类型信令后将对方的sdp描述写入PeerConnection中返回answer类型信令
     skyrtc.prototype.receiveOffer = function (sdp) {
@@ -203,29 +232,29 @@ const SkyRTC = function () {
         this.localPeer.createAnswer().then( answerOffer =>{
             //设置下本地
             that.localPeer.setLocalDescription(answerOffer)
-            const { uId } = that.receiveUser;
-            that.sendMessage(uId, answerOffer, 'sdp')
+            const { wsId } = that.receiveUser;
+            that.sendMessage(wsId, answerOffer, 'sdp')
         });
     };
     /****** ICE 信息交换 *****/
     //向用户发送ICE信息后将对方的ice描述写入PeerConnection中返回answer类型信令
-    skyrtc.prototype.sendIceData = function (uId,ice){
-        this.sendMessage( uId, ice, 'ice' )
+    skyrtc.prototype.sendIceData = function (wsId,ice){
+        this.sendMessage( wsId, ice, 'ice' )
     }
     //接收answer类型信令
     skyrtc.prototype.receiveIce = function (ice){
-        const { uId } = this.receiveUser;
+        const { wsId } = this.receiveUser;
         let candidate = new nativeRTCIceCandidate(ice);
         this.localPeer.addIceCandidate(candidate);
         //判断是否是接收方
-        this.isCalls === false && this.sendIceData(uId,this.ICE)
+        this.isCalls === false && this.sendIceData(wsId,this.ICE)
     }
     
     /***********************点对点连接部分*****************************/
     //呼叫
     skyrtc.prototype.call = function(call_uid, type){
-        const { uId, uName } = this.user;
-        call_uid && this.sendMessage(call_uid, { switch_status:true, uId,uName }, type)
+        const { wsId, uName } = this.user;
+        call_uid && this.sendMessage(call_uid, { switch_status:true, wsId,uName }, type)
     }
 
     //创建单个PeerConnection
@@ -268,12 +297,13 @@ const SkyRTC = function () {
         this.localPeer.close();
         this.initStatus();
         restart && this.createPeerConnection()
+
     };
     skyrtc.prototype.initStatus = function(){
         this.localPeer = null;
         this.isCalls = false;
         this.receiveUser = {
-            uId:null,
+            wsId:null,
             uname:null,
             uAvatar:null
         }
@@ -289,17 +319,20 @@ const SkyRTC = function () {
     /***********************数据通道连接部分*****************************/
     //发送消息方法
     skyrtc.prototype.sendMessage = function (callId, message, exc_type) {
-        const { uId, uName } = this.user;
-        let data = {
-            uId:callId,
+        const { wsId, uName } = this.user;
+        this.socket.send(JSON.stringify({
+            event:'webrtc',
             data:{
-                call_uid:uId,
-                call_uname:uName,
-                exc_type,
-                data:message
+                wsId:callId,
+                type:'call',
+                data:{
+                    call_uid:wsId,
+                    call_uname:uName,
+                    exc_type,
+                    data:message
+                }
             }
-        }
-        this.socket.send(data);
+        }));
     };
 
     return new skyrtc();
