@@ -18,7 +18,7 @@ router.ws('/webrtc/user', function( ws, req ){
         try{
             const { uId, data } = JSON.parse(mes);
             const { ws } = active_user[uId];
-            ws && dispatchMessage(ws, gteSendData('exc',data));
+            ws && dispatchMessage(ws, getSendData('exc',data));
         }catch(e){
             console.log(e)
         }
@@ -31,6 +31,7 @@ router.ws('/webrtc/user', function( ws, req ){
     });
 })
 
+
 //查询当前服务活跃用户
 router.get('/getActiveUserList',(req,res)=>{
     res.send({ status:true,result:Object.values(active_user) })
@@ -38,7 +39,7 @@ router.get('/getActiveUserList',(req,res)=>{
 
 //通知最新活跃用户
 function updateActiveUser(){
-    let activeUser = gteSendData('system',getActiveUserList() );
+    let activeUser = getSendData('system',getActiveUserList() );
     dispatchAllUserMessage( activeUser )
 }
 
@@ -58,7 +59,7 @@ function getActiveUserList(){
 }
 
 //发送的数据
-function gteSendData(type,data){
+function getSendData(type,data){
     return { sender:type, data }
 }
 function dispatchAllUserMessage(data){

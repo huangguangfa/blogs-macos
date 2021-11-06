@@ -19,9 +19,8 @@ export class AttachAddon implements ITerminalAddon {
   public activate(terminal: Terminal): void {
     this._disposables.push(
       addSocketListener(this._socket, 'message', ev => {
-        const data: ArrayBuffer | string = ev.data;
-        console.log('收到服务指令',data)
-        terminal.write(typeof data === 'string' ? data : new Uint8Array(data));
+        const { event,  data } = JSON.parse(ev.data);
+        event === 'xterm' && terminal.write(typeof data === 'string' ? data : new Uint8Array(data));
       })
     );
 
@@ -48,8 +47,6 @@ export class AttachAddon implements ITerminalAddon {
     }
   
     this._socket.send(JSON.stringify({event:"xterm", data}));
-    
-    // this._socket.send(data);
   }
 
   private _sendBinary(data: string): void {
