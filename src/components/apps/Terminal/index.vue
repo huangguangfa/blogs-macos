@@ -1,6 +1,6 @@
 <template>
     <div class="Terminal">
-        <window v-model:show="appInfo.desktop" title="Terminal" v-model:appInfo="appInfo">
+        <window v-model:show="appInfo.desktop" title="Terminal" v-model:appInfo="appInfo" width="700">
             <div class="terminal-content" v-if="appInfo.desktop">
                 <div class="xterm" id="xterm"></div>
             </div>

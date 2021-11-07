@@ -103,7 +103,7 @@
             // 接收scoket消息
             rtc.on("socket_receive_message", function (serve_data) {
                 const { sender, data } = serve_data;
-                console.log('消息',sender,data)
+                // console.log('消息',sender,data)
                 // 派发当前活跃用户列表
                 sender === 'system' && getActiveUserList(data);
                 // 接收文字消息
@@ -118,7 +118,6 @@
                 switch_status && startCall(wsId,uName, false, 'call');
             })
             rtc.on('chats', data =>{
-                console.log('chats', data)
                 const { switch_status, wsId, uName } = data;
                 switch_status && startCall(wsId,uName, false ,'chats');
             })

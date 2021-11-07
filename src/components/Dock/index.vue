@@ -27,6 +27,7 @@
         <app-termial  :appInfo="dockItesmInfo(7)"></app-termial>
         <app-vscode   :appInfo="dockItesmInfo(8)"></app-vscode>
         <appMusic     :appInfo="dockItesmInfo(10)"></appMusic>
+        <app-blogs    :appInfo="dockItesmInfo(11)"></app-blogs>
     </div>
 </template>
 
@@ -39,7 +40,8 @@
     import facetime from "@/components/apps/facetime/index.vue";
     import termial from "@/components/apps/Terminal/index.vue";
     import maps from "@/components/apps/maps/index.vue";
-    import music from "@/components/apps/music/index.vue"
+    import music from "@/components/apps/music/index.vue";
+    import blogs from "@/components/apps/blogs/index.vue"
     import { useStore } from 'vuex';
     export default{
         components:{
@@ -49,7 +51,8 @@
             appFacetime:facetime,
             appTermial:termial,
             appMpas:maps,
-            appMusic:music
+            appMusic:music,
+            appBlogs:blogs
         },
         setup(){
             const { proxy } = getCurrentInstance();
