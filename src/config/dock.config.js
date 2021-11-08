@@ -7,7 +7,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:0,
-        img:"/src/assets/images/tabbar-navigation/Finder.png"
+        img:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/Finder.png"
     },
     {
         id: "launchpad",
@@ -15,7 +15,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:1,
-        img:"/src/assets/images/tabbar-navigation/launchpad.png"
+        img:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/launchpad.png"
     },
     {
         id: "Brar",
@@ -23,7 +23,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:2,
-        img: "/src/assets/images/tabbar-navigation/bear.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/bear.png"
     },
     {
         id: "Facetime",
@@ -31,7 +31,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:3,
-        img: "/src/assets/images/tabbar-navigation/facetime.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/facetime.png"
     }, 
     {
         id: "Maps",
@@ -39,7 +39,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:4,
-        img: "/src/assets/images/tabbar-navigation/maps.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/maps.png"
     },
     {
         id: "Mail",
@@ -47,7 +47,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:5,
-        img: "/src/assets/images/tabbar-navigation/mail.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/mail.png"
     },
     {
         id: "Safari",
@@ -55,7 +55,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:6,
-        img: "/src/assets/images/tabbar-navigation/safari.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/safari.png"
     },
     {
         id: "Terminal",
@@ -63,7 +63,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:7,
-        img: "/src/assets/images/tabbar-navigation/terminal.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/terminal.png"
     },
     {
         id: "Vscode",
@@ -71,7 +71,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:8,
-        img: "/src/assets/images/tabbar-navigation/vscode.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/vscode.png"
     },
     {
         id: "Github",
@@ -79,7 +79,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:9,
-        img: "/src/assets/images/tabbar-navigation/github.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/github.png"
     },
     {
         id: "Music",
@@ -87,7 +87,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:10,
-        img: "/src/assets/images/tabbar-navigation/music.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/music.png"
     },
     {
         id: "Blogs",
@@ -95,7 +95,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:11,
-        img: "/src/assets/images/tabbar-navigation/blogs.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/blogs.png"
     },
     {
         id: "Trash",
@@ -103,7 +103,7 @@ export const TABABR_NAVIGATION = [
         desktop: false,
         isMinimize:false,
         _index:12,
-        img: "/src/assets/images/tabbar-navigation/trash.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/trash.png"
     }
 ]
 
@@ -113,6 +113,6 @@ export const TABABR_MINIMIZE = [
         id: "Trash",
         title: "Trash",
         desktop: false,
-        img:"/src/assets/images/tabbar-navigation/trash.png"
+        img:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/trash.png"
     },
 ]

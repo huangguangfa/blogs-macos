@@ -1,8 +1,8 @@
 export class CssTheme{
     constructor() {
         this.ThemeConfig = {
-            'Light':'/src/styles/Theme/Light.css',
-            'Dark':'/src/styles/Theme/Dark.css'
+            Light:'/src/styles/Theme/Light.css',
+            Dark:'/src/styles/Theme/Light.css'
         }
         //初始化
         this.addLinkDom()
