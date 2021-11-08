@@ -4,4 +4,4 @@ export const serviceHost = "https://www.huangguangfa.cn/blogs";
 
 // export const socketHost = "ws://localhost:7788"
 // export const socketHost = "ws://120.25.233.183:7788"
-export const socketHost = "ws://huangguangfa.cn/ws"
+export const socketHost = "wss://huangguangfa.cn/ws"
