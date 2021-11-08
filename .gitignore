@@ -39,6 +39,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+blogs-macos/
 jspm_packages/
 .idea/
 .vscode/

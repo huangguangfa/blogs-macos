@@ -1,10 +1,17 @@
 export class CssTheme{
     constructor() {
         this.ThemeConfig = {
-            Light:'/src/styles/Theme/Light.css',
-            Dark:'/src/styles/Theme/Light.css'
+            Light:{
+                local:'/src/styles/Theme/Light.css',
+                remote:'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/themeStyle/Light.css'
+            },
+            Dark:{
+                local:'/src/styles/Theme/Dark.css',
+                remote:'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/themeStyle/Dark.css'
+            }
         }
         //初始化
+        console.log(process.env.NODE_ENV)
         this.addLinkDom()
     }
     getThemeCSSName(){
@@ -15,7 +22,7 @@ export class CssTheme{
         isUpdate && this.updateTheme()
     }
     addLinkDom(){
-        let url = this.ThemeConfig[this.getThemeCSSName()];
+        let url = this.ThemeConfig[this.getThemeCSSName()][this.getNodeEnv()]; 
         let link = document.createElement('link');
         link.type = 'text/css';
         link.id = "theme-css-gf";
@@ -23,9 +30,11 @@ export class CssTheme{
         link.href = url;
         document.getElementsByTagName("head")[0].appendChild(link);
     }
+    getNodeEnv(){
+        return process.env.NODE_ENV === 'development' ? 'local' : 'remote'
+    }
     updateTheme(){
         let linkDom = document.getElementById("theme-css-gf");
-        linkDom.href = this.ThemeConfig[this.getThemeCSSName()];
+        linkDom.href = this.ThemeConfig[this.getThemeCSSName()][this.getNodeEnv()];
     }
 }
-
