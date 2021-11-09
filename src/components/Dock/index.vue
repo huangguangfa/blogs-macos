@@ -20,19 +20,21 @@
             </ul>
 
         </div>
-      
-        <app-facetime :appInfo="dockItesmInfo(3)"></app-facetime>
-        <app-mpas     :appInfo="dockItesmInfo(4)"></app-mpas>
-        <app-safari   :appInfo="dockItesmInfo(6)"></app-safari>
-        <app-termial  :appInfo="dockItesmInfo(7)"></app-termial>
-        <app-vscode   :appInfo="dockItesmInfo(8)"></app-vscode>
-        <appMusic     :appInfo="dockItesmInfo(10)"></appMusic>
-        <app-blogs    :appInfo="dockItesmInfo(11)"></app-blogs>
+
+        <div class="app-container" v-if="showApps">
+            <app-facetime :appInfo="dockItesmInfo(3)"></app-facetime>
+            <app-mpas     :appInfo="dockItesmInfo(4)"></app-mpas>
+            <app-safari   :appInfo="dockItesmInfo(6)"></app-safari>
+            <app-termial  :appInfo="dockItesmInfo(7)"></app-termial>
+            <app-vscode   :appInfo="dockItesmInfo(8)"></app-vscode>
+            <appMusic     :appInfo="dockItesmInfo(10)"></appMusic>
+            <app-blogs    :appInfo="dockItesmInfo(11)"></app-blogs>
+        </div>
     </div>
 </template>
 
 <script>
-    import { reactive, computed, getCurrentInstance } from "vue";
+    import { reactive, computed, getCurrentInstance, ref } from "vue";
     import { SET_TABABR_NAVIGATION } from "@/config/store.config.js";
     import Topbar from "@/components/topbar/index.vue";
     import safari from "@/components/apps/safari/index.vue";
@@ -56,6 +58,7 @@
         },
         setup(){
             const { proxy } = getCurrentInstance();
+            let showApps = ref(false);
             const store = useStore();
             const TABABR_NAVIGATIONS = computed( () => store.getters.TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(store.getters.TABABR_NAVIGATION.length).fill(50));
@@ -70,6 +73,10 @@
                 }
             })
             const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE );
+            setTimeout( () =>{
+                showApps.value = true;
+            },500)
+
             // methods
             function tabbarMove(e){
                 const { target } = e;
@@ -101,6 +108,7 @@
                 dockStyle,
                 TABABR_MINIMIZE,
                 dockItesmInfo,
+                showApps,
 
                 // methods
                 tabbarMove,

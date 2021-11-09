@@ -11,7 +11,6 @@ export class CssTheme{
             }
         }
         //初始化
-        console.log(process.env.NODE_ENV)
         this.addLinkDom()
     }
     getThemeCSSName(){
