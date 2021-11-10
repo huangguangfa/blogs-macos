@@ -1,6 +1,15 @@
 <template>
     <div class="iframe_page">
-        <iframe v-show="!loading" :id="ids" ref="iframes" frameborder="0"></iframe>
+        <iframe 
+            v-show="!loading" 
+            :id="ids" 
+            ref="iframes" 
+            frameborder="0" 
+            sandbox="allow-scripts 
+			allow-top-navigation
+			allow-same-origin
+			allow-popups">
+        </iframe>
         <vm-loading v-if="loading"></vm-loading>
     </div>
 </template>

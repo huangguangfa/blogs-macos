@@ -2,7 +2,7 @@
     <div class="vscode">
         <window v-model:show="appInfo.desktop" title="VSCode" width="800" :appInfo="appInfo">
             <div class="vscode-content wh100" v-if="appInfo.desktop">
-                <vm-iframe ids="VSCode" v-if="isLoginVscode" webUrl="http://vscode.huangguangfa.cn:6689"></vm-iframe>
+                <vm-iframe ids="VSCode" v-if="isLoginVscode" webUrl="https://huangguangfa.cn/vscode"></vm-iframe>
                 <div class="login_locks" v-else>
                     <p class="tips">登陆到云开发工具</p>
                     <vmlogin submitText="确认" userLabel="用户名" phoneLabel="密码" :isShowReset="false" :isInit="false" @submit="loginVscode"></vmlogin>
