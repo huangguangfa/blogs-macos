@@ -1,32 +1,52 @@
 <template>
     <div class="Terminal">
-        <window v-model:show="appInfo.desktop" title="Terminal" v-model:appInfo="appInfo" width="700">
+        <window v-model:show="appInfo.desktop" title="Terminal" v-model:appInfo="appInfo" width="800">
             <div class="terminal-content" v-if="appInfo.desktop">
                 <div class="xterm" id="xterm"></div>
+                <div class="login_locks" v-if="!isLoginXterm">
+                    <p class="tips">登陆到云xterm</p>
+                    <vmlogin submitText="确认" userLabel="用户名" phoneLabel="密码" :isShowReset="false" :isInit="false" @submit="loginXterm"></vmlogin>
+                </div>
             </div>
         </window>
     </div>
 </template>
 
 <script>
-import { watch, nextTick, getCurrentInstance,   } from "vue";
+import { watch, nextTick, getCurrentInstance, ref } from "vue";
 import 'xterm/css/xterm.css';
 import { Terminal } from 'xterm';
-import { useStore } from 'vuex';
 import { AttachAddon } from "./xterm-addon-attach";
+import login from "../../locks/index.vue";
 export default{
     props:{
         appInfo:Object
     },
+    components:{
+        vmlogin:login
+    },
     setup( props ){
-        const store = useStore()
+        const isLoginXterm = ref(localStorage.getItem("isLoginXterm"));
         const { proxy } = getCurrentInstance();
         let xterms = null;
         watch( () => props.appInfo.desktop, (status) =>{
             nextTick( () =>{
-                status && startXterm();
+                status && isLoginXterm.value && startXterm();
             })
         })
+
+        function loginXterm(_,info){
+            const { uId, uName } = info;
+            if( uId === 'guangfa123' && uName === 'guangfa' ){
+                localStorage.setItem("isLoginXterm",true)
+                isLoginXterm.value = true;
+                startXterm();
+            }else{
+                proxy.$message.error({
+                    content:'账号密码错误！'
+                })
+            }
+        }
        
         // methods
         async function initXterm(){
@@ -55,6 +75,11 @@ export default{
         function closeXterm(){
 
         }
+
+        return {
+            isLoginXterm,
+            loginXterm
+        }
     }
 }
 </script>
@@ -63,5 +88,11 @@ export default{
         width: 100%;height: 100%;
         background: #000;
         #xterm{width: 100%;height: 100%;}
+    }
+    .login_locks{
+        .tips{
+            position: absolute;top: 50px;z-index: 9999;right: 150px; 
+            font-weight: bold;color: #0092e9;
+        }
     }
 </style>
