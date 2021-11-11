@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import { ref, watch, onMounted } from 'vue'
+    import { ref, watch, onMounted } from 'vue';
     export default{
         name:"vmIframe",
         props:{
@@ -52,5 +52,4 @@
         width: 100%;height:100%;
         iframe{width: 100%;height:100%;}
     }
-    
 </style>
