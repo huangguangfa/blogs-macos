@@ -34,19 +34,24 @@ function createDocumentHandler(el, binding, vnode) {
  * @desc 点击元素外面才会触发的事件
  * @example
  * ```vue
- * <div v-element-clickoutside="handleClose">
+ * <div v-clickoutside="handleClose">
  * ```
  */
 export default {
     mounted(el, binding, vnode) {
-        nodeList.push(el);
-        const id = seed++;
-        el[ctx] = {
-            id,
-            documentHandler: createDocumentHandler(el, binding, vnode),
-            methodName: binding.expression,
-            bindingFn: binding.value
-        };
+        try{
+            nodeList.push(el);
+            const id = seed++;
+            el[ctx] = {
+                id,
+                documentHandler: createDocumentHandler(el, binding, vnode),
+                methodName: binding.expression,
+                bindingFn: binding.value
+            };
+        }catch(e){
+            console.log('eee',e)
+        }
+        
     },
     updated(el, binding, vnode) {
         el[ctx].documentHandler = createDocumentHandler(el, binding, vnode);

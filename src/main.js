@@ -6,5 +6,5 @@ import { initGlobalMethods } from "./plugins/index";
 
 const app = createApp(App);
 app.use(routes).use(store);
-initGlobalMethods(app);
+await initGlobalMethods(app);
 app.mount('#app')

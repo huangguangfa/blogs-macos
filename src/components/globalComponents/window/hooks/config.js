@@ -74,7 +74,7 @@ export function mouseups(pageConfig, iframeId){
     pageConfig.winBarConfig.winBarStart = false;
     pageConfig.sticksConfig.sticksStart = false;
 }
-export function documentMoves(windom,ev,pageConfig){
+export function documentMoves(windom, ev, pageConfig){
     const { clientY, clientX, pageX, pageY  } = ev;
     let web_width =  document.body.offsetWidth;
     const { winBarStart, disX, disY } = pageConfig.winBarConfig;

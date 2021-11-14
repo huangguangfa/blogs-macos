@@ -12,7 +12,7 @@
                     v-for="(item,index) in TABABR_NAVIGATIONS"  
                     :key="index">
                     <p class="tabbar-title absolute d-none">{{ item.title }}</p>
-                    <div class="dock-items" :style="dockStyle(index)" @click="openWindows(index)">
+                    <div class="dock-items" :style="dockStyle(index)" @click="openWindows(index, item)">
                         <span class="minimizes-mark" v-if="item.isMinimize"></span>
                         <img class="tabbar-img" :src="item.img" :data-index="index">
                     </div>
@@ -21,7 +21,7 @@
 
         </div>
 
-        <div class="app-container" v-if="showApps">
+        <div class="app-container">
             <app-facetime :appInfo="dockItesmInfo(3)"></app-facetime>
             <app-mpas     :appInfo="dockItesmInfo(4)"></app-mpas>
             <app-safari   :appInfo="dockItesmInfo(6)"></app-safari>
@@ -35,7 +35,7 @@
 
 <script>
     import { reactive, computed, getCurrentInstance, ref } from "vue";
-    import { SET_TABABR_NAVIGATION } from "@/config/store.config.js";
+    import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config.js";
     import Topbar from "@/components/topbar/index.vue";
     import safari from "@/components/apps/safari/index.vue";
     import vscode from "@/components/apps/vscode/index.vue";
@@ -58,7 +58,6 @@
         },
         setup(){
             const { proxy } = getCurrentInstance();
-            let showApps = ref(false);
             const store = useStore();
             const TABABR_NAVIGATIONS = computed( () => store.getters.TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(store.getters.TABABR_NAVIGATION.length).fill(50));
@@ -73,9 +72,6 @@
                 }
             })
             const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE );
-            setTimeout( () =>{
-                showApps.value = true;
-            },500)
 
             // methods
             function tabbarMove(e){
@@ -93,9 +89,10 @@
             function tabbarMouseout(){
                 TABABR_LIST_WIDTH.fill(50)
             }
-            function openWindows(index){
+            function openWindows(index, dock){
                 store.commit(SET_TABABR_NAVIGATION, { _index:index, dockData:{ desktop:true, isMinimize:false } });
-                if( [0,1,2,5].includes(index) ){
+                store.commit(SET_WINDOW_ID,dock.id);
+                if( [0,1,2,5,9].includes(index) ){
                     proxy.$message.error({
                         content:'正在开发中....😊'
                     })
@@ -108,7 +105,6 @@
                 dockStyle,
                 TABABR_MINIMIZE,
                 dockItesmInfo,
-                showApps,
 
                 // methods
                 tabbarMove,

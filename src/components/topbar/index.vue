@@ -1,5 +1,5 @@
 <template>
-    <div class="topbar" :class="[FULLSCREENBAR === true ? 'barFadeInDownBig zIndexTop theme-desktop-bg': 'nofull' ]">
+    <div class="topbar" :class="[ FULLSCREENBAR === true ? 'barFadeInDownBig zIndexTop theme-desktop-bg': 'nofull' ]">
         <div class="topbar-left">
             <vm-about></vm-about>
         </div>

@@ -13,15 +13,15 @@
         @mousedown="windowBarDowStart">
         <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
         <div class="window-bar" ref="ref_bar" 
+            v-show="isBarShow"
             :class="[ 
                 page_config.isFullScreen && 'barFadeInDownBig box-shadow', 
                 page_config.isFullScreen && isBarShow && 'barFullScreen' 
-            ]" 
-            v-show="isBarShow">
+            ]">
             <div class="window-bars">
-                <div class="round" 
+                <div class="round"
                     v-for="(item,index) in statusLists" 
-                    :key="index" 
+                    :key="index"
                     @click.stop="statusSwitch(index)"
                     :class="[item.className, (index === 1 && page_config.isFullScreen) ? 'no-minimize' : '' ]">
                     <i class="iconfont" :class="item.icon"></i>
@@ -82,7 +82,7 @@ export default{
         let domEvents = reactive(new Map());
         let statusLists = reactive(statusList);
         id ++;
-        let windowId = `window${id}`;
+        let windowId = `window${ id }`;
         store.commit(SET_WINDOW_ID,windowId);
         // watch
         watch( () => props.show, ( status ) => {
@@ -90,8 +90,14 @@ export default{
             status === true && nextTick(() =>{ 
                 const { offsetHeight } = ref_bar.value;
                 page_config.barHeight = offsetHeight + 10;
-                initWindowStaus(getByIdDom( windowId ),props.width, props.height); 
+                initWindowStaus(getByIdDom( windowId ),props.width, props.height);
+                // 每次显示默认最前 
+                setScreenFacade()
             })
+        })
+
+        watch( () => [page_config.cursorPointerY], (status)=>{
+            console.log('status',page_config.isFullScreen)
         })
 
         // computed
@@ -100,15 +106,15 @@ export default{
             const h = props.height;
             const scale = 1 ;
             const { top, left } = ref_windows.dom && ref_windows.dom.style || { top:0, left:0 };
-            return `width:${w}px;height:${h}px;transform:scale(${ scale });left:${left};top:${top};`
+            return `width:${ w }px;height:${ h }px;transform:scale(${ scale });left:${ left };top:${ top };`
         });
         const isScreenFacade = computed(() => store.getters.WINDOWID === windowId );
-        const isMinimize = computed(() => props.appInfo.isMinimize );
+        const isMinimize = computed( () => props.appInfo.isMinimize );
         const isBarShow = computed( () =>{
             const { isFullScreen, cursorPointerY } = page_config;
-            let status =  isFullScreen === false || isFullScreen === true && cursorPointerY  === true ;
+            let status = isFullScreen === false || isFullScreen === true && cursorPointerY  === true ;
             // barTop只需要判断全屏和是否到顶部
-            store.commit(SET_FULL_SCREENBAR,isFullScreen === true && cursorPointerY  === true);
+            store.commit(SET_FULL_SCREENBAR, isFullScreen === true && cursorPointerY === true);
             return status;
         })
         onMounted( () =>{
@@ -116,18 +122,18 @@ export default{
             ref_windows.dom = windom;
             page_config.shows = props.show;
             props.show && nextTick(() =>{ initWindowStaus( getByIdDom( windowId ),props.width, props.height) })
-            //web页面移动
+            // web页面移动
             domEvents.set('mousemove',ev =>{
                 const { winBarConfig:{winBarStart}, sticksConfig:{sticksStart} } = page_config;
                 const { clientY } = ev;
                 page_config.cursorPointerY = clientY < page_config.barHeight;
-                if( winBarStart ||  sticksStart) {
-                    documentMoves(windom,ev,page_config)
+                if( winBarStart || sticksStart ) {
+                    documentMoves(windom, ev, page_config)
                 };
             });
-            //鼠标松开、清除状态
+            // 鼠标松开、清除状态
             domEvents.set('mouseup',() =>{
-                mouseups(page_config,props.title)
+                mouseups(page_config, props.title)
             })
             addEvents(domEvents)
         })
@@ -146,15 +152,15 @@ export default{
             if( status === false ){
                 page_config.isFullScreen = false;
             }
-            //全屏
+            // 全屏
             if( type === 'fullScreen' ){
                 windowFullScreen()
             }
-            //最小化
+            // 最小化
             if( type === 'activeClose' ){
                 const { width, height, top, left } = ref_windows.dom.style;
-                //保存最小化状态
-                ref_windows.dom.minimize = {  width, height, top, left };
+                // 保存最小化状态
+                ref_windows.dom.minimize = { width, height, top, left };
                 windowMinimize()
             }
 
@@ -224,13 +230,13 @@ export default{
             ref_bar,
             isMinimize,
 
-            //methods
+            // methods
             windowFullScreen,
             windowMinimize,
             windowBarDowStart,
             setScreenFacade,
             statusSwitch,
-            stickDownStart
+            stickDownStart,
         }
     }
 }
