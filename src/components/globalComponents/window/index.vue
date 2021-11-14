@@ -96,10 +96,6 @@ export default{
             })
         })
 
-        watch( () => [page_config.cursorPointerY], (status)=>{
-            console.log('status',page_config.isFullScreen)
-        })
-
         // computed
         let initSzie = computed(() => {
             const w = props.width;
@@ -113,8 +109,10 @@ export default{
         const isBarShow = computed( () =>{
             const { isFullScreen, cursorPointerY } = page_config;
             let status = isFullScreen === false || isFullScreen === true && cursorPointerY  === true ;
-            // barTop只需要判断全屏和是否到顶部
-            store.commit(SET_FULL_SCREENBAR, isFullScreen === true && cursorPointerY === true);
+            // 只有当前顶层app才能去对全局状态进行变化 barTop只需要判断全屏和是否到顶部
+            if( isScreenFacade.value ){
+                store.commit(SET_FULL_SCREENBAR, isFullScreen === true && cursorPointerY === true);
+            }
             return status;
         })
         onMounted( () =>{
