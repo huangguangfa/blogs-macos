@@ -98,33 +98,6 @@ const SkyRTC = function () {
 
         socket.addEventListener( 'message', this.receiveSocketMessage)
         socket.webrtc = this;
-
-        // removeEventListener
-        // socket.onopen(function () {
-        //     that.emit('connected', socket);
-        // });
-
-        // socket.onmessage( function (message) {
-            // typeof message === 'string' ? message = JSON.parse(message) : message
-            // const { sender } = message;
-            // let scoketData = message.data;
-            // if( sender === "exc" ){
-            //     const { data, call_uid, call_uname, exc_type  } = scoketData;
-            //     that.receiveUser.uId = call_uid;
-            //     that.receiveUser.uname = call_uname;
-            //     // 添加远端offer
-            //     exc_type === "sdp" && that.receiveOffer(data);
-            //     // 添加IEC
-            //     exc_type === "ice" && that.receiveIce(data);
-            //     // 呼叫监听
-            //     exc_type === 'call' && that.emit('call',data);
-            //     // 聊天
-            //     exc_type === 'chats' && that.emit('chats',data);
-            //     // 挂断
-            //     exc_type === 'endCall' && that.emit('endCall',data);
-            // }
-            // that.emit("socket_receive_message", message, socket );
-        // });
     };
 
     skyrtc.prototype.receiveSocketMessage = function(mes){
