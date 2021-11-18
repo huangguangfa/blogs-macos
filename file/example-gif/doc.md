@@ -38,8 +38,8 @@ highlight: nord
  mkdir -p ~/.config 
  // 创建容器
  docker run -it --name code-server -p 6689:8080 \
-  -v "/gfProject/.config:/home/coder/.config" \
-  -v "/gfProject:/home/coder/project" \
+  -v "/xxx/.config:/home/coder/.config" \
+  -v "/xxx:/home/coder/project" \
   -e PASSWORD="123456" \
   codercom/code-server:latest
  // 访问ip加8080端口访问
