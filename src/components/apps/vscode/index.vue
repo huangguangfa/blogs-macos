@@ -14,6 +14,7 @@
 
 <script>
     import login from "../../locks/index.vue";
+    import { logins } from "@/services/api/user-api.js"
     import { ref, getCurrentInstance } from "vue";
     export default{
         components:{
@@ -24,11 +25,18 @@
         },
         setup(){
             const { proxy } = getCurrentInstance();
-            const isLoginVscode = ref(localStorage.getItem("isLoginVscode"));
-            function loginVscode(_,info){
+            const isLoginVscode = ref(0);
+            async function loginVscode(_,info){
                 const { uId, uName } = info;
-                if( uId === 'guangfa123' && uName === 'guangfa' ){
-                    localStorage.setItem("isLoginVscode",true)
+                const { success } = await logins({
+                    "userName": uName,
+                    "password": uId
+                })
+                console.log('res',success);
+                if( success ){
+                    proxy.$message.success({
+                        content:'成功！！'
+                    })
                     isLoginVscode.value = true;
                 }else{
                     proxy.$message.error({

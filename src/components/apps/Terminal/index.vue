@@ -18,6 +18,7 @@ import 'xterm/css/xterm.css';
 import { Terminal } from 'xterm';
 import { AttachAddon } from "./xterm-addon-attach";
 import login from "../../locks/index.vue";
+import { logins } from "@/services/api/user-api.js"
 export default{
     props:{
         appInfo:Object
@@ -34,11 +35,16 @@ export default{
                 status && isLoginXterm.value && startXterm();
             })
         })
-
-        function loginXterm(_,info){
+        async function loginXterm(_,info){
             const { uId, uName } = info;
-            if( uId === 'guangfa123' && uName === 'guangfa' ){
-                localStorage.setItem("isLoginXterm",true)
+            const { success } = await logins({
+                "userName": uName,
+                "password": uId
+            })
+            if( success ){
+                proxy.$message.success({
+                    content:'成功！！'
+                })
                 isLoginXterm.value = true;
                 startXterm();
             }else{
