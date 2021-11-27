@@ -64,23 +64,30 @@
             // methods
             function tabbarMove(e){
                 const { target } = e;
+                const selectSize = 110;
+                const selectOneIndex = 1;
+                const selectTwoIndex = 2;
+                const selectOneSize = 80;
+                const selectTwoSize = 70;
                 let currentEleIndex = Number( target.getAttribute("data-index") );
                 if( currentEleIndex === undefined ) return;
-                TABABR_LIST_WIDTH[ currentEleIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex] = 110 );
+                TABABR_LIST_WIDTH[ currentEleIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex] = selectSize );
                 //左
-                TABABR_LIST_WIDTH[ currentEleIndex - 1 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex -1] = 80 );
-                TABABR_LIST_WIDTH[ currentEleIndex - 2 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex -2] = 70 );
+                TABABR_LIST_WIDTH[ currentEleIndex - selectOneIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex - selectOneIndex] = selectOneSize );
+                TABABR_LIST_WIDTH[ currentEleIndex - selectTwoIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex - selectTwoIndex] = selectTwoSize );
                 //右
-                TABABR_LIST_WIDTH[ currentEleIndex + 1 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 1] = 80 );
-                TABABR_LIST_WIDTH[ currentEleIndex + 2 ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + 2] = 70 );
+                TABABR_LIST_WIDTH[ currentEleIndex + selectOneIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + selectOneIndex] = selectOneSize );
+                TABABR_LIST_WIDTH[ currentEleIndex + selectTwoIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + selectTwoIndex] = selectTwoSize );
             }
             function tabbarMouseout(){
-                TABABR_LIST_WIDTH.fill(50)
+                const defaultSize = 50;
+                TABABR_LIST_WIDTH.fill(defaultSize);
             }
             function openWindows(index, dock){
                 store.commit(SET_TABABR_NAVIGATION, { _index:index, dockData:{ desktop:true, isMinimize:false } });
                 store.commit(SET_WINDOW_ID,dock.id);
-                if( [0,1,2,5,9].includes(index) ){
+                const undevelopedAppsIndex = [0,1,2,5,9];
+                if( undevelopedAppsIndex.includes(index) ){
                     proxy.$message.error({
                         content:'正在开发中....😊'
                     })
