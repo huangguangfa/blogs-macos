@@ -17,7 +17,7 @@
                 <div class="inputs">
                     <div class="title">{{ configInfo.phoneLabel }}：</div>
                     <div class="inputs-content">
-                        <input v-model="user.uId" type="text">
+                        <input v-model="user.uId" type="text" @keyup.enter="submit">
                         <label :alt="`请输入${configInfo.phoneLabel}`" :placeholder="`请输入${configInfo.phoneLabel}`"></label>
                     </div>
                 </div>

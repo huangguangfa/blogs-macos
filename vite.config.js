@@ -9,6 +9,9 @@ export default defineConfig({
             '~assets': resolve(__dirname, 'src/assets/'),
         },
     },
+    build:{
+        outDir:"blogs-macos"
+    },
     server:{
         port:3001,
         host: '0.0.0.0'

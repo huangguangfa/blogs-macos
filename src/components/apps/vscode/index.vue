@@ -32,11 +32,7 @@
                     "userName": uName,
                     "password": uId
                 })
-                console.log('res',success);
                 if( success ){
-                    proxy.$message.success({
-                        content:'成功！！'
-                    })
                     isLoginVscode.value = true;
                 }else{
                     proxy.$message.error({

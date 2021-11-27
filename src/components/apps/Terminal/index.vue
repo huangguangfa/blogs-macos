@@ -27,7 +27,7 @@ export default{
         vmlogin:login
     },
     setup( props ){
-        const isLoginXterm = ref(localStorage.getItem("isLoginXterm"));
+        const isLoginXterm = ref(false);
         const { proxy } = getCurrentInstance();
         let xterms = null;
         watch( () => props.appInfo.desktop, (status) =>{
@@ -42,9 +42,6 @@ export default{
                 "password": uId
             })
             if( success ){
-                proxy.$message.success({
-                    content:'成功！！'
-                })
                 isLoginXterm.value = true;
                 startXterm();
             }else{

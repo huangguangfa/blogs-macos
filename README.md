@@ -16,5 +16,5 @@ yarn start
 ## 效果
 
 ![image](https://github.com/huanggungfa/blogs-macos/blob/main/file/example-gif/doc.gif)
-
+/usr/gfDocker/nginx/web
 > server服务端 ❗❗❗注意：暂时不维护了、已经使用自己博客的NestJs服务集成使用了
