@@ -22,51 +22,39 @@
         </div>
 
         <div class="app-container">
-            <app-facetime :appInfo="dockItesmInfo(3)"></app-facetime>
-            <app-mpas     :appInfo="dockItesmInfo(4)"></app-mpas>
-            <app-safari   :appInfo="dockItesmInfo(6)"></app-safari>
-            <app-termial  :appInfo="dockItesmInfo(7)"></app-termial>
-            <app-vscode   :appInfo="dockItesmInfo(8)"></app-vscode>
-            <appMusic     :appInfo="dockItesmInfo(10)"></appMusic>
-            <app-blogs    :appInfo="dockItesmInfo(11)"></app-blogs>
+            <component 
+                v-for="apps in APPS_COMPONENT" 
+                :key="apps.appsName" 
+                :appInfo="dockItemsInfo(apps.appsDataIndex)"
+                :is="apps.appsName">
+            </component>
         </div>
     </div>
 </template>
 
 <script>
-    import { reactive, computed, getCurrentInstance, ref } from "vue";
+    import APPSCONFIG from "./apps-config"
+    import { reactive, computed, getCurrentInstance } from "vue";
     import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config.js";
-    import Topbar from "@/components/topbar/index.vue";
-    import safari from "@/components/apps/safari/index.vue";
-    import vscode from "@/components/apps/vscode/index.vue";
-    import facetime from "@/components/apps/facetime/index.vue";
-    import termial from "@/components/apps/Terminal/index.vue";
-    import maps from "@/components/apps/maps/index.vue";
-    import music from "@/components/apps/music/index.vue";
-    import blogs from "@/components/apps/blogs/index.vue"
+    import topbar from "@/components/topbar/index.vue";
     import { useStore } from 'vuex';
     export default{
         components:{
-            vmTopbar:Topbar,
-            appSafari:safari,
-            appVscode:vscode,
-            appFacetime:facetime,
-            appTermial:termial,
-            appMpas:maps,
-            appMusic:music,
-            appBlogs:blogs
+            ...APPSCONFIG.appsInject,
+            vmTopbar:topbar
         },
         setup(){
             const { proxy } = getCurrentInstance();
             const store = useStore();
             const TABABR_NAVIGATIONS = computed( () => store.getters.TABABR_NAVIGATION);
             const TABABR_LIST_WIDTH = reactive(Array(store.getters.TABABR_NAVIGATION.length).fill(50));
+            const APPS_COMPONENT = APPSCONFIG.appsComponent;
             const dockStyle = computed( () =>{
                 return function(index){
                     return `width:${TABABR_LIST_WIDTH[index]}px;height:${TABABR_LIST_WIDTH[index]}px;`
                 }
             })
-            const dockItesmInfo = computed( () =>{
+            const dockItemsInfo = computed( () =>{
                 return function(index){
                     return store.getters.TABABR_NAVIGATION[index];
                 }
@@ -102,9 +90,10 @@
             return {
                 TABABR_NAVIGATIONS,
                 TABABR_LIST_WIDTH,
-                dockStyle,
+                APPS_COMPONENT,
                 TABABR_MINIMIZE,
-                dockItesmInfo,
+                dockStyle,
+                dockItemsInfo,
 
                 // methods
                 tabbarMove,
