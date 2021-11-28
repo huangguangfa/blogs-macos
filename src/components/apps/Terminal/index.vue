@@ -1,6 +1,12 @@
 <template>
     <div class="Terminal">
-        <window v-model:show="appInfo.desktop" title="Terminal" v-model:appInfo="appInfo" width="800">
+        <window 
+            v-model:show="appInfo.desktop" 
+            title="Terminal" 
+            v-model:appInfo="appInfo" 
+            height="420"
+            @windowSize="windowSize"
+            width="800">
             <div class="terminal-content" v-if="appInfo.desktop">
                 <div class="xterm" id="xterm"></div>
                 <div class="login_locks" v-if="!isLoginXterm">
@@ -17,6 +23,7 @@ import { watch, nextTick, getCurrentInstance, ref } from "vue";
 import 'xterm/css/xterm.css';
 import { Terminal } from 'xterm';
 import { AttachAddon } from "./xterm-addon-attach";
+import { FitAddon } from "./FitAddon";
 import login from "../../locks/index.vue";
 import { logins } from "@/services/api/user-api.js"
 export default{
@@ -29,6 +36,8 @@ export default{
     setup( props ){
         const isLoginXterm = ref(false);
         const { proxy } = getCurrentInstance();
+        let attachAddon = null;
+        let fitAddon = null;
         let xterms = null;
         watch( () => props.appInfo.desktop, (status) =>{
             nextTick( () =>{
@@ -67,21 +76,23 @@ export default{
             xterms.open(terminalContainer,true);
             const initXtermTextList = ['\x1b[32m Welcome to gf cloud!!!\x1b[0m', '\x1B[1;3;31m个人五毛钱服务器、我相信你不会乱搞!!!\x1B[0m', '', '[root@VM-0-8-centos ~]# ', ''];
             initXtermTextList.forEach( text => xterms.writeln(text));
-            const attachAddon = new AttachAddon(proxy.$scoket.ws);
+            attachAddon = new AttachAddon(proxy.$scoket.ws);
+            fitAddon = new FitAddon();
             xterms.loadAddon(attachAddon);
+            xterms.loadAddon(fitAddon);
+            fitAddon.fit();
         }
-        
+        function windowSize(){
+            fitAddon && fitAddon.fit();
+        }
         function startXterm(){
             initXterm()
         }
 
-        function closeXterm(){
-
-        }
-
         return {
             isLoginXterm,
-            loginXterm
+            loginXterm,
+            windowSize
         }
     }
 }

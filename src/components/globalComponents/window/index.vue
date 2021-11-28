@@ -132,6 +132,7 @@ export default{
             // 鼠标松开、清除状态
             domEvents.set('mouseup',() =>{
                 mouseups(page_config, props.title)
+                changeSize()
             })
             addEvents(domEvents)
         })
@@ -161,7 +162,6 @@ export default{
                 ref_windows.dom.minimize = { width, height, top, left };
                 windowMinimize()
             }
-
             emit('change',{ type, status })
         }
         function setScreenFacade(){
@@ -198,6 +198,7 @@ export default{
             page_config.isFullScreen = !page_config.isFullScreen;
             let newStyle = null;
             if( page_config.isFullScreen === true ){
+                changeSize()
                 const { offsetWidth, offsetHeight, style } = ref_windows.dom;
                 const { top, left } = style;
                 let web_width = document.body.offsetWidth;
@@ -212,6 +213,13 @@ export default{
                 newStyle = `width:${__formerW}px;height:${__formerH}px;top:${__formerT}px;left:${__formerL}px`;
             }
             ref_windows.dom.setAttribute('style',newStyle)
+        }
+        function changeSize(){
+            const { width, height } = ref_windows.dom.style;
+            emit('windowSize',{
+                width,
+                height
+            })
         }
         // 销毁
         onUnmounted( () =>{

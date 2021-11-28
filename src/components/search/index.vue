@@ -31,17 +31,17 @@
             // methods
             function getInputValue(e){
                 const v = e.target.value;
-                const value = TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash' && i.id.toLowerCase().includes(v)  );
+                const value = TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash' && i.id.toLowerCase().includes(v) );
                 activeApps.value = value;
             }
             function cancelGlobalSearch(){
-                store.commit(SET_START_GLOBAL_SEARCH,false)
+                store.commit(SET_START_GLOBAL_SEARCH,false);
             }
             function openApps(apps){
                 const appsIndex = TABABR_NAVIGATIONS.findIndex( app => app.id === apps.id);
                 store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
                 store.commit(SET_WINDOW_ID,apps.id);
-                cancelGlobalSearch()
+                cancelGlobalSearch();
             }
             return {
                 activeApps,
