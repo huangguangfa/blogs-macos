@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import { ref, getCurrentInstance, onUnmounted } from 'vue';
+    import { ref, getCurrentInstance, onUnmounted, onMounted } from 'vue';
     import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
     import { useStore  } from 'vuex';
     export default {
@@ -41,6 +41,7 @@
             let selectIndex = ref(0);
             let inputIsFocus = ref(false);
             const keyupName = ["ArrowUp", "ArrowDown"];
+
             function globalKeyup(e){
                 const { code } = e;
                 const index = keyupName.indexOf(code);
@@ -82,6 +83,9 @@
             }
             onUnmounted( () =>{
                 proxy.$eventBus.$off("globalKeyup", globalKeyup)
+            })
+            onMounted( () =>{
+                selectIndex.value === 0 && searchDom.value.focus()
             })
             return {
                 activeApps,
