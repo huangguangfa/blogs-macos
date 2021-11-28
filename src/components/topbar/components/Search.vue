@@ -4,18 +4,26 @@
     </div>
 </template>
 <script>
-    import { getCurrentInstance } from "vue";
-    import store from "@/store/index";
+    import { getCurrentInstance, onUnmounted } from "vue";
+    import { useStore } from "vuex";
     import { SET_START_GLOBAL_SEARCH } from "@/config/store.config.js";
     export default {
         setup(){
             const { proxy } = getCurrentInstance();
+            const store = useStore()
             function startGlobalSearch(){
-                store.commit(SET_START_GLOBAL_SEARCH,true)
+                const status = store.getters.STARTGLOBALSEARCH;
+                store.commit(SET_START_GLOBAL_SEARCH,!status);
             }
-            proxy.$eventBus.$on("globalKeyup",function(code){
-
-                console.log(code);
+            function globalKeyup(e){
+                const { code } = e;
+                if( code === "Shift" ){
+                    proxy.$continuousEvent.checkDouble(code,startGlobalSearch);
+                }
+            }
+            proxy.$eventBus.$on("globalKeyup",globalKeyup)
+            onUnmounted( () =>{
+                proxy.$eventBus.$off("globalKeyup",globalKeyup)
             })
             return {
                 // methods

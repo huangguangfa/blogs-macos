@@ -8,7 +8,7 @@ export default class ContinuousEvent{
             this.clearFlagTimer(flagName);
             this.deleteFlag(flagName);
         }else{
-            flagNameList[flagName] = setTimeout( () =>{
+            this.flagNameList[flagName] = setTimeout( () =>{
                 this.deleteFlag(flagName)
             }, time)
         }
@@ -17,6 +17,6 @@ export default class ContinuousEvent{
         this.flagNameList[flagName] && delete this.flagNameList[flagName];
     }
     clearFlagTimer(flagName){
-        this.flagNameList[flagName] && this.clearTimeout(flagNameList[flagName]);
+        this.flagNameList[flagName] && clearTimeout(this.flagNameList[flagName]);
     }
 }
