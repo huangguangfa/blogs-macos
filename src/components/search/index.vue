@@ -6,7 +6,10 @@
                 <input class="search-input" placeholder="Spotlight Search" @input="getInputValue" type="text">
             </div>
             <div class="search-content">
-                <div class="search-item" v-for="apps in activeApps" :key="apps.id">
+                <div class="search-item" 
+                    v-for="apps in activeApps" 
+                    @click="openApps(apps)"
+                    :key="apps.id">
                     <img :src="apps.img" alt="">
                     <span>{{ apps.id }}</span>
                 </div>
@@ -16,7 +19,7 @@
 </template>
 
 <script>
-    import { SET_START_GLOBAL_SEARCH } from "@/config/store.config";
+    import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
     import { useStore } from 'vuex';
     import { ref } from 'vue';
 
@@ -34,13 +37,19 @@
             function cancelGlobalSearch(){
                 store.commit(SET_START_GLOBAL_SEARCH,false)
             }
+            function openApps(apps){
+                const appsIndex = TABABR_NAVIGATIONS.findIndex( app => app.id === apps.id);
+                store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
+                store.commit(SET_WINDOW_ID,apps.id);
+                cancelGlobalSearch()
+            }
             return {
                 activeApps,
 
-
                 // methods
                 getInputValue,
-                cancelGlobalSearch
+                cancelGlobalSearch,
+                openApps
             }
         }
     }

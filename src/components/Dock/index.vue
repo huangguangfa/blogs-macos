@@ -12,7 +12,7 @@
                     v-for="(item,index) in TABABR_NAVIGATIONS"  
                     :key="index">
                     <p class="tabbar-title absolute d-none">{{ item.title }}</p>
-                    <div class="dock-items" :style="dockStyle(index)" @click="openWindows(index, item)">
+                    <div class="dock-items" :style="dockStyle(index)" @click="openWindows(item)">
                         <span class="minimizes-mark" v-if="item.isMinimize"></span>
                         <img class="tabbar-img" :src="item.img" :data-index="index">
                     </div>
@@ -82,11 +82,12 @@
                 const defaultSize = 50;
                 TABABR_LIST_WIDTH.fill(defaultSize);
             }
-            function openWindows(index, dock){
-                store.commit(SET_TABABR_NAVIGATION, { _index:index, dockData:{ desktop:true, isMinimize:false } });
+            function openWindows(dock){
+                const appsIndex = TABABR_NAVIGATIONS.value.findIndex( app => app.id === dock.id);
+                store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
                 store.commit(SET_WINDOW_ID,dock.id);
                 const undevelopedAppsIndex = [0,1,2,5,9];
-                if( undevelopedAppsIndex.includes(index) ){
+                if( undevelopedAppsIndex.includes(appsIndex) ){
                     proxy.$message.error({
                         content:'正在开发中....😊'
                     })
