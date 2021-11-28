@@ -4,12 +4,22 @@
     </div>
 </template>
 <script>
+    import { getCurrentInstance } from "vue";
     import store from "@/store/index";
     import { SET_START_GLOBAL_SEARCH } from "@/config/store.config.js";
     export default {
-        methods:{
-            startGlobalSearch(){
+        setup(){
+            const { proxy } = getCurrentInstance();
+            function startGlobalSearch(){
                 store.commit(SET_START_GLOBAL_SEARCH,true)
+            }
+            proxy.$eventBus.$on("globalKeyup",function(code){
+
+                console.log(code);
+            })
+            return {
+                // methods
+                startGlobalSearch
             }
         }
     }

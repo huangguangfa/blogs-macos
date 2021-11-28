@@ -3,20 +3,20 @@ export default class EventBus{
         this.listeners = {};
     }
 
-    $on(name,fn){
-        if( !this.listeners[name] ) this.listeners[key] = [];
-        this.listeners[name].push(fn);
+    $on(key,fn){
+        if( !this.listeners[key] ) this.listeners[key] = [];
+        this.listeners[key].push(fn);
     }
     
-    $emit(name,data){
-        if( this.listeners[name] ){
-            this.listeners[name].forEach( fn => fn(data));
+    $emit(key,data){
+        if( this.listeners[key] ){
+            this.listeners[key].forEach( fn => fn(data) );
         }
     }
 
-    $off(name, fns){
-        if( this.listeners[name] ){
-            this.listeners[name] = this.listeners[name].filter( fn => fn !== fns);
+    $off(key, fns){
+        if( this.listeners[key] ){
+            this.listeners[key] = this.listeners[key].filter( fn => fn !== fns);
         }
     }
 }

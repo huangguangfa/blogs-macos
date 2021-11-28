@@ -20,9 +20,9 @@
 </template>
 
 <script>
-    import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
-    import { useStore } from 'vuex';
     import { ref } from 'vue';
+    import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
+    import { useStore  } from 'vuex';
     export default {
         setup(){
             const store = useStore();
