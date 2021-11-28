@@ -5,6 +5,7 @@
                 <div class="iconfont macos-sousuo"></div>
                 <input 
                     class="search-input" 
+                    ref="searchDom"
                     placeholder="Spotlight Search" 
                     @input="getInputValue" 
                     @keyup.enter="enterApps" 
@@ -36,6 +37,7 @@
             const store = useStore();
             const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
             const activeApps = ref(TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash'));
+            const searchDom = ref(null);
             let selectIndex = ref(0);
             let inputIsFocus = ref(false);
             const keyupName = ["ArrowUp", "ArrowDown"];
@@ -43,15 +45,17 @@
                 const { code } = e;
                 const index = keyupName.indexOf(code);
                 if( index >= 0 ){
+                    // 判断键盘上下
                     if( index === 0 && selectIndex.value !== 0 ){
                         selectIndex.value -= 1;
                     }else if( index === 1 && selectIndex.value < activeApps.value.length -1 ){
                         selectIndex.value += 1;
                     }
+                    // 选中第一个 且继续按上键、让input得到焦点
+                    index === 0 && selectIndex.value === 0 && searchDom.value.focus()
                 }
-                if( code === "Enter" &&  inputIsFocus.value === false ){
-                    enterApps()
-                }
+                // 不是input且按了enter键盘
+                code === "Enter" &&  inputIsFocus.value === false && enterApps()
             }
             proxy.$eventBus.$on( "globalKeyup",globalKeyup);
             // methods
@@ -84,6 +88,7 @@
                 selectIndex,
                 enterApps,
                 inputIsFocus,
+                searchDom,
 
                 // methods
                 getInputValue,
