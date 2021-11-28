@@ -3,7 +3,14 @@
         <div class="search-tag absolute ov-hide" v-clickoutside="cancelGlobalSearch">
             <div class="search-tga-input flex align-items-center">
                 <div class="iconfont macos-sousuo"></div>
-                <input class="search-input" placeholder="Spotlight Search" @input="getInputValue" @keyup.enter="enterApps" type="text">
+                <input 
+                    class="search-input" 
+                    placeholder="Spotlight Search" 
+                    @input="getInputValue" 
+                    @keyup.enter="enterApps" 
+                    @blur="inputIsFocus = false"
+                    @focus="inputIsFocus = true"
+                    type="text">
             </div>
             <div class="search-content">
                 <div class="search-item" 
@@ -30,6 +37,7 @@
             const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
             const activeApps = ref(TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash'));
             let selectIndex = ref(0);
+            let inputIsFocus = ref(false);
             const keyupName = ["ArrowUp", "ArrowDown"];
             function globalKeyup(e){
                 const { code } = e;
@@ -40,6 +48,9 @@
                     }else if( index === 1 && selectIndex.value < activeApps.value.length -1 ){
                         selectIndex.value += 1;
                     }
+                }
+                if( code === "Enter" &&  inputIsFocus.value === false ){
+                    enterApps()
                 }
             }
             proxy.$eventBus.$on( "globalKeyup",globalKeyup);
@@ -72,6 +83,7 @@
                 activeApps,
                 selectIndex,
                 enterApps,
+                inputIsFocus,
 
                 // methods
                 getInputValue,
