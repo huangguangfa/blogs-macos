@@ -3,12 +3,13 @@
         <div class="search-tag absolute ov-hide" v-clickoutside="cancelGlobalSearch">
             <div class="search-tga-input flex align-items-center">
                 <div class="iconfont macos-sousuo"></div>
-                <input class="search-input" placeholder="Spotlight Search" @input="getInputValue" type="text">
+                <input class="search-input" placeholder="Spotlight Search" @input="getInputValue" @keyup.enter="enterApps" type="text">
             </div>
             <div class="search-content">
                 <div class="search-item" 
-                    v-for="apps in activeApps" 
-                    @click="openApps(apps)"
+                    v-for="(apps, index) in activeApps" 
+                    @click="openApps(apps, index)"
+                    :class="{ 'active': selectIndex === index}"
                     :key="apps.id">
                     <img :src="apps.img" alt="">
                     <span>{{ apps.id }}</span>
@@ -22,12 +23,12 @@
     import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
     import { useStore } from 'vuex';
     import { ref } from 'vue';
-
     export default {
         setup(){
             const store = useStore();
             const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
             const activeApps = ref(TABABR_NAVIGATIONS);
+            let selectIndex = ref(0)
             // methods
             function getInputValue(e){
                 const v = e.target.value;
@@ -37,14 +38,23 @@
             function cancelGlobalSearch(){
                 store.commit(SET_START_GLOBAL_SEARCH,false);
             }
-            function openApps(apps){
+            function openApps(apps, index){
                 const appsIndex = TABABR_NAVIGATIONS.findIndex( app => app.id === apps.id);
-                store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
-                store.commit(SET_WINDOW_ID,apps.id);
-                cancelGlobalSearch();
+                selectIndex.value = index;
+                setTimeout( () =>{
+                    store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
+                    store.commit(SET_WINDOW_ID,apps.id);
+                    cancelGlobalSearch();
+                },100)
+            }
+            function enterApps(){
+                const apps = activeApps.value[selectIndex.value];
+                openApps(apps, selectIndex.value);
             }
             return {
                 activeApps,
+                selectIndex,
+                enterApps,
 
                 // methods
                 getInputValue,
@@ -69,11 +79,13 @@
                     }
                 }
             }
-            .search-content{width: 100%;max-height: 400px;overflow-y: auto; overflow-x:hidden ; margin-top: 1px;border-top: 1px solid rgba(0,0,0,0.1);padding:10px 20px; box-sizing: border-box;
+            .search-content{width: 100%;max-height: 400px;overflow-y: auto; overflow-x:hidden ; margin-top: 1px;border-top: 1px solid rgba(0,0,0,0.1);padding:10px 10px; box-sizing: border-box;
                 .search-item{
                     display: flex;align-items: center;margin-top:10px;cursor: pointer;
+                    padding:2px 10px;
                     img{width: 30px;height: 30px;margin-right: 10px;}
                 }
+                .active{background: #317add;color: #fff;border-radius: 5px;}
             }
         }
     }
