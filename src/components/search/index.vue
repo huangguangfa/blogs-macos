@@ -20,15 +20,29 @@
 </template>
 
 <script>
-    import { ref } from 'vue';
+    import { ref, getCurrentInstance, onUnmounted } from 'vue';
     import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
     import { useStore  } from 'vuex';
     export default {
         setup(){
+            const { proxy } = getCurrentInstance();
             const store = useStore();
             const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
-            const activeApps = ref(TABABR_NAVIGATIONS);
-            let selectIndex = ref(0)
+            const activeApps = ref(TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash'));
+            let selectIndex = ref(0);
+            const keyupName = ["ArrowUp", "ArrowDown"];
+            function globalKeyup(e){
+                const { code } = e;
+                const index = keyupName.indexOf(code);
+                if( index >= 0 ){
+                    if( index === 0 && selectIndex.value !== 0 ){
+                        selectIndex.value -= 1;
+                    }else if( index === 1 && selectIndex.value < activeApps.value.length -1 ){
+                        selectIndex.value += 1;
+                    }
+                }
+            }
+            proxy.$eventBus.$on( "globalKeyup",globalKeyup);
             // methods
             function getInputValue(e){
                 const v = e.target.value;
@@ -51,6 +65,9 @@
                 const apps = activeApps.value[selectIndex.value];
                 openApps(apps, selectIndex.value);
             }
+            onUnmounted( () =>{
+                proxy.$eventBus.$off("globalKeyup", globalKeyup)
+            })
             return {
                 activeApps,
                 selectIndex,

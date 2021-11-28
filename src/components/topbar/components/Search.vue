@@ -21,9 +21,9 @@
                     proxy.$continuousEvent.checkDouble(code,startGlobalSearch);
                 }
             }
-            proxy.$eventBus.$on("globalKeyup",globalKeyup)
+            proxy.$eventBus.$on("globalKeyup", globalKeyup)
             onUnmounted( () =>{
-                proxy.$eventBus.$off("globalKeyup",globalKeyup)
+                proxy.$eventBus.$off("globalKeyup", globalKeyup)
             })
             return {
                 // methods
