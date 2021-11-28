@@ -18,7 +18,6 @@
                     </div>
                 </li>
             </ul>
-
         </div>
 
         <div class="app-container">
