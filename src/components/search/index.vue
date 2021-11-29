@@ -56,7 +56,7 @@
                     index === 0 && selectIndex.value === 0 && searchDom.value.focus()
                 }
                 // 不是input且按了enter键盘
-                code === "Enter" &&  inputIsFocus.value === false && enterApps()
+                code === "Enter" && inputIsFocus.value === false && enterApps()
             }
             proxy.$eventBus.$on( "globalKeyup",globalKeyup);
             // methods
@@ -64,6 +64,7 @@
                 const v = e.target.value;
                 const value = TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash' && i.id.toLowerCase().includes(v) );
                 activeApps.value = value;
+                selectIndex.value = 0;
             }
             function cancelGlobalSearch(){
                 store.commit(SET_START_GLOBAL_SEARCH,false);

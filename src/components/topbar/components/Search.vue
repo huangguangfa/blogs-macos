@@ -18,7 +18,7 @@
             function globalKeyup(e){
                 const { code } = e;
                 if( code === "Shift" ){
-                    proxy.$continuousEvent.checkDouble(code,startGlobalSearch);
+                    proxy.$continuousEvent.checkDouble(code,startGlobalSearch,500);
                 }
             }
             proxy.$eventBus.$on("globalKeyup", globalKeyup)
