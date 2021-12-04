@@ -4,7 +4,8 @@ import Facetime from "@/components/apps/facetime/index.vue";
 import Termial from "@/components/apps/Terminal/index.vue";
 import Maps from "@/components/apps/maps/index.vue";
 import Music from "@/components/apps/music/index.vue";
-import Blogs from "@/components/apps/blogs/index.vue"
+import Blogs from "@/components/apps/blogs/index.vue";
+import Home from "@/components/apps/home/index.vue";
 const apps = {
     'app-facetime':{
         component:Facetime,
@@ -33,6 +34,10 @@ const apps = {
     'app-blogs':{
         component:Blogs,
         index:11
+    },
+    'app-home':{
+        component:Home,
+        index:12
     }
 };
 

@@ -98,13 +98,22 @@ export const TABABR_NAVIGATION = [
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/blogs.png"
     },
     {
+        id: "Three",
+        title: "Three",
+        desktop: true,
+        isMinimize:false,
+        _index:12,
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/three.png"
+    },
+    {
         id: "Trash",
         title: "Trash",
         desktop: false,
         isMinimize:false,
-        _index:12,
+        _index:13,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/trash.png"
-    }
+    },
+    
 ]
 
 // 最小化活动列表

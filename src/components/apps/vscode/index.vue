@@ -14,7 +14,7 @@
 
 <script>
     import login from "../../locks/index.vue";
-    import { logins } from "@/services/api/user-api.js"
+    import { logins } from "@/services/api/user-api.js";
     import { ref, getCurrentInstance } from "vue";
     export default{
         components:{
