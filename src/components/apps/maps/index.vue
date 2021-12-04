@@ -48,11 +48,11 @@
                     color: 'rgb(15,19,40)',
                     position: [121.482697,31.239712, 2600],
                     intensity: 25,
-                    // 距离表示从光源到光照强度为 0 的位置，0 就是光不会消失。
+                    // 距离表示从光源到光照强度为 0 的位置，0 就是光不会消失
                     distance: 3900,
                 };
                 let geo = new Loca.GeoJSONSource({
-                    url: 'https://a.amap.com/Loca/static/loca-v2/demos/mock_data/sh_building_center.json',
+                    url: 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/apps/maps/sh_building_center.json',
                 });
                 let pl = window.pl = new Loca.PolygonLayer({
                     zIndex: 120,
@@ -68,7 +68,7 @@
                         return feature.properties.h;
                     },
                     textureSize: [1000, 820],
-                    texture: 'https://a.amap.com/Loca/static/loca-v2/demos/images/windows.jpg',
+                    texture: 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/apps/maps/windows.jpg',
                 });
                 pl.setLoca(loca);
                 map.on('complete', function () {
