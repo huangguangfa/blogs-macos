@@ -1,6 +1,6 @@
 <template>
     <div class="loading">
-        <img draggable="false" src="@/assets/images/loading/loading.gif" alt="">
+        <img draggable="false" src="@/assets/images/loading/loadings.gif" alt="">
     </div>
 </template>
 <script>
@@ -11,7 +11,7 @@
 
 <style lang="less">
     .loading{
-        width: 100%;height: 100%;background: #fff;
+        width: 100%;height: 100%;background: #000; position: absolute;top: 0;left: 0;
         display: flex; align-items: center; justify-content: center;
     }    
 </style>

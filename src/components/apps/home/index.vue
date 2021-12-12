@@ -1,7 +1,8 @@
 <template>
     <div class="home">
         <window v-model:show="appInfo.desktop" width="1000" height="700" title="MyHome" @windowId="getWindowId" :appInfo="appInfo">
-            <div ref="windowRefs" class="home-content wh100" v-if="appInfo.desktop"></div>
+			<vm-loading v-if="loading"></vm-loading>
+            <div ref="windowRefs" class="home-content wh100"></div>
         </window>
     </div>
 </template>
@@ -15,6 +16,7 @@
     import { PointerLockControls } from '@/lib/threeJS/jsm/controls/PointerLockControls.js';
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+	import { randomNum } from "@/utils/utils";
     export default{
         props:{
             appInfo:Object
@@ -23,11 +25,12 @@
             const observer = new MutationObserver(() =>{
                onWindowResize()
             });
+			const loading = ref(true);
             const windowRefs = ref(null);
             // 相机 // 场景 // 渲染器
 			let camera, scene, renderer;
             // 鼠标控制相机变量
-            let cameraControls;
+            // let cameraControls;
 			// 定义方向键状态
 			const controls = {
 				moveForward: false,
@@ -35,7 +38,9 @@
 				moveLeft: false,
 				moveRight: false
 			};
-            let controlss;
+			// 第三人称
+            let thirdPerson;
+            let thirdPersonStatus = false;
             const characters = [];
             let nCharacters = 0;
             let light;
@@ -45,7 +50,6 @@
             }
             
             const init = () =>{
-                
                 const container = windowRefs.value;
                 // 创建相机
                 camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 1, 4000 );
@@ -105,7 +109,7 @@
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
                 // 添加场景拖拽
                 addCameraControls()
-                scene.add( controlss.getObject() );
+                scene.add( thirdPerson.getObject() );
                 // 添加键盘事件
                 addEvents()
                 // 创建管家
@@ -141,8 +145,18 @@
 					case 'Space': controls.jump = true; break;
 					case 'ControlLeft':
 					case 'ControlRight': controls.attack = true; break;
+                    // 第三人称视角设置
                     case 'KeyV':
-                        controlss.lock(); break;
+                        if( thirdPersonStatus ){
+                            thirdPersonStatus = false;
+                            camera.position.set(0, 190, 1300);
+                            thirdPerson.unlock();
+                        }else{
+                            thirdPersonStatus = true;
+                            camera.position.set(0, 110, 20);
+                            thirdPerson.lock(); 
+                        }
+                        break;
 				}
 			}
 
@@ -173,7 +187,7 @@
 				// cameraControls = new OrbitControls( camera, renderer.domElement );
 				// cameraControls.target.set( 0, 1, 0 );
 				// cameraControls.update();
-                controlss = new PointerLockControls( camera, document.body );
+                thirdPerson = new PointerLockControls( camera, document.body );
 
             }
             // 创建管家
@@ -247,18 +261,22 @@
 				requestAnimationFrame( animate );
 				render();
 			}
-
+			const start = () =>{
+				setTimeout( () =>{
+					loading.value = false;
+				},randomNum(3,4) * 1000)
+				init()
+                animate()
+			}
             onMounted( () =>{
                 appInfo.desktop && nextTick( () =>{
-                    init()
-                    animate()
+                    start()
                 })
             })
             watch( ( ) => appInfo.desktop ,(status)=>{
                 if(status){
                     nextTick( () =>{
-                        init();
-                        animate();
+                        start()
                     })
                 }else{
                     observer.disconnect();
@@ -271,7 +289,8 @@
 
             return {
                 windowRefs,
-                getWindowId
+                getWindowId,
+				loading
             }
         }
     }
