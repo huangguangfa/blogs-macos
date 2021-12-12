@@ -100,7 +100,7 @@ export const TABABR_NAVIGATION = [
     {
         id: "Three",
         title: "Three",
-        desktop: false,
+        desktop: true,
         isMinimize:false,
         _index:12,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/three.png"
