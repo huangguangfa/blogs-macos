@@ -88,6 +88,7 @@ export default{
         watch( () => props.show, ( status ) => {
             page_config.shows = status;
             status === true && nextTick(() =>{ 
+                emit('windowId',windowId)
                 const { offsetHeight } = ref_bar.value;
                 page_config.barHeight = offsetHeight + 10;
                 initWindowStaus(getByIdDom( windowId ),props.width, props.height);
@@ -119,7 +120,10 @@ export default{
             let windom = getByIdDom( windowId );
             ref_windows.dom = windom;
             page_config.shows = props.show;
-            props.show && nextTick(() =>{ initWindowStaus( getByIdDom( windowId ),props.width, props.height) })
+            props.show && nextTick(() =>{ 
+                emit('windowId',windowId);
+                initWindowStaus( getByIdDom( windowId ),props.width, props.height) 
+            })
             // web页面移动
             domEvents.set('mousemove',ev =>{
                 const { winBarConfig:{winBarStart}, sticksConfig:{sticksStart} } = page_config;
