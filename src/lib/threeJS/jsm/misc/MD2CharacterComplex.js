@@ -183,8 +183,8 @@ class MD2CharacterComplex {
 
 		// SKINS
 
-		this.skinsBody = loadTextures( config.baseUrl + 'skins/', config.skins );
-		this.skinsWeapon = loadTextures( config.baseUrl + 'skins/', weaponsTextures );
+		this.skinsBody = loadTextures( config.baseUrl + '', config.skins );
+		this.skinsWeapon = loadTextures( config.baseUrl + '', weaponsTextures );
 
 		// BODY
 

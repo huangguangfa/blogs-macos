@@ -1,8 +1,8 @@
 <template>
     <div class="home">
         <window v-model:show="appInfo.desktop" width="1000" height="700" title="MyHome" @windowId="getWindowId" :appInfo="appInfo">
-			<vm-loading v-if="loading"></vm-loading>
-            <div ref="windowRefs" class="home-content wh100"></div>
+			<vm-loading v-if="appInfo.desktop && loading"></vm-loading>
+            <div v-if="appInfo.desktop" ref="windowRefs" class="home-content wh100"></div>
 			<vm-controls></vm-controls>
         </window>
     </div>
@@ -34,10 +34,8 @@
             const windowRefs = ref(null);
             // 相机 // 场景 // 渲染器
 			let camera, scene, renderer;
-            // 鼠标控制相机变量
-            // let cameraControls;
 			// 定义方向键状态
-			const controls = {
+			let controls = {
 				moveForward: false,
 				moveBackward: false,
 				moveLeft: false,
@@ -46,15 +44,36 @@
 			// 第三人称
             let thirdPerson;
             let thirdPersonStatus = false;
-            const characters = [];
+            let characters = [];
             let nCharacters = 0;
             let light;
-            const clock = new THREE.Clock();
+            let clock;
             const getWindowId = (id) =>{
                 observer.observe(document.getElementById(id),{ attributes: true})
             }
+			const resetStatus = () =>{
+				loading.value = true;
+				camera = null;
+				scene = null;
+				renderer = null;
+				// 定义方向键状态
+				controls = {
+					moveForward: false,
+					moveBackward: false,
+					moveLeft: false,
+					moveRight: false
+				};
+				// 第三人称
+				thirdPerson;
+				thirdPersonStatus = false;
+				characters = [];
+				nCharacters = 0;
+				light;
+				clock = new THREE.Clock();
+			}
             
             const init = () =>{
+				resetStatus();
                 const container = windowRefs.value;
                 // 创建相机
                 camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 1, 4000 );
@@ -126,6 +145,7 @@
 				document.addEventListener( 'keyup', onKeyUp );
             }
             const onWindowResize = () => {
+				if( windowRefs.value ) return ;
                 const container = windowRefs.value;
 				renderer.setSize( container.offsetWidth, container.offsetHeight );
 				camera.aspect = container.offsetWidth / container.offsetHeight;
@@ -189,20 +209,25 @@
 
             // 添加鼠标拖拽相机功能
             const addCameraControls = () =>{
-				// cameraControls = new OrbitControls( camera, renderer.domElement );
-				// cameraControls.target.set( 0, 1, 0 );
-				// cameraControls.update();
                 thirdPerson = new PointerLockControls( camera, document.body );
-
             }
+			
             // 创建管家
             const addButler = () =>{
 				const configOgro = {
-					baseUrl: "/src/lib/threeJS/models/md2/ogro/",
-					body: "ogro.md2",
-					// skins: [ "grok.jpg", "ogrobase.png", "arboshak.png", "ctf_r.png", "ctf_b.png", "darkam.png", "freedom.png", "gib.png", "gordogh.png", "igdosh.png", "khorne.png", "nabogro.png", "sharokh.png" ],
-					skins: [ "darkam.png"],
-					weapons: [[ "weapon.md2", "weapon.jpg" ]],
+					// baseUrl: "/src/lib/threeJS/models/md2/ogro/",
+					baseUrl: "",
+					// body: "ogro.md2",
+					body: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/md2/ogro/ogro.md2",
+					// skins: [ "darkam.png"],
+					skins: [ "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/md2/ogro/skins/darkam.png"],
+					// weapons: [[ "weapon.md2", "weapon.jpg" ]],
+					weapons: [
+						[ 
+							"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/md2/ogro/weapon.md2", 
+							"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/md2/ogro/skins/weapon.jpg" 
+						]
+					],
 					animations: {
 						move: "run",
 						idle: "stand",
