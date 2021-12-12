@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <window v-model:show="appInfo.desktop" width="1000" height="700" title="home" @windowId="getWindowId" :appInfo="appInfo">
+        <window v-model:show="appInfo.desktop" width="1000" height="700" title="MyHome" @windowId="getWindowId" :appInfo="appInfo">
             <div ref="windowRefs" class="home-content wh100" v-if="appInfo.desktop"></div>
         </window>
     </div>
@@ -12,6 +12,7 @@
     import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls.js';
     import { MD2CharacterComplex } from '@/lib/threeJS/jsm/misc/MD2CharacterComplex.js';
     import { Gyroscope } from "@/lib/threeJS/jsm/misc/Gyroscope.js";
+    import { PointerLockControls } from '@/lib/threeJS/jsm/controls/PointerLockControls.js';
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     export default{
@@ -34,6 +35,7 @@
 				moveLeft: false,
 				moveRight: false
 			};
+            let controlss;
             const characters = [];
             let nCharacters = 0;
             let light;
@@ -41,7 +43,9 @@
             const getWindowId = (id) =>{
                 observer.observe(document.getElementById(id),{ attributes: true})
             }
+            
             const init = () =>{
+                
                 const container = windowRefs.value;
                 // 创建相机
                 camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 1, 4000 );
@@ -85,7 +89,6 @@
 				ground.receiveShadow = true;
 				// 添加进场景
 				scene.add( ground );
-
                 // 创建渲染器
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
                 // 返回当前显示设备的物理像素分辨率与CSS像素分辨率之比
@@ -102,6 +105,7 @@
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
                 // 添加场景拖拽
                 addCameraControls()
+                scene.add( controlss.getObject() );
                 // 添加键盘事件
                 addEvents()
                 // 创建管家
@@ -137,7 +141,8 @@
 					case 'Space': controls.jump = true; break;
 					case 'ControlLeft':
 					case 'ControlRight': controls.attack = true; break;
-
+                    case 'KeyV':
+                        controlss.lock(); break;
 				}
 			}
 
@@ -165,9 +170,11 @@
 
             // 添加鼠标拖拽相机功能
             const addCameraControls = () =>{
-				cameraControls = new OrbitControls( camera, renderer.domElement );
-				cameraControls.target.set( 0, 50, 0 );
-				cameraControls.update();
+				// cameraControls = new OrbitControls( camera, renderer.domElement );
+				// cameraControls.target.set( 0, 1, 0 );
+				// cameraControls.update();
+                controlss = new PointerLockControls( camera, document.body );
+
             }
             // 创建管家
             const addButler = () =>{
@@ -233,6 +240,7 @@
 					characters[ i ].update( delta );
 				}
                 renderer.render( scene, camera );
+                // cameraControls.update();
             }
 
             const animate = () => {

@@ -98,12 +98,12 @@ export const TABABR_NAVIGATION = [
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/blogs.png"
     },
     {
-        id: "Three",
-        title: "Three",
-        desktop: true,
+        id: "MyHome",
+        title: "MyHome",
+        desktop: false,
         isMinimize:false,
         _index:12,
-        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/three.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
     },
     {
         id: "Trash",
