@@ -3,6 +3,7 @@
         <window v-model:show="appInfo.desktop" width="1000" height="700" title="MyHome" @windowId="getWindowId" :appInfo="appInfo">
 			<vm-loading v-if="loading"></vm-loading>
             <div ref="windowRefs" class="home-content wh100"></div>
+			<vm-controls></vm-controls>
         </window>
     </div>
 </template>
@@ -17,7 +18,11 @@
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 	import { randomNum } from "@/utils/utils";
+	import Controls from "./controls.vue";
     export default{
+		components:{
+			vmControls:Controls
+		},
         props:{
             appInfo:Object
         },
