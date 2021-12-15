@@ -11,8 +11,9 @@
 <script>
     import { nextTick, onMounted, ref, watch, onUnmounted } from "vue";
     import * as THREE from "@/lib/threeJS/three.module.js";
-    import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls.js';
+    // import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls.js';
     import { MD2CharacterComplex } from '@/lib/threeJS/jsm/misc/MD2CharacterComplex.js';
+	import { FBXLoader } from "@/lib/threeJS/jsm/loaders/FBXLoader.js"
     import { Gyroscope } from "@/lib/threeJS/jsm/misc/Gyroscope.js";
     import { PointerLockControls } from '@/lib/threeJS/jsm/controls/PointerLockControls.js';
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
@@ -34,6 +35,7 @@
             const windowRefs = ref(null);
             // 相机 // 场景 // 渲染器
 			let camera, scene, renderer;
+			const FBXloader = new FBXLoader();
 			// 定义方向键状态
 			let controls = {
 				moveForward: false,
@@ -138,7 +140,14 @@
                 addEvents()
                 // 创建管家
                 addButler()
+				addGf()
             }
+			const addGf = () =>{
+				FBXloader.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/gf.fbx',function( object ) {
+					scene.add(object);
+					console.log(object)
+				})
+			}
             // 事件的绑定
             const addEvents = () =>{
 				document.addEventListener( 'keydown', onKeyDown );
