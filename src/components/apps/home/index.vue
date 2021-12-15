@@ -143,7 +143,8 @@
 				addGf()
             }
 			const addGf = () =>{
-				FBXloader.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/gf.fbx',function( object ) {
+				FBXloader.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/StreetEnvironment_V01.FBX',function( object ) {
+					object.scale.set(50, 50, 50)
 					scene.add(object);
 					console.log(object)
 				})
