@@ -11,9 +11,10 @@
 <script>
     import { nextTick, onMounted, ref, watch, onUnmounted } from "vue";
     import * as THREE from "@/lib/threeJS/three.module.js";
-    // import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls.js';
+    import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls.js';
     import { MD2CharacterComplex } from '@/lib/threeJS/jsm/misc/MD2CharacterComplex.js';
 	import { FBXLoader } from "@/lib/threeJS/jsm/loaders/FBXLoader.js"
+	import { GLTFLoader } from '@/lib/threeJS/jsm/loaders/GLTFLoader.js';
     import { Gyroscope } from "@/lib/threeJS/jsm/misc/Gyroscope.js";
     import { PointerLockControls } from '@/lib/threeJS/jsm/controls/PointerLockControls.js';
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
@@ -31,6 +32,7 @@
             const observer = new MutationObserver(() =>{
                onWindowResize()
             });
+			let cameraControls;
 			const loading = ref(true);
             const windowRefs = ref(null);
             // 相机 // 场景 // 渲染器
@@ -90,6 +92,7 @@
                 // 往场景里面添加摄像机
                 scene.add( camera );
 
+				
                 // 添加光影
                 scene.add( new THREE.AmbientLight(0x222222));
                 light = new THREE.DirectionalLight( 0xffffff, 2.25 );
@@ -104,6 +107,7 @@
 				light.shadow.camera.top = 350;
 				light.shadow.camera.bottom = - 350;
 				scene.add( light );
+
 
                 // 创建地面
                 const gt = new THREE.TextureLoader().load( rasslightBig );
@@ -135,19 +139,44 @@
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
                 // 添加场景拖拽
                 addCameraControls()
+				// 添加第一人称
+                addLockControls()
                 scene.add( thirdPerson.getObject() );
                 // 添加键盘事件
                 addEvents()
                 // 创建管家
                 addButler()
-				addGf()
+				// addGf()
+				addGLF()
+
+				
             }
 			const addGf = () =>{
-				FBXloader.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/StreetEnvironment_V01.FBX',function( object ) {
-					object.scale.set(50, 50, 50)
+				FBXloader.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/tree.fbx',function( object ) {
+					object.scale.set(.1,.1, .1)
 					scene.add(object);
 					console.log(object)
 				})
+			}
+			
+			const loaderGLF = new GLTFLoader();
+
+			const addGLF = ()=>{
+				loaderGLF.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/small_buildingA.glb', function ( gltf ) {
+					const boomBox = gltf.scene;
+					// 给模型添加光
+					// boomBox.traverse( function ( child ) {
+					// 	if ( child.isMesh ) {
+					// 		child.material.emissive =  child.material.color;
+					// 		child.material.emissiveMap = child.material.map ;
+					// 	}
+					// });
+					// 设置模型倍数
+					boomBox.scale.set( 300, 300, 300 );
+					scene.add( boomBox );
+				} , undefined, function ( error ) {
+					console.error('模型加载错误', error );
+				} );
 			}
             // 事件的绑定
             const addEvents = () =>{
@@ -217,11 +246,16 @@
 			}
 
 
-            // 添加鼠标拖拽相机功能
-            const addCameraControls = () =>{
+            // 添加第一人称
+            const addLockControls = () =>{
                 thirdPerson = new PointerLockControls( camera, document.body );
             }
-			
+			// 添加鼠标拖拽相机功能
+			const addCameraControls = () =>{
+				cameraControls = new OrbitControls( camera, renderer.domElement );
+				cameraControls.target.set( 0, 50, 0 );
+				cameraControls.update();
+			}
             // 创建管家
             const addButler = () =>{
 				const configOgro = {
@@ -293,8 +327,11 @@
 				for ( let i = 0; i < nCharacters; i ++ ) {
 					characters[ i ].update( delta );
 				}
+				// 克隆光、让光随着相机走
+				let vector = camera.position.clone();
+				light.position.set(vector.x,vector.y,vector.z);
+				// 执行渲染
                 renderer.render( scene, camera );
-                // cameraControls.update();
             }
 
             const animate = () => {
