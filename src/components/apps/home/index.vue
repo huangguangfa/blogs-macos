@@ -178,7 +178,8 @@
 						x:0, 
 						z:600, 
 						y:0 
-					}
+					},
+					isSuv:true
 				})
 
 				
@@ -194,7 +195,7 @@
 					console.log(object)
 				})
 			}
-			
+			let suvObj = null;
 			// GLf和glb模型加载
 			const loaderGLF = new GLTFLoader();
 			const addGLF = ({ 
@@ -202,12 +203,11 @@
 				scale = { x:1, z:1, y:1 }, 
 				position = { x:0, z:0, y:0 },
 				rotation = { x:0, z:0, y:0 },
+				isSuv
 				})=>{
 					if( !url ) return;
 					loaderGLF.load( url, function ( gltf ) {
-						const boomBox = gltf.scene;
-						console.log(boomBox)
-
+						let gltfModule = gltf.scene;
 						// 给模型添加光
 						// boomBox.traverse( function ( child ) {
 						// 	if ( child.isMesh ) {
@@ -215,26 +215,63 @@
 						// 		child.material.emissiveMap = child.material.map;
 						// 	}
 						// });
-
+						let component = gltf.scene.getObjectByName('car_body');
+						TweenLite.to(component.position, 1.5, {
+							y: 5,
+							ease: Power4.easeOut
+						});
+						if(isSuv) suvObj = gltfModule;
 						// 设置模型倍数
-						boomBox.scale.set( scale.x, scale.z, scale.y );
+						gltfModule.scale.set( scale.x, scale.z, scale.y );
 						// 设置模型位置
-						boomBox.position.set( position.x, position.z, position.y );
+						gltfModule.position.set( position.x, position.z, position.y );
 						// 设置模型旋转
-						boomBox.rotation.set( rotation.x, rotation.z, rotation.y )
+						gltfModule.rotation.set( rotation.x, rotation.z, rotation.y )
 						// 添加模型
-						scene.add( boomBox );
+						scene.add( gltfModule );
 					} , undefined, function ( error ) {
 						console.error('模型加载错误', error );
 					} );
 			}
+
+			// 选中模型事件
+			const raycaster = new THREE.Raycaster();
+			const mouse = new THREE.Vector2();
+			const selectHandler = (ev) =>{
+				const container = windowRefs.value;
+				// 模型换色
+				mouse.x = ( (ev.clientX - container.getBoundingClientRect().left) / container.offsetWidth ) * 2 - 1; 
+            	mouse.y = - ( (ev.clientY - container.getBoundingClientRect().top) / container.offsetHeight ) * 2 + 1;
+				raycaster.setFromCamera(mouse, camera);
+				// 这里我们只检测模型的选中情况
+				let intersects = raycaster.intersectObjects(suvObj.children, true);
+				if (intersects.length > 0) {
+					// 获取选中的模型 添加颜色
+					let selectedObjects = intersects[0].object;
+					let newMaterial = selectedObjects.material.clone();
+					newMaterial.color = new THREE.Color(0xffffff); //重新修改颜色
+					selectedObjects.material = newMaterial;
+					console.log("selectedObjects",selectedObjects)
+				}
+			}
+			
+
+
+
+
+
+
+
+
+
+
             // 事件的绑定
             const addEvents = () =>{
 				document.addEventListener( 'keydown', onKeyDown );
 				document.addEventListener( 'keyup', onKeyUp );
             }
 
-			
+
             const onWindowResize = () => {
 				if( windowRefs.value ) return ;
                 const container = windowRefs.value;
@@ -400,6 +437,7 @@
             onMounted( () =>{
                 appInfo.desktop && nextTick( () =>{
                     start()
+					windowRefs.value.addEventListener('click', selectHandler, false);
                 })
             })
             watch( ( ) => appInfo.desktop ,(status)=>{
