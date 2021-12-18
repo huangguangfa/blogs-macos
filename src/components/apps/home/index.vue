@@ -147,10 +147,46 @@
                 // 创建管家
                 addButler()
 				// addGf()
-				addGLF()
+
+
+				addGLF({
+					url:'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/small_buildingA.glb',
+					scale:{
+						x:500,
+						z:500,
+						y:500
+					},
+					position:{ 
+						x:400, 
+						z:0, 
+						y:0 
+					}
+				})
+				addGLF({
+					url:'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/suv.glb',
+					scale:{
+						x:100,
+						z:100,
+						y:100
+					},
+					position:{ 
+						x:-400, 
+						z:0, 
+						y:0 
+					},
+					rotation:{ 
+						x:0, 
+						z:600, 
+						y:0 
+					}
+				})
+
+				
 
 				
             }
+
+			// fbx模型加载
 			const addGf = () =>{
 				FBXloader.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/tree.fbx',function( object ) {
 					object.scale.set(.1,.1, .1)
@@ -159,30 +195,46 @@
 				})
 			}
 			
+			// GLf和glb模型加载
 			const loaderGLF = new GLTFLoader();
+			const addGLF = ({ 
+				url, 
+				scale = { x:1, z:1, y:1 }, 
+				position = { x:0, z:0, y:0 },
+				rotation = { x:0, z:0, y:0 },
+				})=>{
+					if( !url ) return;
+					loaderGLF.load( url, function ( gltf ) {
+						const boomBox = gltf.scene;
+						console.log(boomBox)
 
-			const addGLF = ()=>{
-				loaderGLF.load( 'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/small_buildingA.glb', function ( gltf ) {
-					const boomBox = gltf.scene;
-					// 给模型添加光
-					// boomBox.traverse( function ( child ) {
-					// 	if ( child.isMesh ) {
-					// 		child.material.emissive =  child.material.color;
-					// 		child.material.emissiveMap = child.material.map ;
-					// 	}
-					// });
-					// 设置模型倍数
-					boomBox.scale.set( 300, 300, 300 );
-					scene.add( boomBox );
-				} , undefined, function ( error ) {
-					console.error('模型加载错误', error );
-				} );
+						// 给模型添加光
+						// boomBox.traverse( function ( child ) {
+						// 	if ( child.isMesh ) {
+						// 		child.material.emissive =  child.material.color;
+						// 		child.material.emissiveMap = child.material.map;
+						// 	}
+						// });
+
+						// 设置模型倍数
+						boomBox.scale.set( scale.x, scale.z, scale.y );
+						// 设置模型位置
+						boomBox.position.set( position.x, position.z, position.y );
+						// 设置模型旋转
+						boomBox.rotation.set( rotation.x, rotation.z, rotation.y )
+						// 添加模型
+						scene.add( boomBox );
+					} , undefined, function ( error ) {
+						console.error('模型加载错误', error );
+					} );
 			}
             // 事件的绑定
             const addEvents = () =>{
 				document.addEventListener( 'keydown', onKeyDown );
 				document.addEventListener( 'keyup', onKeyUp );
             }
+
+			
             const onWindowResize = () => {
 				if( windowRefs.value ) return ;
                 const container = windowRefs.value;
@@ -329,7 +381,7 @@
 				}
 				// 克隆光、让光随着相机走
 				let vector = camera.position.clone();
-				light.position.set(vector.x,vector.y,vector.z);
+				light.position.set(vector.x,(vector.y + 500),vector.z);
 				// 执行渲染
                 renderer.render( scene, camera );
             }
