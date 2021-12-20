@@ -126,6 +126,7 @@ export default{
             })
             // web页面移动
             domEvents.set('mousemove',ev =>{
+                emit('eventMousemove',ev);
                 const { winBarConfig:{winBarStart}, sticksConfig:{sticksStart} } = page_config;
                 const { clientY } = ev;
                 page_config.cursorPointerY = clientY < page_config.barHeight;

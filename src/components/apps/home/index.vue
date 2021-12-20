@@ -4,12 +4,13 @@
 			<vm-loading v-if="appInfo.desktop && loading"></vm-loading>
             <div v-if="appInfo.desktop" ref="windowRefs" class="home-content wh100"></div>
 			<vm-controls></vm-controls>
+			<vm-car-config @onCar="onCarEvent"></vm-car-config>
         </window>
     </div>
 </template>
 
 <script>
-    import { nextTick, onMounted, ref, watch, onUnmounted } from "vue";
+    import { nextTick, onMounted, ref, watch, onUnmounted, reactive } from "vue";
     import * as THREE from "@/lib/threeJS/three.module.js";
     import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls.js';
     import { MD2CharacterComplex } from '@/lib/threeJS/jsm/misc/MD2CharacterComplex.js';
@@ -17,13 +18,22 @@
 	import { GLTFLoader } from '@/lib/threeJS/jsm/loaders/GLTFLoader.js';
     import { Gyroscope } from "@/lib/threeJS/jsm/misc/Gyroscope.js";
     import { PointerLockControls } from '@/lib/threeJS/jsm/controls/PointerLockControls.js';
+	// 模型选中发光 start-------
+	import { EffectComposer } from '@/lib/threeJS/jsm/postprocessing/EffectComposer.js';
+	import { RenderPass } from '@/lib/threeJS/jsm/postprocessing/RenderPass.js';
+	import { OutlinePass } from '@/lib/threeJS/jsm/postprocessing/OutlinePass.js';
+	import { ShaderPass } from '@/lib/threeJS/jsm/postprocessing/ShaderPass.js';
+	import { FXAAShader } from "@/lib/threeJS/jsm/shaders/FXAAShader.js"
+	// 模型选中发光 end -------
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
 	import { randomNum } from "@/utils/utils";
-	import Controls from "./controls.vue";
+	import Controls from "./Controls.vue";
+	import CarConfig from "./CarConfig.vue";
     export default{
 		components:{
-			vmControls:Controls
+			vmControls:Controls,
+			vmCarConfig:CarConfig
 		},
         props:{
             appInfo:Object
@@ -52,6 +62,8 @@
             let nCharacters = 0;
             let light;
             let clock;
+			let composer;
+			let outlinePass;
             const getWindowId = (id) =>{
                 observer.observe(document.getElementById(id),{ attributes: true})
             }
@@ -108,7 +120,7 @@
 				light.shadow.camera.bottom = - 350;
 				scene.add( light );
 
-
+				
                 // 创建地面
                 const gt = new THREE.TextureLoader().load( rasslightBig );
 				const gg = new THREE.PlaneGeometry( 16000, 16000 );
@@ -137,6 +149,27 @@
 				renderer.shadowMap.enabled = true;
 				// 阴影投放类型
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+				
+				// composer = new EffectComposer(renderer);
+				// let renderPass = new RenderPass(scene, camera);
+				// composer.addPass(renderPass);
+				// outlinePass = new OutlinePass(new THREE.Vector2(container.offsetWidth, container.offsetHeight), scene, camera);
+				// outlinePass.pulsePeriod = 2; //数值越大，律动越慢
+				// outlinePass.visibleEdgeColor.set('#130AF2'); // 选中颜色
+				// outlinePass.hiddenEdgeColor.set( 0x000000 );// 阴影颜色
+				// outlinePass.usePatternTexture = false; // 使用纹理覆盖？
+				// outlinePass.edgeStrength = 5; // 高光边缘强度
+				// outlinePass.edgeGlow = 1; // 边缘微光强度
+				// outlinePass.edgeThickness = 1; // 高光厚度
+				// let effectFXAA = new ShaderPass(FXAAShader)
+				// effectFXAA.uniforms.resolution.value.set(1 / container.offsetWidth, 1 / container.offsetHeight)
+				// effectFXAA.renderToScreen = true
+				// composer.addPass(outlinePass);
+				// composer.addPass(effectFXAA)
+
+
+
                 // 添加场景拖拽
                 addCameraControls()
 				// 添加第一人称
@@ -146,6 +179,7 @@
                 addEvents()
                 // 创建管家
                 addButler()
+
 				// addGf()
 
 
@@ -162,6 +196,7 @@
 						y:0 
 					}
 				})
+
 				addGLF({
 					url:'https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/threeJS/models/fbx/house/suv.glb',
 					scale:{
@@ -181,10 +216,6 @@
 					},
 					isSuv:true
 				})
-
-				
-
-				
             }
 
 			// fbx模型加载
@@ -195,6 +226,8 @@
 					console.log(object)
 				})
 			}
+
+			
 			let suvObj = null;
 			// GLf和glb模型加载
 			const loaderGLF = new GLTFLoader();
@@ -208,19 +241,6 @@
 					if( !url ) return;
 					loaderGLF.load( url, function ( gltf ) {
 						let gltfModule = gltf.scene;
-						// 给模型添加光
-						// boomBox.traverse( function ( child ) {
-						// 	if ( child.isMesh ) {
-						// 		child.material.emissive =  child.material.color;
-						// 		child.material.emissiveMap = child.material.map;
-						// 	}
-						// });
-						let component = gltf.scene.getObjectByName('car_body');
-						TweenLite.to(component.position, 1.5, {
-							y: 5,
-							ease: Power4.easeOut
-						});
-						if(isSuv) suvObj = gltfModule;
 						// 设置模型倍数
 						gltfModule.scale.set( scale.x, scale.z, scale.y );
 						// 设置模型位置
@@ -229,32 +249,86 @@
 						gltfModule.rotation.set( rotation.x, rotation.z, rotation.y )
 						// 添加模型
 						scene.add( gltfModule );
+
+						// 用于测试的模型、拆分!
+						if(isSuv){
+							suvObj = gltfModule;
+							let positionConfig = {
+								"suv":[false, false, false],
+								"body":[false, 0.3, false],
+								"Mesh_body":[false, 1.2, false],
+								"Mesh_body_1":[false, 1.1, false],
+								"Mesh_body_2":[false, false, false],
+								"Mesh_body_3":[false, false, false],
+								"Mesh_body_4":[false, false, .2],
+								"Mesh_body_5":[false, false, false],
+								"wheel_back":[false, 1, 1.5],
+								"Mesh_wheel_frontLeft":[false, false, false],
+								"Mesh_wheel_frontLeft_1":[false, false, false],
+								"wheel_backLeft":[-.7, .5, .7],
+								"wheel_backRight":[.7, .5, .7],
+								"wheel_frontLeft":[-.7, .5, -.7],
+								"wheel_frontRight":[.7, .5, -.7]
+							}
+							suvObj.traverse(function (child) {
+								const { name } = child;
+								child.fromPosition = [child.position.x,child.position.y,child.position.z]
+								// 随机生成
+								// child.toPosition = [Math.random()* r, Math.random()* r, Math.random()* r]
+								const [x ,y, z] = positionConfig[name] || [child.position.x,child.position.y,child.position.z];
+								child.toPosition = [ x ?? child.position.x, y ?? child.position.y , z ?? child.position.z ];
+							})
+						}
 					} , undefined, function ( error ) {
 						console.error('模型加载错误', error );
-					} );
+					});
 			}
 
+			/************* 模型车 ************************************************************************************************/
+			let carModeConfig = reactive({
+				opShow:false,
+				selectModel:null
+			})
+			const onCarEvent = ({ type, color }) => {
+				const { selectModel } = carModeConfig;
+				if( type ){
+					suvObj.traverse(function (child) {
+						const [x,z,y] = type === 1 && child.toPosition || child.fromPosition
+						child.position.set(x,z,y) 
+					})
+				}
+				if( color && selectModel ){
+					let newMaterial = selectModel.material.clone();
+					newMaterial.color = new THREE.Color(color);
+					selectModel.material = newMaterial;
+				}
+			}
+
+			
+
+			/************* 模型车 ************************************************************************************************/
 			// 选中模型事件
 			const raycaster = new THREE.Raycaster();
 			const mouse = new THREE.Vector2();
-			const selectHandler = (ev) =>{
+			const selectModelHandler = (ev) =>{
 				const container = windowRefs.value;
-				// 模型换色
 				mouse.x = ( (ev.clientX - container.getBoundingClientRect().left) / container.offsetWidth ) * 2 - 1; 
             	mouse.y = - ( (ev.clientY - container.getBoundingClientRect().top) / container.offsetHeight ) * 2 + 1;
 				raycaster.setFromCamera(mouse, camera);
-				// 这里我们只检测模型的选中情况
+				// 只检测模型的选中
 				let intersects = raycaster.intersectObjects(suvObj.children, true);
 				if (intersects.length > 0) {
 					// 获取选中的模型 添加颜色
 					let selectedObjects = intersects[0].object;
 					let newMaterial = selectedObjects.material.clone();
-					newMaterial.color = new THREE.Color(0xffffff); //重新修改颜色
+					newMaterial.color = new THREE.Color("#ffffff"); //重新修改颜色
 					selectedObjects.material = newMaterial;
-					console.log("selectedObjects",selectedObjects)
+					// 保存下当前选中的模型
+					carModeConfig.selectModel = selectedObjects;
+
+					// outlinePass.selectedObjects = selectedObjects
 				}
 			}
-			
 
 
 
@@ -270,7 +344,6 @@
 				document.addEventListener( 'keydown', onKeyDown );
 				document.addEventListener( 'keyup', onKeyUp );
             }
-
 
             const onWindowResize = () => {
 				if( windowRefs.value ) return ;
@@ -419,6 +492,8 @@
 				// 克隆光、让光随着相机走
 				let vector = camera.position.clone();
 				light.position.set(vector.x,(vector.y + 500),vector.z);
+				// 模型选中光描边
+				// composer.render()
 				// 执行渲染
                 renderer.render( scene, camera );
             }
@@ -433,11 +508,12 @@
 				},randomNum(3,4) * 1000)
 				init()
                 animate()
+				windowRefs.value.addEventListener('click', selectModelHandler, false);
+
 			}
             onMounted( () =>{
                 appInfo.desktop && nextTick( () =>{
                     start()
-					windowRefs.value.addEventListener('click', selectHandler, false);
                 })
             })
             watch( ( ) => appInfo.desktop ,(status)=>{
@@ -457,7 +533,9 @@
             return {
                 windowRefs,
                 getWindowId,
-				loading
+				loading,
+				carModeConfig,
+				onCarEvent
             }
         }
     }
