@@ -50,6 +50,7 @@ class ShaderPass extends Pass {
 		if ( this.renderToScreen ) {
 
 			renderer.setRenderTarget( null );
+			readBuffer.texture.encoding = renderer.outputEncoding;
 			this.fsQuad.render( renderer );
 
 		} else {

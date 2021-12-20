@@ -106,8 +106,8 @@
 
 				
                 // 添加光影
-                scene.add( new THREE.AmbientLight(0x222222));
-                light = new THREE.DirectionalLight( 0xffffff, 2.25 );
+                scene.add( new THREE.AmbientLight(0xffffff));
+                light = new THREE.DirectionalLight( 0xffffff, 2.23 );
 				light.position.set( 200, 450, 500 );
 				light.castShadow = true;
 				light.shadow.mapSize.width = 1024;
@@ -150,24 +150,23 @@
 				// 阴影投放类型
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-				
-				// composer = new EffectComposer(renderer);
-				// let renderPass = new RenderPass(scene, camera);
-				// composer.addPass(renderPass);
-				// outlinePass = new OutlinePass(new THREE.Vector2(container.offsetWidth, container.offsetHeight), scene, camera);
-				// outlinePass.pulsePeriod = 2; //数值越大，律动越慢
-				// outlinePass.visibleEdgeColor.set('#130AF2'); // 选中颜色
-				// outlinePass.hiddenEdgeColor.set( 0x000000 );// 阴影颜色
-				// outlinePass.usePatternTexture = false; // 使用纹理覆盖？
-				// outlinePass.edgeStrength = 5; // 高光边缘强度
-				// outlinePass.edgeGlow = 1; // 边缘微光强度
-				// outlinePass.edgeThickness = 1; // 高光厚度
-				// let effectFXAA = new ShaderPass(FXAAShader)
-				// effectFXAA.uniforms.resolution.value.set(1 / container.offsetWidth, 1 / container.offsetHeight)
-				// effectFXAA.renderToScreen = true
-				// composer.addPass(outlinePass);
-				// composer.addPass(effectFXAA)
-
+				// 创建最终视觉效果合成器
+				composer = new EffectComposer(renderer);
+				let renderPass = new RenderPass(scene, camera);
+				composer.addPass(renderPass);
+				outlinePass = new OutlinePass(new THREE.Vector2(container.offsetWidth, container.offsetHeight), scene, camera);
+				outlinePass.pulsePeriod = 2; //数值越大，律动越慢
+				outlinePass.visibleEdgeColor.set('#130AF2'); // 选中颜色
+				outlinePass.hiddenEdgeColor.set( 0x000000 );// 阴影颜色
+				outlinePass.usePatternTexture = false; // 使用纹理覆盖？
+				outlinePass.edgeStrength = 5; // 高光边缘强度
+				outlinePass.edgeGlow = 1; // 边缘微光强度
+				outlinePass.edgeThickness = 1; // 高光厚度
+				let effectFXAA = new ShaderPass(FXAAShader);
+				effectFXAA.uniforms.resolution.value.set(1 / container.offsetWidth, 1 / container.offsetHeight);
+				effectFXAA.renderToScreen = true;
+				composer.addPass(outlinePass);
+				composer.addPass(effectFXAA);
 
 
                 // 添加场景拖拽
@@ -231,8 +230,8 @@
 			let suvObj = null;
 			// GLf和glb模型加载
 			const loaderGLF = new GLTFLoader();
-			const addGLF = ({ 
-				url, 
+			const addGLF = ({
+				url,
 				scale = { x:1, z:1, y:1 }, 
 				position = { x:0, z:0, y:0 },
 				rotation = { x:0, z:0, y:0 },
@@ -273,8 +272,6 @@
 							suvObj.traverse(function (child) {
 								const { name } = child;
 								child.fromPosition = [child.position.x,child.position.y,child.position.z]
-								// 随机生成
-								// child.toPosition = [Math.random()* r, Math.random()* r, Math.random()* r]
 								const [x ,y, z] = positionConfig[name] || [child.position.x,child.position.y,child.position.z];
 								child.toPosition = [ x ?? child.position.x, y ?? child.position.y , z ?? child.position.z ];
 							})
@@ -301,6 +298,8 @@
 					let newMaterial = selectModel.material.clone();
 					newMaterial.color = new THREE.Color(color);
 					selectModel.material = newMaterial;
+					outlinePass.selectedObjects = [];
+					carModeConfig.selectModel = null;
 				}
 			}
 
@@ -320,13 +319,15 @@
 				if (intersects.length > 0) {
 					// 获取选中的模型 添加颜色
 					let selectedObjects = intersects[0].object;
-					let newMaterial = selectedObjects.material.clone();
-					newMaterial.color = new THREE.Color("#ffffff"); //重新修改颜色
-					selectedObjects.material = newMaterial;
-					// 保存下当前选中的模型
+					// let newMaterial = selectedObjects.material.clone();
+					// newMaterial.color = new THREE.Color("#ffffff"); //重新修改颜色
+					// selectedObjects.material = newMaterial;
+					// // 保存下当前选中的模型
 					carModeConfig.selectModel = selectedObjects;
-
-					// outlinePass.selectedObjects = selectedObjects
+					outlinePass.selectedObjects = [selectedObjects]
+				}else{
+					outlinePass.selectedObjects = [];
+					carModeConfig.selectModel = null;
 				}
 			}
 
@@ -492,10 +493,11 @@
 				// 克隆光、让光随着相机走
 				let vector = camera.position.clone();
 				light.position.set(vector.x,(vector.y + 500),vector.z);
-				// 模型选中光描边
-				// composer.render()
 				// 执行渲染
                 renderer.render( scene, camera );
+				// 模型选中光描边
+				composer.render()
+				
             }
 
             const animate = () => {

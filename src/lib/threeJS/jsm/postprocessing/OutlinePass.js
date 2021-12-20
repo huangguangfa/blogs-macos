@@ -420,6 +420,7 @@ class OutlinePass extends Pass {
 			this.fsQuad.material = this.materialCopy;
 			this.copyUniforms[ 'tDiffuse' ].value = readBuffer.texture;
 			renderer.setRenderTarget( null );
+			readBuffer.texture.encoding = renderer.outputEncoding;
 			this.fsQuad.render( renderer );
 
 		}
