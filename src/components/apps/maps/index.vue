@@ -32,7 +32,6 @@
                     showLabel: false,
                 });
                 addModel(map);
-                
             }
             
             function addModel(map){
