@@ -6,7 +6,7 @@
 
 <script>
 import Dock from '@/components/Dock/index.vue';
-import { getCurrentInstance } from "vue";
+import { getCurrentInstance} from "vue";
 export default{
     components:{
         vmDock:Dock,
@@ -19,6 +19,8 @@ export default{
                 code:v.key
             })
         }, true)
+
+       
     }
 }
 </script>
