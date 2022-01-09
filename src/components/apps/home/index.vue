@@ -23,7 +23,8 @@
 	import { RenderPass } from '@/lib/threeJS/jsm/postprocessing/RenderPass.js';
 	import { OutlinePass } from '@/lib/threeJS/jsm/postprocessing/OutlinePass.js';
 	import { ShaderPass } from '@/lib/threeJS/jsm/postprocessing/ShaderPass.js';
-	import { FXAAShader } from "@/lib/threeJS/jsm/shaders/FXAAShader.js"
+	import { FXAAShader } from '@/lib/threeJS/jsm/shaders/FXAAShader.js';
+	import { AfterimagePass } from '@/lib/threeJS/jsm/postprocessing/AfterimagePass.js';
 	// 模型选中发光 end -------
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
@@ -152,8 +153,8 @@
 
 				// 创建最终视觉效果合成器
 				composer = new EffectComposer(renderer);
+				// let afterimagePass = new AfterimagePass();
 				let renderPass = new RenderPass(scene, camera);
-				composer.addPass(renderPass);
 				outlinePass = new OutlinePass(new THREE.Vector2(container.offsetWidth, container.offsetHeight), scene, camera);
 				outlinePass.pulsePeriod = 2; //数值越大，律动越慢
 				outlinePass.visibleEdgeColor.set('#130AF2'); // 选中颜色
@@ -165,6 +166,8 @@
 				let effectFXAA = new ShaderPass(FXAAShader);
 				effectFXAA.uniforms.resolution.value.set(1 / container.offsetWidth, 1 / container.offsetHeight);
 				effectFXAA.renderToScreen = true;
+				composer.addPass(renderPass);
+				// composer.addPass(afterimagePass);
 				composer.addPass(outlinePass);
 				composer.addPass(effectFXAA);
 
