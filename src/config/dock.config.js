@@ -106,11 +106,19 @@ export const TABABR_NAVIGATION = [
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
     },
     {
+        id: "2022",
+        title: "2022",
+        desktop: false,
+        isMinimize:false,
+        _index:13,
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/2022.png"
+    },
+    {
         id: "Trash",
         title: "Trash",
         desktop: false,
         isMinimize:false,
-        _index:13,
+        _index:14,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/trash.png"
     },
     
