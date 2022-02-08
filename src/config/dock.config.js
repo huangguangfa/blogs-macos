@@ -108,7 +108,7 @@ export const TABABR_NAVIGATION = [
     {
         id: "2022",
         title: "2022",
-        desktop: false,
+        desktop: true,
         isMinimize:false,
         _index:13,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/2022.png"

@@ -6,6 +6,7 @@ import Maps from "@/components/apps/maps/index.vue";
 import Music from "@/components/apps/music/index.vue";
 import Blogs from "@/components/apps/blogs/index.vue";
 import Home from "@/components/apps/home/index.vue";
+import NewYear from "@/components/apps/newYear/index.vue";
 const apps = {
     'app-facetime':{
         component:Facetime,
@@ -38,6 +39,10 @@ const apps = {
     'app-home':{
         component:Home,
         index:12
+    },
+    'app-new-year':{
+        component:NewYear,
+        index:13
     }
 };
 
