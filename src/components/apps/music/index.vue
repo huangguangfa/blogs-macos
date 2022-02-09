@@ -62,7 +62,6 @@
                 playBg:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/ui/music-default-bg.jpeg"
             })
             const audioDom = ref(null);
-
             onMounted( () =>{
                 // 音乐结束了
                 audioDom.value.onended = function(){
@@ -168,7 +167,7 @@
                 }
 
                 .music-bar-btns{
-                    color: #fff;height:15%;display:flex; align-items: center; justify-content: center;
+                    color: #fff;height:15%;display:flex; align-items: center; justify-content: center;opacity: .7;
                     i{
                         font-size: 30px;margin: 0 20px;cursor: pointer;
                     }
