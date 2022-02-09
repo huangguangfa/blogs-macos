@@ -1,6 +1,6 @@
 <template>
     <div class="github">
-        <window v-model:show="appInfo.desktop" title="2022加油" :appInfo="appInfo" width="1500" height="700">
+        <window v-model:show="appInfo.desktop" title="2022/01/03" :appInfo="appInfo" width="1500" height="700">
             <div class="github-content wh100" style="background-image: linear-gradient(to bottom, #1d1c2c, #3c364c);" v-if="appInfo.desktop">
                 <canvas id="canvas" ref="canvas" style="width:100%;height:100%;"></canvas>
             </div>
@@ -9,12 +9,12 @@
 </template>
 
 <script>
-    import { ref, onMounted } from "vue"
+    import { watch, nextTick, onUnmounted } from "vue"
     export default{
         props:{
             appInfo:Object
         },
-        setup(){
+        setup(props){
             // const canvas = ref(null);
             let ctx = null;
             let canvasWidth = 0;
@@ -23,6 +23,7 @@
             let particles = []; // 粒子集合
             let textData = null;
             let dateTextData = null;
+            let requestId;
             // #优化性能
             // 点击事件发射烟花 loop函数每循环调用5次才发射一次
             let limiterTotal = 5
@@ -202,8 +203,14 @@
                 }
             }
 
-            onMounted( () =>{
-                initCanvas()
+            watch( () => props.appInfo.desktop, (status) =>{
+                nextTick( () =>{
+                    if( status ){ initCanvas() }
+                    else{
+                        console.log('删除了')
+                        window.cancelAnimationFrame(requestId);
+                    }
+                })
             })
 
             function initCanvas(){
@@ -235,7 +242,8 @@
                 render()
             }
             function render() {
-                window.requestAnimationFrame(render);
+                requestId = window.requestAnimationFrame(render);
+                console.log('111')
                 // 制造拖尾效果，不使用clearRect 每次覆盖一层带透明度的底色
                 ctx.globalCompositeOperation = 'destination-out' // 现有内容保持在新图形不重叠的地方
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'
