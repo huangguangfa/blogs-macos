@@ -19,8 +19,6 @@ export default{
                 code:v.key
             })
         }, true)
-
-       
     }
 }
 </script>
