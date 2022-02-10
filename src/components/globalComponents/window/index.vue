@@ -6,13 +6,13 @@
             'isFullScreen':page_config.isFullScreen,
             'topLevel':isMinimize
         }"
-        :style="initSzie"
         v-show="page_config.shows"
         :id="windowId"
         @click.stop="setScreenFacade"
         @mousedown="windowBarDowStart">
         <div class="fullScreen-top" v-if="page_config.isFullScreen"></div>
-        <div class="window-bar" ref="ref_bar" 
+        <div class="window-bar" 
+            ref="ref_bar" 
             v-show="isBarShow"
             :class="[ 
                 page_config.isFullScreen && 'barFadeInDownBig box-shadow', 
@@ -100,13 +100,6 @@
     })
 
     // computed
-    let initSzie = computed(() => {
-        const w = props.width;
-        const h = props.height;
-        const scale = 1 ;
-        const { top, left } = ref_windows.dom && ref_windows.dom.style || { top:0, left:0};
-        return `width:${ w }px;height:${ h }px;transform:scale(${ scale });left:${ left };top:${ top };`
-    });
     const isScreenFacade = computed(() => store.getters.WINDOWID === windowId );
     const isMinimize = computed( () => props.appInfo.isMinimize );
     const isBarShow = computed( () =>{
@@ -202,7 +195,7 @@
         page_config.isFullScreen = !page_config.isFullScreen;
         let newStyle = null;
         if( page_config.isFullScreen === true ){
-            changeSize()
+            changeSize();
             const { offsetWidth, offsetHeight, style } = ref_windows.dom;
             const { top, left } = style;
             let web_width = document.body.offsetWidth;
@@ -216,7 +209,9 @@
             const { __formerW, __formerH, __formerL, __formerT } = ref_windows.dom;
             newStyle = `width:${__formerW}px;height:${__formerH}px;top:${__formerT}px;left:${__formerL}px`;
         }
-        ref_windows.dom.setAttribute('style',newStyle)
+        nextTick( () =>{
+            ref_windows.dom.setAttribute('style',newStyle)
+        })
     }
     function changeSize(){
         const { width, height } = ref_windows.dom.style;
