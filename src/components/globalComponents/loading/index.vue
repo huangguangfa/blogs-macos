@@ -3,11 +3,6 @@
         <img draggable="false" src="@/assets/images/loading/loadings.gif" alt="">
     </div>
 </template>
-<script>
-    export default{
-        name:"vmLoading"
-    }
-</script>
 
 <style lang="less">
     .loading{

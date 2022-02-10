@@ -14,36 +14,27 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import { ref, watch, onMounted } from 'vue';
-    export default{
-        name:"vmIframe",
-        props:{
-            webUrl:String,
-            ids:String
-        },
-        setup(props){
-            let iframes = ref(null);
-            let loading = ref(true);
-            watch( () => props.webUrl, (newUrl) =>initIframe(newUrl))
-            onMounted(() =>{
-                props.webUrl && initIframe(props.webUrl);
-            })
-            //methods
-            function onload(){
-                loading.value = false;
-            }
-            function initIframe(url){
-                loading.value = true;
-                let iframe = iframes.value;
-                iframe.src = url;
-                iframe.attachEvent ? iframe.attachEvent("onload", onload) : iframe.onload = onload;
-            }
-            return {
-                iframes,
-                loading
-            }
-        }
+    const props = defineProps({
+        webUrl:String,
+        ids:String
+    })
+    let iframes = ref(null);
+    let loading = ref(true);
+    watch( () => props.webUrl, (newUrl) =>initIframe(newUrl))
+    onMounted(() =>{
+        props.webUrl && initIframe(props.webUrl);
+    })
+    //methods
+    function onload(){
+        loading.value = false;
+    }
+    function initIframe(url){
+        loading.value = true;
+        let iframe = iframes.value;
+        iframe.src = url;
+        iframe.attachEvent ? iframe.attachEvent("onload", onload) : iframe.onload = onload;
     }
 </script>
 

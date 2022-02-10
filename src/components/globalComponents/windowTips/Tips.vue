@@ -6,10 +6,9 @@
     </transition>
 </template>
 
-<script>
-import { getCurrentInstance, ref } from 'vue'
-export default {
-    props: {
+<script setup>
+    import { getCurrentInstance, ref } from 'vue'
+    const props = defineProps({
         type: {
             type: String,
             defalut: 'info',
@@ -19,35 +18,28 @@ export default {
         },
         duration: Number,
         content:String
-    },
-    setup(props,{ emit }) {
-        const instance = getCurrentInstance()
-        const isShow = ref(true)
-        let timer
-        function delayClose() {
-            if (props.duration > 0) {
-                timer = setTimeout(() => {
-                _close()
-                }, props.duration)
-            }
-        }
-        function _close() {
-            clearTimeout(timer)
-            emit('close', instance)
-            isShow.value = false
-        }
-        function handleAfterLeave() {
-            instance.vnode.el.parentElement?.removeChild(instance.vnode.el)
-        }
-        delayClose()
-        return {
-            isShow,
-
-            //methods
-            handleAfterLeave
+    })
+    const emit = defineEmits(["close"]);
+    const instance = getCurrentInstance()
+    const isShow = ref(true)
+    let timer
+    function delayClose() {
+        if (props.duration > 0) {
+            timer = setTimeout(() => {
+            _close()
+            }, props.duration)
         }
     }
-}
+    function _close() {
+        clearTimeout(timer)
+        emit('close', instance)
+        isShow.value = false
+    }
+    function handleAfterLeave() {
+        instance.vnode.el.parentElement?.removeChild(instance.vnode.el)
+    }
+    delayClose()
+
 </script>
 
 

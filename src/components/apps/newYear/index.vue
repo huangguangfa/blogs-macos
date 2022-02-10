@@ -243,7 +243,6 @@
             }
             function render() {
                 requestId = window.requestAnimationFrame(render);
-                console.log('111')
                 // 制造拖尾效果，不使用clearRect 每次覆盖一层带透明度的底色
                 ctx.globalCompositeOperation = 'destination-out' // 现有内容保持在新图形不重叠的地方
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'

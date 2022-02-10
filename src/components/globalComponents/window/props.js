@@ -1,4 +1,4 @@
-export const props = {
+export const propsOption = {
     show: {
         type:Boolean,
         default:true

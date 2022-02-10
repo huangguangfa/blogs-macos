@@ -1,24 +1,16 @@
 <template>
     <div class="empty">
         <img draggable="false" src="@/assets/images/empty/empty.png" alt="">
-        <div class="empyt-text">{{  empytText }}</div>
+        <div class="empyt-text">{{ empytText }}</div>
     </div>
 </template>
 
-<script>
+<script setup>
     import { ref } from "vue"
-    export default {
-        name:"vmEmpty",
-        props:{
-            text:String
-        },
-        setup(props){
-            let empytText = ref(props.text ?? '暂无数据')
-            return {
-                empytText
-            }
-        }
-    }
+    const props = defineProps({
+        text:String
+    })
+    let empytText = ref(props.text ?? '暂无数据');
 </script>
 
 <style lang="less">

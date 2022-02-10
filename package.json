@@ -11,14 +11,14 @@
     "axios": "^0.21.1",
     "less": "2.7.3",
     "less-loader": "^10.0.1",
-    "vue": "^3.0.5",
+    "vue": "^3.2.30",
     "vue-router": "4",
     "vuex": "^4.0.2",
     "xterm": "^4.13.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.5",
-    "@vue/compiler-sfc": "^3.0.5",
+    "@vue/compiler-sfc": "^3.2.30",
     "vite": "^2.4.3"
   }
 }
