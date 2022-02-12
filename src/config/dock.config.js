@@ -107,20 +107,20 @@ export const TABABR_NAVIGATION = [
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
     },
     {
-        id: "2022",
-        title: "2022",
-        desktop: false,
-        isMinimize:false,
-        _index:10,
-        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/2022.png"
-    },
-    {
         id: "fcwUI",
         title: "fcwUI",
         desktop: false,
         isMinimize:false,
+        _index:10,
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/fcwUi.png"
+    },
+    {
+        id: "2022",
+        title: "2022",
+        desktop: false,
+        isMinimize:false,
         _index:11,
-        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/github.png"
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/2022.png"
     },
     {
         id: "Trash",

@@ -41,12 +41,12 @@ const apps = {
         component:Home,
         index:9
     },
-    'AppNewYear':{
-        component:NewYear,
-        index:10
-    },
     'AppFcwUi':{
         component:fcwUi,
+        index:10
+    },
+    'AppNewYear':{
+        component:NewYear,
         index:11
     }
 };
