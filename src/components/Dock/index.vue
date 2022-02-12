@@ -25,88 +25,66 @@
                 v-for="apps in APPS_COMPONENT" 
                 :key="apps.appsName" 
                 :appInfo="dockItemsInfo(apps.appsDataIndex)"
-                :is="apps.appsName">
+                :is="apps.appComponent">
             </component>
         </div>
     </div>
 </template>
 
-<script>
-    import APPSCONFIG from "./apps-config"
+<script setup>
     import { reactive, computed, getCurrentInstance } from "vue";
-    import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config.js";
-    import topbar from "@/components/topbar/index.vue";
     import { useStore } from 'vuex';
-    export default{
-        components:{
-            ...APPSCONFIG.appsInject,
-            vmTopbar:topbar
-        },
-        setup(){
-            const { proxy } = getCurrentInstance();
-            const store = useStore();
-            const TABABR_NAVIGATIONS = computed( () => store.getters.TABABR_NAVIGATION);
-            const TABABR_LIST_WIDTH = reactive(Array(store.getters.TABABR_NAVIGATION.length).fill(50));
-            const APPS_COMPONENT = APPSCONFIG.appsComponent;
-            const dockStyle = computed( () =>{
-                return function(index){
-                    return `width:${TABABR_LIST_WIDTH[index]}px;height:${TABABR_LIST_WIDTH[index]}px;`
-                }
+    import vmTopbar from "@/components/topbar/index.vue";
+    import APPSCONFIG from "./apps-config";
+    import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config.js";
+    const { proxy } = getCurrentInstance();
+    const store = useStore();
+    const TABABR_NAVIGATIONS = computed( () => store.getters.TABABR_NAVIGATION);
+    const TABABR_LIST_WIDTH = reactive(Array(store.getters.TABABR_NAVIGATION.length).fill(50));
+    const APPS_COMPONENT = APPSCONFIG.appsComponent;
+    const dockStyle = computed( () =>{
+        return function(index){
+            return `width:${TABABR_LIST_WIDTH[index]}px;height:${TABABR_LIST_WIDTH[index]}px;`
+        }
+    })
+    const dockItemsInfo = computed( () =>{
+        return function(index){
+            return store.getters.TABABR_NAVIGATION[index];
+        }
+    })
+    const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE );
+
+    // methods
+    function tabbarMove(e){
+        const { target } = e;
+        const selectSize = 110;
+        const selectOneIndex = 1;
+        const selectTwoIndex = 2;
+        const selectOneSize = 80;
+        const selectTwoSize = 70;
+        let currentEleIndex = Number( target.getAttribute("data-index") );
+        if( currentEleIndex === undefined ) return;
+        TABABR_LIST_WIDTH[ currentEleIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex] = selectSize );
+        //左
+        TABABR_LIST_WIDTH[ currentEleIndex - selectOneIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex - selectOneIndex] = selectOneSize );
+        TABABR_LIST_WIDTH[ currentEleIndex - selectTwoIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex - selectTwoIndex] = selectTwoSize );
+        //右
+        TABABR_LIST_WIDTH[ currentEleIndex + selectOneIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + selectOneIndex] = selectOneSize );
+        TABABR_LIST_WIDTH[ currentEleIndex + selectTwoIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + selectTwoIndex] = selectTwoSize );
+    }
+    function tabbarMouseout(){
+        const defaultSize = 50;
+        TABABR_LIST_WIDTH.fill(defaultSize);
+    }
+    function openWindows(dock){
+        const appsIndex = TABABR_NAVIGATIONS.value.findIndex( app => app.id === dock.id);
+        store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
+        store.commit(SET_WINDOW_ID,dock.id);
+        const undevelopedAppsIndex = [0,1,2,5,9];
+        if( undevelopedAppsIndex.includes(appsIndex) ){
+            proxy.$message.error({
+                content:'正在开发中....😊'
             })
-            const dockItemsInfo = computed( () =>{
-                return function(index){
-                    return store.getters.TABABR_NAVIGATION[index];
-                }
-            })
-            const TABABR_MINIMIZE = computed( () => store.getters.TABABR_MINIMIZE );
-
-            // methods
-            function tabbarMove(e){
-                const { target } = e;
-                const selectSize = 110;
-                const selectOneIndex = 1;
-                const selectTwoIndex = 2;
-                const selectOneSize = 80;
-                const selectTwoSize = 70;
-                let currentEleIndex = Number( target.getAttribute("data-index") );
-                if( currentEleIndex === undefined ) return;
-                TABABR_LIST_WIDTH[ currentEleIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex] = selectSize );
-                //左
-                TABABR_LIST_WIDTH[ currentEleIndex - selectOneIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex - selectOneIndex] = selectOneSize );
-                TABABR_LIST_WIDTH[ currentEleIndex - selectTwoIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex - selectTwoIndex] = selectTwoSize );
-                //右
-                TABABR_LIST_WIDTH[ currentEleIndex + selectOneIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + selectOneIndex] = selectOneSize );
-                TABABR_LIST_WIDTH[ currentEleIndex + selectTwoIndex ] !== undefined && ( TABABR_LIST_WIDTH[currentEleIndex + selectTwoIndex] = selectTwoSize );
-            }
-            function tabbarMouseout(){
-                const defaultSize = 50;
-                TABABR_LIST_WIDTH.fill(defaultSize);
-            }
-            function openWindows(dock){
-                const appsIndex = TABABR_NAVIGATIONS.value.findIndex( app => app.id === dock.id);
-                store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
-                store.commit(SET_WINDOW_ID,dock.id);
-                const undevelopedAppsIndex = [0,1,2,5,9];
-                if( undevelopedAppsIndex.includes(appsIndex) ){
-                    proxy.$message.error({
-                        content:'正在开发中....😊'
-                    })
-                }
-            }
-
-            return {
-                TABABR_NAVIGATIONS,
-                TABABR_LIST_WIDTH,
-                APPS_COMPONENT,
-                TABABR_MINIMIZE,
-                dockStyle,
-                dockItemsInfo,
-
-                // methods
-                tabbarMove,
-                tabbarMouseout,
-                openWindows
-            }
         }
     }
 </script>

@@ -8,39 +8,39 @@ import Blogs from "@/components/apps/blogs/index.vue";
 import Home from "@/components/apps/home/index.vue";
 import NewYear from "@/components/apps/newYear/index.vue";
 const apps = {
-    'app-facetime':{
+    'AppFacetime':{
         component:Facetime,
         index:3
     },
-    'app-mpas':{
+    'AppMpas':{
         component:Maps,
         index:4
     },
-    'app-safari':{
+    'AppSafari':{
         component:Safari,
         index:6
     },
-    'app-termial':{
+    'AppTermial':{
         component:Termial,
         index:7
     },
-    'app-vscode':{
+    'AppVscode':{
         component:Vscode,
         index:8
     },
-    'app-music':{
+    'AppMusic':{
         component:Music,
         index:10
     },
-    'app-blogs':{
+    'AppBlogs':{
         component:Blogs,
         index:11
     },
-    'app-home':{
+    'AppHome':{
         component:Home,
         index:12
     },
-    'app-new-year':{
+    'AppNewYear':{
         component:NewYear,
         index:13
     }

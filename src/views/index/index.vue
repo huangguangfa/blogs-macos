@@ -4,23 +4,16 @@
     </div>
 </template>
 
-<script>
-import Dock from '@/components/Dock/index.vue';
-import { getCurrentInstance} from "vue";
-export default{
-    components:{
-        vmDock:Dock,
-    },
-    setup(){
-        const { proxy } = getCurrentInstance();
-        // 监听键盘事件
-        window.addEventListener('keyup', function(v){
-            proxy.$eventBus.$emit('globalKeyup',{
-                code:v.key
-            })
-        }, true)
-    }
-}
+<script setup>
+    import vmDock from '@/components/Dock/index.vue';
+    import { getCurrentInstance} from "vue";
+    const { proxy } = getCurrentInstance();
+    // 监听键盘事件
+    window.addEventListener('keyup', function(v){
+        proxy.$eventBus.$emit('globalKeyup',{
+            code:v.key
+        })
+    }, true)
 </script>
 
 <style lang="less">
