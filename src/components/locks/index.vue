@@ -32,7 +32,7 @@
     import { reactive } from 'vue';
     import { propsOptions } from "./props"
     const props = defineProps(propsOptions);
-    const emit = defineEmits("submit", "getUserInfo");
+    const emit = defineEmits(["submit", "getUserInfo"]);
     const { isInit, isShowReset, submitText, userLabel, phoneLabel } = props;
     let user = reactive({ uId: null, uName:null, uAvatar:null });
     const configInfo = {

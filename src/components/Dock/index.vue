@@ -80,7 +80,7 @@
         const appsIndex = TABABR_NAVIGATIONS.value.findIndex( app => app.id === dock.id);
         store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
         store.commit(SET_WINDOW_ID,dock.id);
-        const undevelopedAppsIndex = [0,1,2,5,9];
+        const undevelopedAppsIndex = [0,1];
         if( undevelopedAppsIndex.includes(appsIndex) ){
             proxy.$message.error({
                 content:'正在开发中....😊'

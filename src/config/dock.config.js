@@ -17,20 +17,28 @@ export const TABABR_NAVIGATION = [
         _index:1,
         img:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/launchpad.png"
     },
-    {
-        id: "Brar",
-        title: "Brar",
-        desktop: false,
-        isMinimize:false,
-        _index:2,
-        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/bear.png"
-    },
+    // {
+    //     id: "Brar",
+    //     title: "Brar",
+    //     desktop: false,
+    //     isMinimize:false,
+    //     _index:2,
+    //     img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/bear.png"
+    // },
+    // {
+    //     id: "Mail",
+    //     title: "Mail",
+    //     desktop: false,
+    //     isMinimize:false,
+    //     _index:3,
+    //     img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/mail.png"
+    // },
     {
         id: "Facetime",
         title: "Facetime",
         desktop: false,
         isMinimize:false,
-        _index:3,
+        _index:2,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/facetime.png"
     }, 
     {
@@ -38,23 +46,16 @@ export const TABABR_NAVIGATION = [
         title: "Maps",
         desktop: false,
         isMinimize:false,
-        _index:4,
+        _index:3,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/maps.png"
     },
-    {
-        id: "Mail",
-        title: "Mail",
-        desktop: false,
-        isMinimize:false,
-        _index:5,
-        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/mail.png"
-    },
+   
     {
         id: "Safari",
         title: "Safari",
         desktop: false,
         isMinimize:false,
-        _index:6,
+        _index:4,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/safari.png"
     },
     {
@@ -62,7 +63,7 @@ export const TABABR_NAVIGATION = [
         title: "Terminal",
         desktop: false,
         isMinimize:false,
-        _index:7,
+        _index:5,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/terminal.png"
     },
     {
@@ -70,23 +71,23 @@ export const TABABR_NAVIGATION = [
         title: "Vscode",
         desktop: false,
         isMinimize:false,
-        _index:8,
+        _index:6,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/vscode.png"
     },
-    {
-        id: "Github",
-        title: "Github",
-        desktop: false,
-        isMinimize:false,
-        _index:9,
-        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/github.png"
-    },
+    // {
+    //     id: "Github",
+    //     title: "Github",
+    //     desktop: false,
+    //     isMinimize:false,
+    //     _index:7,
+    //     img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/github.png"
+    // },
     {
         id: "Music",
         title: "Music",
         desktop: false,
         isMinimize:false,
-        _index:10,
+        _index:7,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/music.png"
     },
     {
@@ -94,7 +95,7 @@ export const TABABR_NAVIGATION = [
         title: "Blogs",
         desktop: false,
         isMinimize:false,
-        _index:11,
+        _index:8,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/blogs.png"
     },
     {
@@ -102,7 +103,7 @@ export const TABABR_NAVIGATION = [
         title: "MyHome",
         desktop: false,
         isMinimize:false,
-        _index:12,
+        _index:9,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
     },
     {
@@ -110,15 +111,23 @@ export const TABABR_NAVIGATION = [
         title: "2022",
         desktop: false,
         isMinimize:false,
-        _index:13,
+        _index:10,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/2022.png"
+    },
+    {
+        id: "fcwUI",
+        title: "fcwUI",
+        desktop: false,
+        isMinimize:false,
+        _index:11,
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/github.png"
     },
     {
         id: "Trash",
         title: "Trash",
         desktop: false,
         isMinimize:false,
-        _index:14,
+        _index:12,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/trash.png"
     },
     

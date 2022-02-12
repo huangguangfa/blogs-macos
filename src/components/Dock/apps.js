@@ -7,42 +7,47 @@ import Music from "@/components/apps/music/index.vue";
 import Blogs from "@/components/apps/blogs/index.vue";
 import Home from "@/components/apps/home/index.vue";
 import NewYear from "@/components/apps/newYear/index.vue";
+import fcwUi from "@/components/apps/fcwUi/index.vue"
 const apps = {
     'AppFacetime':{
         component:Facetime,
-        index:3
+        index:2
     },
     'AppMpas':{
         component:Maps,
-        index:4
+        index:3
     },
     'AppSafari':{
         component:Safari,
-        index:6
+        index:4
     },
     'AppTermial':{
         component:Termial,
-        index:7
+        index:5
     },
     'AppVscode':{
         component:Vscode,
-        index:8
+        index:6
     },
     'AppMusic':{
         component:Music,
-        index:10
+        index:7
     },
     'AppBlogs':{
         component:Blogs,
-        index:11
+        index:8
     },
     'AppHome':{
         component:Home,
-        index:12
+        index:9
     },
     'AppNewYear':{
         component:NewYear,
-        index:13
+        index:10
+    },
+    'AppFcwUi':{
+        component:fcwUi,
+        index:11
     }
 };
 
