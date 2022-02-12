@@ -3,21 +3,14 @@
        <vm-iframe :webUrl="propsWebUrl"></vm-iframe>
     </div>
 </template>
-<script>
+<script setup>
 import { ref,watch } from 'vue'
-    export default{
-        props:{
-            webUrl:String
-        },
-        setup(props){
-            let propsWebUrl = ref(props.webUrl);
-            watch( () => props.webUrl, (newUrl) =>{
-                propsWebUrl.value = newUrl;
-            })
-            return {
-                propsWebUrl
-            }
-        }
-    }
+    const props = defineProps({
+        webUrl:String
+    })
+    let propsWebUrl = ref(props.webUrl);
+    watch( () => props.webUrl, (newUrl) =>{
+        propsWebUrl.value = newUrl;
+    })
 </script>
 

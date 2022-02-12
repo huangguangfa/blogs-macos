@@ -1,4 +1,4 @@
-export const props = {
+export const propsOptions = {
     isInit: {
         type:Boolean,
         default:true

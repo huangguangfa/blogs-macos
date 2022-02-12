@@ -27,40 +27,30 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import { getRandomMoble, getRandomName, getRandomuAvatar } from "@/utils/utils.js"
     import { reactive } from 'vue';
-    import { props } from "./props"
-    export default{
-        props,
-        setup(props, { emit }){
-            const { isInit, isShowReset, submitText, userLabel, phoneLabel } = props;
-            let user = reactive({ uId: null, uName:null, uAvatar:null });
-            const configInfo = {
-                submitText,
-                isShowReset,
-                isInit,
-                userLabel,
-                phoneLabel
-            }
-            isInit && resetName()
-            function resetName(){
-                user.uId = getRandomMoble();
-                user.uName = getRandomName();
-                user.uAvatar = getRandomuAvatar();
-                emit('getUserInfo',user)
-            }
-            function submit(){
-                emit('submit',true, user)
-            }
-            return {
-                configInfo,
-
-                resetName,
-                submit,
-                user
-            }
-        }
+    import { propsOptions } from "./props"
+    const props = defineProps(propsOptions);
+    const emit = defineEmits("submit", "getUserInfo");
+    const { isInit, isShowReset, submitText, userLabel, phoneLabel } = props;
+    let user = reactive({ uId: null, uName:null, uAvatar:null });
+    const configInfo = {
+        submitText,
+        isShowReset,
+        isInit,
+        userLabel,
+        phoneLabel
+    }
+    isInit && resetName()
+    function resetName(){
+        user.uId = getRandomMoble();
+        user.uName = getRandomName();
+        user.uAvatar = getRandomuAvatar();
+        emit('getUserInfo',user)
+    }
+    function submit(){
+        emit('submit',true, user)
     }
 </script>
 

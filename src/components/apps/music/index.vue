@@ -43,62 +43,49 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import { nextTick, reactive, ref, watch, onMounted } from "vue";
     import musicList from "../../../../file/music/index.json"
-    export default{
-        props:{
-            appInfo:Object
-        },
-        setup(props){
-            const musicType = reactive([
-                { name:"正在播放" },
-                { name:"我的歌单" }
-            ])
-            const palyConfig = reactive({
-                musicLists:musicList,
-                curPlay:{},
-                curIndex:0,
-                playBg:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/ui/music-default-bg.jpeg"
-            })
-            const audioDom = ref(null);
-            onMounted( () =>{
-                // 音乐结束了
-                audioDom.value.onended = function(){
-                    if( palyConfig.curIndex === palyConfig.musicLists.length - 1 ){
-                        addPlay(0)
-                    }else{
-                        addPlay(palyConfig.curIndex + 1)
-                    }
-                }
-            })
-
-            // methods
-            function addPlay(index){
-                const item = musicList[index];
-                palyConfig.curPlay = item;
-                palyConfig.playBg = item.cover;
-                palyConfig.curIndex = index;
-                nextTick( () =>{
-                    audioDom.value.play()
-                })
+    const props = defineProps({
+        appInfo:Object
+    })
+     const musicType = reactive([
+        { name:"正在播放" },
+        { name:"我的歌单" }
+    ])
+    const palyConfig = reactive({
+        musicLists:musicList,
+        curPlay:{},
+        curIndex:0,
+        playBg:"https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/ui/music-default-bg.jpeg"
+    })
+    const audioDom = ref(null);
+    onMounted( () =>{
+        // 音乐结束了
+        audioDom.value.onended = function(){
+            if( palyConfig.curIndex === palyConfig.musicLists.length - 1 ){
+                addPlay(0)
+            }else{
+                addPlay(palyConfig.curIndex + 1)
             }
-            watch( () => props.appInfo.desktop, (status) =>{
-                if( status === false && props.appInfo.isMinimize === false ){
-                    audioDom.value.pause()
-                }
-            })
+        }
+    })
 
-            return {
-                musicType,
-                palyConfig,
-                audioDom,
-
-                // methods
-                addPlay
-            }
-        }       
+    // methods
+    function addPlay(index){
+        const item = musicList[index];
+        palyConfig.curPlay = item;
+        palyConfig.playBg = item.cover;
+        palyConfig.curIndex = index;
+        nextTick( () =>{
+            audioDom.value.play()
+        })
     }
+    watch( () => props.appInfo.desktop, (status) =>{
+        if( status === false && props.appInfo.isMinimize === false ){
+            audioDom.value.pause()
+        }
+    })
 </script>
 
 <style lang="less" scoped>

@@ -27,85 +27,70 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import { ref, getCurrentInstance, onUnmounted, onMounted } from 'vue';
     import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
     import { useStore  } from 'vuex';
-    export default {
-        setup(){
-            const { proxy } = getCurrentInstance();
-            const store = useStore();
-            const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
-            const activeApps = ref(TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash'));
-            const searchDom = ref(null);
-            let selectIndex = ref(0);
-            let inputIsFocus = ref(false);
-            const keyupName = ["ArrowUp", "ArrowDown"];
 
-            function globalKeyup(e){
-                const { code } = e;
-                const index = keyupName.indexOf(code);
-                if( index >= 0 ){
-                    // 判断键盘上下
-                    if( index === 0 && selectIndex.value !== 0 ){
-                        selectIndex.value -= 1;
-                    }else if( index === 1 && selectIndex.value < activeApps.value.length -1 ){
-                        selectIndex.value += 1;
-                    }
-                    // 选中第一个 且继续按上键、让input得到焦点
-                    index === 0 && selectIndex.value === 0 && searchDom.value.focus()
-                }
-                // 不是input且按了enter键盘
-                code === "Enter" && inputIsFocus.value === false && enterApps()
-            }
-            proxy.$eventBus.$on( "globalKeyup",globalKeyup);
-            // methods
-            function getInputValue(e){
-                const v = e.target.value;
-                const value = TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash' && i.id.toLowerCase().includes(v) );
-                activeApps.value = value;
-                selectIndex.value = 0;
-            }
-            function cancelGlobalSearch(){
-                store.commit(SET_START_GLOBAL_SEARCH,false);
-            }
-            function openApps(apps, index){
-                const appsIndex = TABABR_NAVIGATIONS.findIndex( app => app.id === apps.id);
-                selectIndex.value = index;
-                setTimeout( () =>{
-                    store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
-                    store.commit(SET_WINDOW_ID,apps.id);
-                    cancelGlobalSearch();
-                },100)
-            }
-            function enterApps(){
-                const apps = activeApps.value[selectIndex.value];
-                openApps(apps, selectIndex.value);
-            }
-            onUnmounted( () =>{
-                proxy.$eventBus.$off("globalKeyup", globalKeyup)
-            })
-            onMounted( () =>{
-                selectIndex.value === 0 && searchDom.value.focus()
-            })
-            return {
-                activeApps,
-                selectIndex,
-                enterApps,
-                inputIsFocus,
-                searchDom,
+    const { proxy } = getCurrentInstance();
+    const store = useStore();
+    const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
+    const activeApps = ref(TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash'));
+    const searchDom = ref(null);
+    let selectIndex = ref(0);
+    let inputIsFocus = ref(false);
+    const keyupName = ["ArrowUp", "ArrowDown"];
 
-                // methods
-                getInputValue,
-                cancelGlobalSearch,
-                openApps
+    function globalKeyup(e){
+        const { code } = e;
+        const index = keyupName.indexOf(code);
+        if( index >= 0 ){
+            // 判断键盘上下
+            if( index === 0 && selectIndex.value !== 0 ){
+                selectIndex.value -= 1;
+            }else if( index === 1 && selectIndex.value < activeApps.value.length -1 ){
+                selectIndex.value += 1;
             }
+            // 选中第一个 且继续按上键、让input得到焦点
+            index === 0 && selectIndex.value === 0 && searchDom.value.focus()
         }
+        // 不是input且按了enter键盘
+        code === "Enter" && inputIsFocus.value === false && enterApps()
     }
+    proxy.$eventBus.$on( "globalKeyup",globalKeyup);
+    // methods
+    function getInputValue(e){
+        const v = e.target.value;
+        const value = TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash' && i.id.toLowerCase().includes(v) );
+        activeApps.value = value;
+        selectIndex.value = 0;
+    }
+    function cancelGlobalSearch(){
+        store.commit(SET_START_GLOBAL_SEARCH,false);
+    }
+    function openApps(apps, index){
+        const appsIndex = TABABR_NAVIGATIONS.findIndex( app => app.id === apps.id);
+        selectIndex.value = index;
+        setTimeout( () =>{
+            store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
+            store.commit(SET_WINDOW_ID,apps.id);
+            cancelGlobalSearch();
+        },100)
+    }
+    function enterApps(){
+        const apps = activeApps.value[selectIndex.value];
+        openApps(apps, selectIndex.value);
+    }
+    onUnmounted( () =>{
+        proxy.$eventBus.$off("globalKeyup", globalKeyup)
+    })
+    onMounted( () =>{
+        selectIndex.value === 0 && searchDom.value.focus()
+    })
 </script>
 
 <style lang="less">
-    .global-search{ width: 100vw;height: 100vh;
+    .global-search{ width: 100vw;height: 100vh; 
         .search-tag{width:660px;box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);backdrop-filter: blur(40px);background-color: rgba(243, 244, 246, 0.8);border: 1px solid rgba(156,163,175,0.5);left: 50%;top: 10%;transform: translate(-50%);border-radius: .375rem;
             .search-tga-input{width: 100%;height: 59px;padding: 0 10px; box-sizing:border-box;
                 .macos-sousuo{width: 60px;height: 100%;display: flex;align-items: center;justify-content: center;color: rgb(75,85,99);font-size: 30px;}

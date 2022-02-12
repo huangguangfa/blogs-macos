@@ -24,49 +24,37 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import { reactive, ref, nextTick } from "vue";
-    export default {
-        props:{
-            MessageList:Array
-        },
-        setup(props, { emit } ){
-            let mes_text = ref(null)
-            const chatroomArea = ref(null)
-            let options_config = reactive({
-                icon_list:[
-                    {name:'macos-biaoqing'},
-                    {name:'macos-wenjian'}
-                ]
-            })
-            function sendMes(){
-                if( !mes_text.value.trim() ) return;
-                let mes_data = {
-                    type:'right',
-                    mes_content:mes_text.value,
-                    isHaveRead:true
-                }
-                emit('newMessage',mes_data,true);
-                mes_text.value = null;
-                document.getElementById("textareas").innerText = "";
-                nextTick( () =>{
-                    const chatroomAreaDom = chatroomArea.value;
-                    chatroomAreaDom.scrollTop = chatroomAreaDom.scrollHeight;
-                })
-            }
-            function changeText(val){
-                mes_text.value = val.target.innerText;
-            }
-
-            return {
-                options_config,
-                mes_text,
-                chatroomArea,
-                // methods
-                sendMes,
-                changeText,
-            }
+    const props = defineProps({
+        MessageList:Array
+    })
+    const emit = defineEmits(['newMessage'])
+    let mes_text = ref(null)
+    const chatroomArea = ref(null)
+    let options_config = reactive({
+        icon_list:[
+            {name:'macos-biaoqing'},
+            {name:'macos-wenjian'}
+        ]
+    })
+    function sendMes(){
+        if( !mes_text.value.trim() ) return;
+        let mes_data = {
+            type:'right',
+            mes_content:mes_text.value,
+            isHaveRead:true
         }
+        emit('newMessage',mes_data,true);
+        mes_text.value = null;
+        document.getElementById("textareas").innerText = "";
+        nextTick( () =>{
+            const chatroomAreaDom = chatroomArea.value;
+            chatroomAreaDom.scrollTop = chatroomAreaDom.scrollHeight;
+        })
+    }
+    function changeText(val){
+        mes_text.value = val.target.innerText;
     }
 </script>
 

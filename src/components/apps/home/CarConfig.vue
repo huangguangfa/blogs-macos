@@ -1,42 +1,32 @@
 <template>
     <div class="car-config">
         <div class="optins-content">
-            <div class="optins-items" v-for="(item, index) in optins" :key="index" @click="selectOp(index)">{{ item }} </div>
+            <div class="optins-items" v-for="(item, index) in state.optins" :key="index" @click="selectOp(index)">{{ item }} </div>
         </div>
         <div class="select-color">
-            <div class="color-items" :style="`background:${item}`" v-for="(item, index) in colorList" :key="index" @click="selectColor(item)"></div>
+            <div class="color-items" :style="`background:${item}`" v-for="(item, index) in state.colorList" :key="index" @click="selectColor(item)"></div>
         </div>
     </div>
 </template>
 
-<script>
-    import { reactive, toRefs } from 'vue'
-    export default{
-        emits:["onCar"],
-        setup(_,{ emit }){
-            let state = reactive({
-                optins:["分解","合成"],
-                colorList:["#FFDAB9", "#F0FFF0", "#E6E6FA", "#54FF9F", "#000080", "#FFC125", "#EE6363", "#6959CD"]
-            })
+<script setup>
+    import { reactive } from 'vue'
+    const emit = defineEmits(['onCar']);
+    let state = reactive({
+        optins:["分解","合成"],
+        colorList:["#FFDAB9", "#F0FFF0", "#E6E6FA", "#54FF9F", "#000080", "#FFC125", "#EE6363", "#6959CD"]
+    })
 
-            const selectOp = (index) =>{
-                handleCarEvent({
-                    type:index + 1
-                })
-            }
-            const selectColor = (color) =>{
-                handleCarEvent({ color })
-            }
-            const handleCarEvent = (data) =>{
-                emit("onCar",data )
-            }
-
-            return {
-                ...toRefs(state),
-                selectOp,
-                selectColor
-            }
-        }
+    const selectOp = (index) =>{
+        handleCarEvent({
+            type:index + 1
+        })
+    }
+    const selectColor = (color) =>{
+        handleCarEvent({ color })
+    }
+    const handleCarEvent = (data) =>{
+        emit("onCar",data )
     }
 </script>
 

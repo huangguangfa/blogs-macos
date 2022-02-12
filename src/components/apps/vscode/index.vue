@@ -12,39 +12,28 @@
     </div>
 </template>
 
-<script>
-    import login from "../../locks/index.vue";
+<script setup>
+    import vmlogin from "../../locks/index.vue";
     import { logins } from "@/services/api/user-api.js";
     import { ref, getCurrentInstance } from "vue";
-    export default{
-        components:{
-            vmlogin:login
-        },
-        props:{
-            appInfo:Object
-        },
-        setup(){
-            const { proxy } = getCurrentInstance();
-            const isLoginVscode = ref(0);
-            async function loginVscode(_,info){
-                const { uId, uName } = info;
-                const { success } = await logins({
-                    "userName": uName,
-                    "password": uId
-                })
-                if( success ){
-                    isLoginVscode.value = true;
-                }else{
-                    proxy.$message.error({
-                        content:'账号密码错误！'
-                    })
-                }
-            }
-            return {
-                isLoginVscode,
-                loginVscode
-            }
-        }        
+    const props = defineProps({
+        appInfo:Object
+    })
+    const { proxy } = getCurrentInstance();
+    const isLoginVscode = ref(0);
+    async function loginVscode(_,info){
+        const { uId, uName } = info;
+        const { success } = await logins({
+            "userName": uName,
+            "password": uId
+        })
+        if( success ){
+            isLoginVscode.value = true;
+        }else{
+            proxy.$message.error({
+                content:'账号密码错误！'
+            })
+        }
     }
 </script>
 <style lang="less" scoped>

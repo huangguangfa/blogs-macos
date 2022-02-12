@@ -13,34 +13,19 @@
     </div>
 </template>
 
-<script>
-    import About from "./components/About.vue";
-    import Electricity from "./components/Electricity.vue";
-    import Wifi from "./components/Wifi.vue";
-    import Search from "./components/Search.vue";
-    import Controlcenter from "./components/Controlcenter.vue";
-    import globalSearch from "@/components/search/index.vue";
+<script setup>
     import { useStore } from "vuex";
     import { computed } from "vue";
-    export default{
-        components:{
-            VmAbout:About,
-            VmElectricity:Electricity,
-            VmWifi:Wifi,
-            VmSearch:Search,
-            VmControlcenter:Controlcenter,
-            VmGlobalSearch:globalSearch
-        },
-        setup(){
-            const store = useStore();
-            const FULLSCREENBAR = computed( () => store.getters.FULLSCREENBAR )
-            const STARTGLOBALSEARCH = computed( () => store.getters.STARTGLOBALSEARCH)
-            return {
-                FULLSCREENBAR,
-                STARTGLOBALSEARCH
-            }
-        }
-    }
+    import VmAbout from "./components/About.vue";
+    import VmElectricity from "./components/Electricity.vue";
+    import VmWifi from "./components/Wifi.vue";
+    import VmSearch from "./components/Search.vue";
+    import VmControlcenter from "./components/Controlcenter.vue";
+    import VmGlobalSearch from "@/components/search/index.vue";
+
+    const store = useStore();
+    const FULLSCREENBAR = computed( () => store.getters.FULLSCREENBAR )
+    const STARTGLOBALSEARCH = computed( () => store.getters.STARTGLOBALSEARCH)
 </script>
 
 <style lang="less">

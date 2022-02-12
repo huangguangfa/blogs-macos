@@ -49,99 +49,171 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import { reactive, computed, onUnmounted, onMounted } from "vue";
     import { useStore } from "vuex"
     import { handleFullScreen } from "@/utils/index";
     import { SET_SYSTEM_CONFIG } from "@/config/store.config.js"
     let intervalId = null;
-    export default{
-        setup(){
-            const store = useStore()
-            let dates = reactive({
-                date:new Date()
-            })
-            let options = reactive({
-                module:[
-                    {
-                        icon:"macos-wifi",
-                        name:"Wi-Fi",
-                        des:"GF-Home",
-                        is_start:false
-                    },
-                    {
-                        icon:"macos-wifi",
-                        name:"Wi-Fi",
-                        des:"GF-Home",
-                        is_start:true
-                    },
-                    {
-                        icon:"macos-wifi",
-                        name:"Wi-Fi",
-                        des:"GF-Home",
-                        is_start:true
-                    }
-                ]
-            })
-            let datesResult = computed(() =>{
-                let date = dates.date;
-                let h = date.getHours();
-                let period = h > 12 ? " PM" : " AM"
-                h = h < 10 ? ('0' + h) : h;
-                let m = date.getMinutes();
-                m = m < 10 ? ('0' + m) : m;
-                let day_list = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
-                let getMonth = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-                return {
-                    time:`${h} : ${m}  ${period}`,
-                    day:`${day_list[date.getDay()]}  ${getMonth[date.getMonth()]} ${date.getUTCDate()}`
-                }
-            })
-            intervalId = setInterval(() => {
-                dates.date = new Date()
-            }, 60 * 1000);
-            let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
-            let isShowControlcenter = computed(() => store.getters.SYSTEM_CONFIG.isShowControlcenter)
-            //销毁
-            onUnmounted( () =>{ clearInterval(intervalId) })
-            onMounted( () =>{
-                //监听全屏变化
-                document.addEventListener('fullscreenchange',() =>{
-                    //取消全屏的时候
-                    if ( !document.fullscreenElement && isFullscreen.value === true ){
-                        handleFullScreens();
-                    }
-                })
-            })
-            // methods
-            //全屏
-            function handleFullScreens(){
-                handleFullScreen(isFullscreen.value).then( res =>{
-                    store.commit(SET_SYSTEM_CONFIG,{
-                        ...store.getters.SYSTEM_CONFIG,
-                        isFullscreen:!res
-                    })
-                });
+    const store = useStore()
+    let dates = reactive({
+        date:new Date()
+    })
+    let options = reactive({
+        module:[
+            {
+                icon:"macos-wifi",
+                name:"Wi-Fi",
+                des:"GF-Home",
+                is_start:false
+            },
+            {
+                icon:"macos-wifi",
+                name:"Wi-Fi",
+                des:"GF-Home",
+                is_start:true
+            },
+            {
+                icon:"macos-wifi",
+                name:"Wi-Fi",
+                des:"GF-Home",
+                is_start:true
             }
-            function handleShowControlcenter(status){
-                store.commit(SET_SYSTEM_CONFIG,{
-                    ...store.getters.SYSTEM_CONFIG,
-                    isShowControlcenter:status
-                })
+        ]
+    })
+    let datesResult = computed(() =>{
+        let date = dates.date;
+        let h = date.getHours();
+        let period = h > 12 ? " PM" : " AM"
+        h = h < 10 ? ('0' + h) : h;
+        let m = date.getMinutes();
+        m = m < 10 ? ('0' + m) : m;
+        let day_list = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
+        let getMonth = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        return {
+            time:`${h} : ${m}  ${period}`,
+            day:`${day_list[date.getDay()]}  ${getMonth[date.getMonth()]} ${date.getUTCDate()}`
+        }
+    })
+    intervalId = setInterval(() => {
+        dates.date = new Date()
+    }, 60 * 1000);
+    let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
+    let isShowControlcenter = computed(() => store.getters.SYSTEM_CONFIG.isShowControlcenter)
+    //销毁
+    onUnmounted( () =>{ clearInterval(intervalId) })
+    onMounted( () =>{
+        //监听全屏变化
+        document.addEventListener('fullscreenchange',() =>{
+            //取消全屏的时候
+            if ( !document.fullscreenElement && isFullscreen.value === true ){
+                handleFullScreens();
             }
-
-            return {
-                dates,
-                datesResult,
-                options,
-                isFullscreen,
-                handleFullScreens,
-                isShowControlcenter,
-                handleShowControlcenter
-            }
-        },
-        
+        })
+    })
+    // methods
+    //全屏
+    function handleFullScreens(){
+        handleFullScreen(isFullscreen.value).then( res =>{
+            store.commit(SET_SYSTEM_CONFIG,{
+                ...store.getters.SYSTEM_CONFIG,
+                isFullscreen:!res
+            })
+        });
     }
+    function handleShowControlcenter(status){
+        store.commit(SET_SYSTEM_CONFIG,{
+            ...store.getters.SYSTEM_CONFIG,
+            isShowControlcenter:status
+        })
+    }
+    // export default{
+    //     setup(){
+    //         const store = useStore()
+    //         let dates = reactive({
+    //             date:new Date()
+    //         })
+    //         let options = reactive({
+    //             module:[
+    //                 {
+    //                     icon:"macos-wifi",
+    //                     name:"Wi-Fi",
+    //                     des:"GF-Home",
+    //                     is_start:false
+    //                 },
+    //                 {
+    //                     icon:"macos-wifi",
+    //                     name:"Wi-Fi",
+    //                     des:"GF-Home",
+    //                     is_start:true
+    //                 },
+    //                 {
+    //                     icon:"macos-wifi",
+    //                     name:"Wi-Fi",
+    //                     des:"GF-Home",
+    //                     is_start:true
+    //                 }
+    //             ]
+    //         })
+    //         let datesResult = computed(() =>{
+    //             let date = dates.date;
+    //             let h = date.getHours();
+    //             let period = h > 12 ? " PM" : " AM"
+    //             h = h < 10 ? ('0' + h) : h;
+    //             let m = date.getMinutes();
+    //             m = m < 10 ? ('0' + m) : m;
+    //             let day_list = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
+    //             let getMonth = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+    //             return {
+    //                 time:`${h} : ${m}  ${period}`,
+    //                 day:`${day_list[date.getDay()]}  ${getMonth[date.getMonth()]} ${date.getUTCDate()}`
+    //             }
+    //         })
+    //         intervalId = setInterval(() => {
+    //             dates.date = new Date()
+    //         }, 60 * 1000);
+    //         let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
+    //         let isShowControlcenter = computed(() => store.getters.SYSTEM_CONFIG.isShowControlcenter)
+    //         //销毁
+    //         onUnmounted( () =>{ clearInterval(intervalId) })
+    //         onMounted( () =>{
+    //             //监听全屏变化
+    //             document.addEventListener('fullscreenchange',() =>{
+    //                 //取消全屏的时候
+    //                 if ( !document.fullscreenElement && isFullscreen.value === true ){
+    //                     handleFullScreens();
+    //                 }
+    //             })
+    //         })
+    //         // methods
+    //         //全屏
+    //         function handleFullScreens(){
+    //             handleFullScreen(isFullscreen.value).then( res =>{
+    //                 store.commit(SET_SYSTEM_CONFIG,{
+    //                     ...store.getters.SYSTEM_CONFIG,
+    //                     isFullscreen:!res
+    //                 })
+    //             });
+    //         }
+    //         function handleShowControlcenter(status){
+    //             store.commit(SET_SYSTEM_CONFIG,{
+    //                 ...store.getters.SYSTEM_CONFIG,
+    //                 isShowControlcenter:status
+    //             })
+    //         }
+
+    //         return {
+    //             dates,
+    //             datesResult,
+    //             options,
+    //             isFullscreen,
+    //             handleFullScreens,
+    //             isShowControlcenter,
+    //             handleShowControlcenter
+    //         }
+    //     },
+        
+    // }
 </script>
 
 <style lang="less">

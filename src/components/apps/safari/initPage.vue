@@ -17,22 +17,13 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import { initPageConfig } from "./conifg.js"
-    export default{
-        setup(props,{ emit }){
-            //methods
-            function dispatchNewWeb(data,index){
-                const { web_url } = data;
-                emit('dispatchNewWeb',web_url)
-            }
-            return {
-                initPageConfig,
-
-                //methods
-                dispatchNewWeb
-            }
-        }
+    const emit = defineEmits(['dispatchNewWeb'])
+    //methods
+    function dispatchNewWeb(data,index){
+        const { web_url } = data;
+        emit('dispatchNewWeb',web_url)
     }
 </script>
 

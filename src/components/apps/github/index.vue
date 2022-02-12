@@ -9,10 +9,8 @@
     </div>
 </template>
 
-<script>
-    export default{
-        props:{
-            appInfo:Object
-        }   
-    }
+<script setup>
+    const props = defineProps({
+        appInfo:Object
+    })
 </script>

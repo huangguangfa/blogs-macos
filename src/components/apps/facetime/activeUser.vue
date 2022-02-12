@@ -21,20 +21,13 @@
     </div>
 </template>
 
-<script>
-    export default{
-        props:{
-            activeUserList:Array
-        },
-        setup(props,{ emit }){
-            function callUser(userInfo, type){
-                emit(type,userInfo)
-            }
-
-            return {
-                callUser
-            }
-        }
+<script setup>
+    const props = defineProps({
+        activeUserList:Array
+    })
+    const emit = defineEmits(['callUser'])
+    function callUser(userInfo, type){
+        emit(type,userInfo)
     }
 </script>
 
