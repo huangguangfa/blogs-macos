@@ -195,7 +195,6 @@
         page_config.isFullScreen = !page_config.isFullScreen;
         let newStyle = null;
         if( page_config.isFullScreen === true ){
-            changeSize();
             const { offsetWidth, offsetHeight, style } = ref_windows.dom;
             const { top, left } = style;
             let web_width = document.body.offsetWidth;
@@ -210,7 +209,8 @@
             newStyle = `width:${__formerW}px;height:${__formerH}px;top:${__formerT}px;left:${__formerL}px`;
         }
         nextTick( () =>{
-            ref_windows.dom.setAttribute('style',newStyle)
+            ref_windows.dom.setAttribute('style',newStyle);
+            changeSize();
         })
     }
     function changeSize(){
