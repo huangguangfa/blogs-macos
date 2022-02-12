@@ -12,9 +12,9 @@
                     v-for="(item,index) in TABABR_NAVIGATIONS"  
                     :key="index">
                     <p class="tabbar-title absolute d-none">{{ item.title }}</p>
-                    <div class="dock-items" :style="dockStyle(index)" @click="openWindows(item)">
+                    <div class="dock-items" >
                         <span class="minimizes-mark" v-if="item.isMinimize"></span>
-                        <img class="tabbar-img" :src="item.img" :data-index="index">
+                        <img class="tabbar-img" :style="dockStyle(index)" @click="openWindows(item)" :src="item.img" :data-index="index">
                     </div>
                 </li>
             </ul>
@@ -118,12 +118,12 @@
                 &:hover .tabbar-title{display: block;}
                 .tabbar-title{ color: black; background-color: rgba(209,213,219,0.8);  padding:5px 10px; border-radius: .375rem; top: -80px;}
                 .dock-items{
-                    transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; 
-                    transition-duration: .15s;  will-change: width height;
-                    -webkit-user-drag: none; padding: 0 3px; 
+                    padding: 0 3px; 
                     position: relative;
                     .tabbar-img{ 
-                        width: 100%;height: 100%;
+                        transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; 
+                        transition-duration: .15s;  will-change: width height;
+                        -webkit-user-drag: none; 
                     }
                     .minimizes-mark{
                         width: 10px;height: 10px;border-radius: 100%;background: red; position: absolute; top: 2px;right: 5px;
