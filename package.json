@@ -6,7 +6,6 @@
     "buildVite": "vite build",
     "serve": "vite preview",
     "build": "sh build.sh"
-
   },
   "license": "ISC",
   "dependencies": {
