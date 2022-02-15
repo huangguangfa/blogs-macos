@@ -9,9 +9,6 @@ const state = {
         isFullscreen:false, //是否全屏
         isShowControlcenter:false, //显示控制
     },
-    GLOABL_SOCKET_DATA:{}, // 全局socket消息
-    USER_INFO:{
-        userId:null
-    }
+    GLOABL_SOCKET_DATA:{} // 全局socket消息
 }
 export default state;
