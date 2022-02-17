@@ -51,11 +51,11 @@
 
 <script setup>
     import { reactive, computed, onUnmounted, onMounted } from "vue";
-    import { useStore } from "vuex"
+    // import { useStore } from "vuex"
     import { handleFullScreen } from "@/utils/index";
     import { SET_SYSTEM_CONFIG } from "@/config/store.config.js"
     let intervalId = null;
-    const store = useStore()
+    // const store = useStore()
     let dates = reactive({
         date:new Date()
     })
@@ -98,8 +98,8 @@
     intervalId = setInterval(() => {
         dates.date = new Date()
     }, 60 * 1000);
-    let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
-    let isShowControlcenter = computed(() => store.getters.SYSTEM_CONFIG.isShowControlcenter)
+    // let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
+    // let isShowControlcenter = computed(() => store.getters.SYSTEM_CONFIG.isShowControlcenter)
     //销毁
     onUnmounted( () =>{ clearInterval(intervalId) })
     onMounted( () =>{

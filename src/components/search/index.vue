@@ -30,11 +30,11 @@
 <script setup>
     import { ref, getCurrentInstance, onUnmounted, onMounted } from 'vue';
     import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
-    import { useStore  } from 'vuex';
+    // import { useStore  } from 'vuex';
 
     const { proxy } = getCurrentInstance();
-    const store = useStore();
-    const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
+    // const store = useStore();
+    // const TABABR_NAVIGATIONS = store.getters.TABABR_NAVIGATION;
     const activeApps = ref(TABABR_NAVIGATIONS.filter( i => i.id !== 'Trash'));
     const searchDom = ref(null);
     let selectIndex = ref(0);
@@ -66,14 +66,14 @@
         selectIndex.value = 0;
     }
     function cancelGlobalSearch(){
-        store.commit(SET_START_GLOBAL_SEARCH,false);
+        // store.commit(SET_START_GLOBAL_SEARCH,false);
     }
     function openApps(apps, index){
         const appsIndex = TABABR_NAVIGATIONS.findIndex( app => app.id === apps.id);
         selectIndex.value = index;
         setTimeout( () =>{
-            store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
-            store.commit(SET_WINDOW_ID,apps.id);
+            // store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
+            // store.commit(SET_WINDOW_ID,apps.id);
             cancelGlobalSearch();
         },100)
     }

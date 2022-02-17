@@ -33,12 +33,16 @@
 
 <script setup>
     import { reactive, computed, getCurrentInstance } from "vue";
-    import { useStore } from 'vuex';
+    // import { useStore } from 'vuex';
+    import { useSystemStore } from "@/store/system";
     import vmTopbar from "@/components/topbar/index.vue";
     import APPSCONFIG from "./apps-config";
     import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config.js";
     const { proxy } = getCurrentInstance();
-    const store = useStore();
+    // const store = useStore();
+    const systemStore = useSystemStore();
+    console.log('systemStore',systemStore);
+    
     const TABABR_NAVIGATIONS = computed( () => store.getters.TABABR_NAVIGATION);
     const TABABR_LIST_WIDTH = reactive(Array(store.getters.TABABR_NAVIGATION.length).fill(50));
     const APPS_COMPONENT = APPSCONFIG.appsComponent;

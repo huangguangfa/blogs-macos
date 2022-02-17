@@ -5,6 +5,12 @@
     </div>
 </template>
 
+<script setup>
+    // import { useSystemStore } from "@/store/system";
+    // const systemStore = useSystemStore();
+    // console.log('11111')
+</script>
+
 <style lang="less">
     .gf-blogs-macos{
         width: 100vw;

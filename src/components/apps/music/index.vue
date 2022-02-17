@@ -45,7 +45,7 @@
 
 <script setup>
     import { nextTick, reactive, ref, watch, onMounted } from "vue";
-    import musicList from "../../../../file/music/index.json"
+    import musicList from "../../../../file/music/index.json";
     const props = defineProps({
         appInfo:Object
     })

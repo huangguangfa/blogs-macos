@@ -7,7 +7,7 @@ import Music from "@/components/apps/music/index.vue";
 import Blogs from "@/components/apps/blogs/index.vue";
 import Home from "@/components/apps/home/index.vue";
 import NewYear from "@/components/apps/newYear/index.vue";
-import fcwUi from "@/components/apps/fcwUi/index.vue"
+import fcwUi from "@/components/apps/fcwUi/index.vue";
 const apps = {
     'AppFacetime':{
         component:Facetime,

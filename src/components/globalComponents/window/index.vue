@@ -51,7 +51,7 @@
 
 <script setup>
     import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
-    import store from "@/store/index";
+    // import store from "@/store/index";
     import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_NAVIGATION } from "@/config/store.config.js";
     import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
     import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
@@ -86,7 +86,7 @@
     let statusLists = reactive(statusList);
     WINDOWID ++;
     let windowId = `window${ WINDOWID }`;
-    store.commit(SET_WINDOW_ID,windowId);
+    // store.commit(SET_WINDOW_ID,windowId);
     // watch
     watch( () => props.show, ( status ) => {
         page_config.shows = status;
@@ -107,7 +107,7 @@
         let status = isFullScreen === false || isFullScreen === true && cursorPointerY  === true ;
         // 只有当前顶层app才能去对全局状态进行变化 barTop只需要判断全屏和是否到顶部
         if( isScreenFacade.value ){
-            store.commit(SET_FULL_SCREENBAR, isFullScreen === true && cursorPointerY === true);
+            // store.commit(SET_FULL_SCREENBAR, isFullScreen === true && cursorPointerY === true);
         }
         return status;
     })
@@ -144,7 +144,7 @@
         page_config.shows = status;
 
         // 修改store的dokc状态
-        store.commit(SET_TABABR_NAVIGATION, { _index, dockData:{ desktop:status } });
+        // store.commit(SET_TABABR_NAVIGATION, { _index, dockData:{ desktop:status } });
         if( status === false ){
             page_config.isFullScreen = false;
         }
@@ -162,7 +162,7 @@
         emit('change',{ type, status })
     }
     function setScreenFacade(){
-        store.commit(SET_WINDOW_ID,windowId);
+        // store.commit(SET_WINDOW_ID,windowId);
     }
     function windowBarDowStart(e){
         const { clientX, clientY } = e;
@@ -189,7 +189,7 @@
     async function windowMinimize(){
         const { _index } = props.appInfo;
         // 最小化保存状态
-        store.commit(SET_TABABR_NAVIGATION,{ _index, dockData:{ isMinimize:true } });
+        // store.commit(SET_TABABR_NAVIGATION,{ _index, dockData:{ isMinimize:true } });
     }
     function windowFullScreen(){
         page_config.isFullScreen = !page_config.isFullScreen;
