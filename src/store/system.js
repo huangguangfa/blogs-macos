@@ -18,12 +18,13 @@ export const useSystemStore = defineStore({
         }
     },
     getters:{
-        WINDOWID = state => state.WINDOWID,
-        FULLSCREENBAR = state => state.FULLSCREENBAR,
-        STARTGLOBALSEARCH = state => state.STARTGLOBALSEARCH,
-        TABABR_MINIMIZE = state => state.TABABR_MINIMIZE,
-        TABABR_NAVIGATION = state => state.TABABR_NAVIGATION,
-        SYSTEM_CONFIG = state => state.SYSTEM_CONFIG,
-        GLOABL_SOCKET_DATA = state => state.GLOABL_SOCKET_DATA
+        aa:state => state.TABABR_NAVIGATION
+        // WINDOWID:state => state.WINDOWID,
+        // FULLSCREENBAR :state => state.FULLSCREENBAR,
+        // STARTGLOBALSEARCH :state => state.STARTGLOBALSEARCH,
+        // TABABR_MINIMIZE :state => state.TABABR_MINIMIZE,
+        // TABABR_NAVIGATION :state => state.TABABR_NAVIGATION,
+        // SYSTEM_CONFIG :state => state.SYSTEM_CONFIG,
+        // GLOABL_SOCKET_DATA :state => state.GLOABL_SOCKET_DATA
     }
 });
