@@ -48,7 +48,6 @@
     let WINDOWID = 0;
 </script>
 
-
 <script setup>
     import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
     import { useSystemStore } from "@/store/system.js";
@@ -98,6 +97,7 @@
             setScreenFacade()
         })
     })
+    
     // computed
     const isScreenFacade = computed(() => systemStore.WINDOWID === windowId );
     const isMinimize = computed( () => props.appInfo.isMinimize );
@@ -109,6 +109,12 @@
             systemStore[SET_FULL_SCREENBAR](isFullScreen === true && cursorPointerY === true);
         }
         return status;
+    })
+    watch( () => props.appInfo.isMinimize, (status) =>{
+        if(status === false){
+            // 每次显示默认最前 
+            setScreenFacade()
+        }
     })
     onMounted( () =>{
         let windom = getByIdDom( windowId );
@@ -141,7 +147,6 @@
         const { type, status } = windowTbarConfig[index];
         page_config.currentWindowStatus = type;
         page_config.shows = status;
-
         // 修改store的dokc状态
         systemStore[SET_TABABR_NAVIGATION]({ _index, dockData:{ desktop:status } })
         if( status === false ){

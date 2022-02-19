@@ -78,7 +78,7 @@
         TABABR_LIST_WIDTH.fill(defaultSize);
     }
     function openWindows(dock){
-        const appsIndex = TABABR_NAVIGATIONS.value.findIndex( app => app.id === dock.id);
+        const appsIndex = TABABR_NAVIGATIONS.value.findIndex(app => app.id === dock.id);
         systemStore[SET_TABABR_NAVIGATION]({ _index:appsIndex, dockData:{ desktop:true, isMinimize:false } })
         const undevelopedAppsIndex = [0,1];
         if( undevelopedAppsIndex.includes(appsIndex) ){
