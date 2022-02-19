@@ -1,7 +1,7 @@
 <template>
     <div class="github">
         <window v-model:show="appInfo.desktop" title="2022/01/03" :appInfo="appInfo" width="1500" height="700">
-            <div class="github-content wh100" style="background-image: linear-gradient(to bottom, #1d1c2c, #3c364c);" v-if="appInfo.desktop">
+            <div class="github-content wh100" style="background:#000;" v-if="appInfo.desktop">
                 <canvas id="canvas" ref="canvas" style="width:100%;height:100%;"></canvas>
             </div>
         </window>
