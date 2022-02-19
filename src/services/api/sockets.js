@@ -1,8 +1,9 @@
-// import store from '@/store/index';
 import { SET_GLOABL_SOCKET_DATA } from "@/config/store.config.js";
 import socket from "@/services/socket/index.js";
 import { socketHost } from "@/config/service.config.js";
 import { getTemporaryUser } from "@/services/api/user-api.js";
+import { useSystemStore } from "@/store/system.js";
+let systemStore = null
 export async function initScoket(){
     const { result } = await getTemporaryUser();
     sessionStorage.setItem('userId',`/ws/${result.userId}`)
@@ -28,7 +29,10 @@ function handleGlobalSocketEvent( socket ){
         console.log('%cscoket_success', 'color: green;');
     })
     socket.onmessage( function( data ){
-        // store.commit(SET_GLOABL_SOCKET_DATA, JSON.parse(data))
+        if(!systemStore){
+            systemStore = useSystemStore();
+        }
+        systemStore[SET_GLOABL_SOCKET_DATA](JSON.parse(data))
     })
     socket.onerror(function (error) {
         console.log('%cscoket_error', 'color: red;'); 

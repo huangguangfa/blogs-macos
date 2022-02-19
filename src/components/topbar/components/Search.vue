@@ -5,13 +5,13 @@
 </template>
 <script setup>
     import { getCurrentInstance, onUnmounted } from "vue";
-    // import { useStore } from "vuex";
     import { SET_START_GLOBAL_SEARCH } from "@/config/store.config.js";
     const { proxy } = getCurrentInstance();
-    // const store = useStore()
+    import { useSystemStore } from "@/store/system.js";
+    const systemStore = useSystemStore();
     function startGlobalSearch(){
-        // const status = store.getters.STARTGLOBALSEARCH;
-        // store.commit(SET_START_GLOBAL_SEARCH,!status);
+        const status = systemStore.STARTGLOBALSEARCH;
+        systemStore(SET_START_GLOBAL_SEARCH)(!status)
     }
     function globalKeyup(e){
         const { code } = e;

@@ -51,11 +51,11 @@
 
 <script setup>
     import { reactive, computed, onUnmounted, onMounted } from "vue";
-    // import { useStore } from "vuex"
     import { handleFullScreen } from "@/utils/index";
     import { SET_SYSTEM_CONFIG } from "@/config/store.config.js"
+    import { useSystemStore } from "@/store/system.js";
+    const systemStore = useSystemStore();
     let intervalId = null;
-    // const store = useStore()
     let dates = reactive({
         date:new Date()
     })
@@ -98,8 +98,8 @@
     intervalId = setInterval(() => {
         dates.date = new Date()
     }, 60 * 1000);
-    // let isFullscreen = computed(() => store.getters.SYSTEM_CONFIG.isFullscreen)
-    // let isShowControlcenter = computed(() => store.getters.SYSTEM_CONFIG.isShowControlcenter)
+    let isFullscreen = computed(() => systemStore.SYSTEM_CONFIG.isFullscreen)
+    let isShowControlcenter = computed(() => systemStore.SYSTEM_CONFIG.isShowControlcenter)
     //销毁
     onUnmounted( () =>{ clearInterval(intervalId) })
     onMounted( () =>{
@@ -115,15 +115,15 @@
     //全屏
     function handleFullScreens(){
         handleFullScreen(isFullscreen.value).then( res =>{
-            store.commit(SET_SYSTEM_CONFIG,{
-                ...store.getters.SYSTEM_CONFIG,
+            systemStore[SET_SYSTEM_CONFIG]({
+                ...systemStore.SYSTEM_CONFIG,
                 isFullscreen:!res
             })
         });
     }
     function handleShowControlcenter(status){
-        store.commit(SET_SYSTEM_CONFIG,{
-            ...store.getters.SYSTEM_CONFIG,
+        systemStore[SET_SYSTEM_CONFIG]({
+            ...systemStore.SYSTEM_CONFIG,
             isShowControlcenter:status
         })
     }

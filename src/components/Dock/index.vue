@@ -1,6 +1,6 @@
 <template>
     <div class="tabbars mx-auto fixed bottom-0 right-0 left-0 ">
-        <!-- <vm-topbar></vm-topbar> -->
+        <vm-topbar></vm-topbar>
         <div class="flex dock">
             <ul class="tabbars-u justify-between justify-center flex-row flex rounded-none border-gray-400 bg-opacity-20 bg-white blur"
                 @mousemove="tabbarMove" @mouseout="tabbarMouseout">
@@ -33,17 +33,13 @@
 
 <script setup>
     import { reactive, computed, getCurrentInstance } from "vue";
-    // import { useStore } from 'vuex';
-    // const store = useStore();
     import { useSystemStore } from "@/store/system.js";
-    // import vmTopbar from "@/components/topbar/index.vue";
+    const systemStore = useSystemStore();
+    import vmTopbar from "@/components/topbar/index.vue";
     import APPSCONFIG from "./apps-config";
     import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config.js";
     const { proxy } = getCurrentInstance();
-    const systemStore = useSystemStore();
 
-    console.log('systemStore',systemStore.aa);
-    
     const TABABR_NAVIGATIONS = computed( () => systemStore.TABABR_NAVIGATION);
     const TABABR_LIST_WIDTH = reactive(Array(systemStore.TABABR_NAVIGATION.length).fill(50));
     const APPS_COMPONENT = APPSCONFIG.appsComponent;
@@ -83,8 +79,7 @@
     }
     function openWindows(dock){
         const appsIndex = TABABR_NAVIGATIONS.value.findIndex( app => app.id === dock.id);
-        // store.commit(SET_TABABR_NAVIGATION, { _index:appsIndex, dockData:{ desktop:true, isMinimize:false } });
-        // store.commit(SET_WINDOW_ID,dock.id);
+        systemStore[SET_TABABR_NAVIGATION]({ _index:appsIndex, dockData:{ desktop:true, isMinimize:false } })
         const undevelopedAppsIndex = [0,1];
         if( undevelopedAppsIndex.includes(appsIndex) ){
             proxy.$message.error({

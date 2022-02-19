@@ -25,9 +25,15 @@
 </template>
 
 <script setup>
-    import { reactive, ref, nextTick } from "vue";
+    import { reactive, ref, nextTick, watch } from "vue";
     const props = defineProps({
         MessageList:Array
+    })
+    watch(props.MessageList, () =>{
+        nextTick( () =>{
+            const chatroomAreaDom = chatroomArea.value;
+            chatroomAreaDom.scrollTop = chatroomAreaDom.scrollHeight;
+        })
     })
     const emit = defineEmits(['newMessage'])
     let mes_text = ref(null)

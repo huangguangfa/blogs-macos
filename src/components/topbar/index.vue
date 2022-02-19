@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-    // import { useStore } from "vuex";
+    
     import { computed } from "vue";
     import VmAbout from "./components/About.vue";
     import VmElectricity from "./components/Electricity.vue";
@@ -22,10 +22,11 @@
     import VmSearch from "./components/Search.vue";
     import VmControlcenter from "./components/Controlcenter.vue";
     import VmGlobalSearch from "@/components/search/index.vue";
+    import { useSystemStore } from "@/store/system.js";
+    const systemStore = useSystemStore();
 
-    // const store = useStore();
-    // const FULLSCREENBAR = computed( () => store.getters.FULLSCREENBAR )
-    // const STARTGLOBALSEARCH = computed( () => store.getters.STARTGLOBALSEARCH)
+    const FULLSCREENBAR = computed( () => systemStore.FULLSCREENBAR )
+    const STARTGLOBALSEARCH = computed( () => systemStore.STARTGLOBALSEARCH)
 </script>
 
 <style lang="less">
