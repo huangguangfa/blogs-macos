@@ -11,7 +11,7 @@
     const systemStore = useSystemStore();
     function startGlobalSearch(){
         const status = systemStore.STARTGLOBALSEARCH;
-        systemStore(SET_START_GLOBAL_SEARCH)(!status)
+        systemStore[SET_START_GLOBAL_SEARCH](!status)
     }
     function globalKeyup(e){
         const { code } = e;
