@@ -2,25 +2,29 @@
   "name": "blogs-macos",
   "version": "0.0.0",
   "scripts": {
-    "start": "vite",
-    "buildVite": "vite build",
     "serve": "vite preview",
-    "build": "sh build.sh"
+    "build": "sh build.sh",
+    "buildVite": "vite build",
+    "start": "vite"
   },
-  "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
     "less": "2.7.3",
     "less-loader": "^10.0.1",
     "pinia": "^2.0.11",
     "vue": "^3.2.30",
+    "vue-class-component": "^8.0.0-0",
     "vue-router": "4",
     "vuex": "^4.0.2",
     "xterm": "^4.13.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.5",
+    "@vue/cli-plugin-typescript": "~4.5.15",
+    "@vue/cli-service": "^5.0.1",
     "@vue/compiler-sfc": "^3.2.30",
+    "typescript": "~4.1.5",
     "vite": "^2.4.3"
-  }
+  },
+  "license": "ISC"
 }

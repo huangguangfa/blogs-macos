@@ -1,15 +1,18 @@
-export function addEvents(events) {
-    events.forEach((cb, eventName) => {
+type Events = { [Key:string]: Function }
+
+export function addEvents(events: Array<Events>) {
+    events?.forEach( (cb, eventName) => {
         document.documentElement.addEventListener(eventName, cb);
-    });
+    })
 }
+
 export function removeEvents(events) {
     events && events.forEach((cb, eventName) => {
         document.documentElement.removeEventListener(eventName, cb);
     });
 }
 
-export function getByIdDom(id){
+export function getByIdDom(id:string){
     return document.getElementById(id)
 }
 

@@ -4,7 +4,13 @@ import App from './views/app.vue';
 import routes from "./router";
 import { initGlobalMethods } from "./plugins/index";
 
-const app = createApp(App);
-app.use(routes).use(createPinia())
-initGlobalMethods(app);
-app.mount('#app')
+
+
+function bootstrap() {
+    const app = createApp(App);
+    app.use(routes).use(createPinia());
+    initGlobalMethods(app);
+    app.mount('#app');
+}
+
+bootstrap()

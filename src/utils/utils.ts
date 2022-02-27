@@ -1,8 +1,8 @@
 
 //获取随机手机号
-export function getRandomMoble() {
+export function getRandomMoble(): string {
     let prefixArray = new Array("130", "131", "132", "133", "135", "137", "138", "170", "187", "189");
-    let i = parseInt(10 * Math.random());
+    let i = Math.floor(10 * Math.random());
     let prefix = prefixArray[i];
     for (let j = 0; j < 8; j++) {
         prefix = prefix + Math.floor(Math.random() * 10);
@@ -14,7 +14,7 @@ export function getRandomMoble() {
 /*
 *@param Number NameLength 随机获取名字
 */
-export function getRandomName() {
+export function getRandomName(): string {
     let index = Math.floor(Math.random() * (136 - 0)) + 0;
     let names = [
         "宋江","卢俊义","吴用","公孙胜","关胜",
@@ -52,8 +52,13 @@ export function getRandomuAvatar(){
     return `https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/generateAvatar/${index}.png`
 }
 
-export function deepClone(source) {
-    const targetObj = source.constructor === Array ? [] : {}; 
+/*
+* methods 深拷贝
+*@param source 拷贝对象
+*/
+type _typeObj = { [anyKey: string]: any }
+export function deepClone(source: _typeObj ): _typeObj {
+    const targetObj: _typeObj = source.constructor === Array ? [] : {}; 
     for (let keys in source) { 
         if (source[keys] && typeof source[keys] === 'object') { 
             targetObj[keys] = deepClone(source[keys]);
@@ -65,13 +70,13 @@ export function deepClone(source) {
 }
 
 // 生成随机数
-export const randomNum = function(minNum,maxNum){ 
+export const randomNum = function(minNum: number, maxNum: number):number{ 
     switch(arguments.length){ 
         case 1: 
-            return parseInt(Math.random()*minNum+1,10); 
+            return Math.floor(Math.random()*minNum+1); 
         break; 
         case 2: 
-            return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
+            return Math.floor(Math.random()*(maxNum-minNum+1)+minNum); 
         break; 
             default: 
                 return 0; 
