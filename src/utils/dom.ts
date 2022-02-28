@@ -18,10 +18,11 @@ export function getByIdDom(id:string){
 
 /* 绑定事件 */
 export const on = (function() {
-    if (document.addEventListener) {
+    let eventTarget:HTMLBaseElement = document.addEventListener
+    if (eventTarget) {
         return function(element, event, handler) {
             if (element && event && handler) {
-                element.addEventListener(event, handler, false);
+                eventTarget(event, handler, false);
             }
         };
     } else {

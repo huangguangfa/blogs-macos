@@ -1,25 +1,25 @@
 
-export default class EventBus{
-    listeners:{
-        [Key: string]: Function[] 
+export default class EventBus {
+    listeners: {
+        [Key: string]: Function[]
     }
-    constructor(){
+    constructor() {
         this.listeners = {};
     }
-    $on(key: string, fn: Function): void{
-        if( !this.listeners[key] ) this.listeners[key] = [];
+    $on(key: string, fn: Function): void {
+        if (!this.listeners[key]) this.listeners[key] = [];
         this.listeners[key].push(fn);
     }
-    
-    $emit(key: string,data: any): void{
-        if(this.listeners[key]){
-            this.listeners[key]?.forEach( (fn:Function) => fn(data) );
+
+    $emit(key: string, data: any): void {
+        if (this.listeners[key]) {
+            this.listeners[key]?.forEach((fn: Function) => fn(data));
         }
     }
 
-    $off(key: string, fns: Function){
-        if( this.listeners[key] ){
-            this.listeners[key] = this.listeners[key]?.filter( fn => fn !== fns);
+    $off(key: string, fns: Function) {
+        if (this.listeners[key]) {
+            this.listeners[key] = this.listeners[key]?.filter(fn => fn !== fns);
         }
     }
 }
