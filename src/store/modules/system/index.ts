@@ -6,6 +6,11 @@ import {
 } from "@/config/dock.config";
 
 import {
+    SYSTEM_CONFIG_TYPE,
+    TABABR_MINIMIZE_TYPE
+} from "./types"
+
+import {
     SET_WINDOW_ID,
     SET_FULL_SCREENBAR,
     SET_START_GLOBAL_SEARCH,
@@ -19,7 +24,7 @@ export const useSystemStore = defineStore({
     id: "system-store",
     state: () => {
         return {
-            windowId: null,
+            windowId: '',
             fullscreenbar: false, //是否全屏以及显示bar和最顶部topbar
             startGlobalSearch: false,  //开启全局搜索
             tabbarNavigation: TABABR_NAVIGATION,
@@ -41,28 +46,29 @@ export const useSystemStore = defineStore({
         GLOABL_SOCKET_DATA: state => state.globalSocketData
     },
     actions: {
-        [SET_WINDOW_ID](id: string) {
+        [SET_WINDOW_ID](id: string): void {
             this.windowId = id;
         },
-        [SET_FULL_SCREENBAR](status) {
+        [SET_FULL_SCREENBAR](status: boolean): void {
             this.fullscreenbar = status;
         },
-        [SET_START_GLOBAL_SEARCH](status) {
+        [SET_START_GLOBAL_SEARCH](status: boolean): void {
             this.startGlobalSearch = status;
         },
-        [SET_TABABR_MINIMIZE](list) {
-            this.TABABR_MINIMIZE = list;
+        [SET_TABABR_MINIMIZE](list: []): void {
+            this.tabbarMinimize = list;
         },
-        [SET_TABABR_NAVIGATION]({ _index, dockData }) {
+        [SET_TABABR_NAVIGATION]({ _index, dockData }:TABABR_MINIMIZE_TYPE): void {
             for (let key in dockData) {
-                let value = dockData[key]
-                this.tabbarNavigation[_index][key] = value;
+                let value = dockData[key];
+                let appInfo:{ [key:string]:any } = this.tabbarNavigation[_index];
+                appInfo[key] = value;
             }
         },
-        [SET_SYSTEM_CONFIG](data:{ [Key:string]:any }) {
+        [SET_SYSTEM_CONFIG](data: SYSTEM_CONFIG_TYPE): void {
             this.systemConfig = data;
         },
-        [SET_GLOABL_SOCKET_DATA](data) {
+        [SET_GLOABL_SOCKET_DATA](data: { [key: string]: any }): void {
             this.globalSocketData = data;
         }
     }
