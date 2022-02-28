@@ -4,9 +4,6 @@
     </div>
 </template>
 
-<script lang="ts" setup>
-  
-</script>
 <style lang="less">
     .gf-blogs-macos{
         width: 100vw;

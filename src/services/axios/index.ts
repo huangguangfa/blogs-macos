@@ -20,11 +20,11 @@ const onsend = req => {
 }
 
 const onsuccess = res => {
-    if (res.status !== 200) {  throw res.status }
-    if( res.headers['content-disposition'] ){
+    if (res.status !== 200) { throw res.status }
+    if (res.headers['content-disposition']) {
         return {
-            data:res.data,
-            fileName:res.headers['content-disposition'] || ''
+            data: res.data,
+            fileName: res.headers['content-disposition'] || ''
         }
     }
     return res.data;
@@ -36,7 +36,7 @@ const onerror = e => {
         Code: -1,
         Message: '请求失败'
     }
-    if (info.includes('Network Error')){
+    if (info.includes('Network Error')) {
         err.Message = '网络错误'
     }
     else if (info.includes('timeout of')) {
@@ -50,10 +50,10 @@ window.Promise.prototype.done = done;
 service.interceptors.request.use(onsend);
 service.interceptors.response.use(onsuccess, onerror);
 
-export const $get = (url, params) => service.get(url, { params })
-export const $put =  (url, o) => service.put(url, o)
+export const $get = (url: string, params?: { [key: string]: any }) => service.get(url, { params })
+export const $put = (url, o) => service.put(url, o)
 export const $post = (url, o) => service.post(url, o)
 export const $patch = (url, o) => service.patch(url, o)
 export const $form = (url, o) => service.post(url, o)
 export const $auth = (url, o) => service.post(url, o, { responseType: 'blob' })
-export const $uploadPost = (url,o,fn) => service.post(url, o,{ headers: {'Content-Type': 'multipart/form-data',},onUploadProgress:fn })
+export const $uploadPost = (url, o, fn) => service.post(url, o, { headers: { 'Content-Type': 'multipart/form-data', }, onUploadProgress: fn })

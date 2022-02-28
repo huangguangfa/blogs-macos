@@ -1,6 +1,6 @@
 export default class ContinuousEvent {
     flagNameList: {
-        [key: string]: NodeJS.Timeout
+        [key: string]: any
     }
     constructor() {
         this.flagNameList = {};
