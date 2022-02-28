@@ -6,9 +6,9 @@ import {
 	TextureLoader,
 	UVMapping,
 	sRGBEncoding
-} from '../../three.module.js';
-import { MD2Loader } from '../loaders/MD2Loader.js';
-import { MorphBlendMesh } from './MorphBlendMesh.js';
+} from '../../three.module';
+import { MD2Loader } from '../loaders/MD2Loader';
+import { MorphBlendMesh } from './MorphBlendMesh';
 
 class MD2CharacterComplex {
 

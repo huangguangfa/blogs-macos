@@ -44,8 +44,8 @@
 
 <script setup>
     import { ref, watch, reactive, computed, getCurrentInstance  } from "vue";
-    import { deepClone } from "@/utils/utils.js";
-    import SkyRTC from "./hooks/webrtc.js";
+    import { deepClone } from "@/utils/utils";
+    import SkyRTC from "./hooks/webrtc";
     import vmChatroom from "./chatroom.vue";
     import vmActiveUser from "./activeUser.vue";
     import vmGetUser from "../../locks/index.vue";

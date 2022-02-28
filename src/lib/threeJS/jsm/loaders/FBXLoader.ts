@@ -40,9 +40,9 @@ import {
 	Vector4,
 	VectorKeyframeTrack,
 	sRGBEncoding
-} from '../../three.module.js';
-import * as fflate from '../../libs/fflate.module.js';
-import { NURBSCurve } from '../../curves/NURBSCurve.js';
+} from '../../three.module';
+import * as fflate from '../../libs/fflate.module';
+import { NURBSCurve } from '../../curves/NURBSCurve';
 
 /**
  * Loader loads FBX file and generates Group representing FBX scene.

@@ -1,9 +1,9 @@
-import { CssTheme } from '@/utils/cssTheme.js';
+import { CssTheme } from '@/utils/cssTheme';
 import { initGlobalComponent } from "@/components/index";
 import { initGlobalDirectives } from "@/directives/index";
-import { initScoket } from "@/services/api/sockets.js";
+import { initScoket } from "@/services/api/sockets";
 import EventBus from "@/utils/event-bus";
-import ContinuousEvent from "@/utils/continuousEvent.js";
+import ContinuousEvent from "@/utils/continuousEvent";
 export function initGlobalMethods( app ){
     // 初始化换肤方法
     app.config.globalProperties.$theme = new CssTheme();

@@ -14,7 +14,7 @@
 
 <script setup>
     import vmlogin from "../../locks/index.vue";
-    import { logins } from "@/services/api/user-api.js";
+    import { logins } from "@/services/api/user-api";
     import { ref, getCurrentInstance } from "vue";
     const props = defineProps({
         appInfo:Object

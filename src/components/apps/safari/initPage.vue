@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-    import { initPageConfig } from "./conifg.js"
+    import { initPageConfig } from "./conifg"
     const emit = defineEmits(['dispatchNewWeb'])
     //methods
     function dispatchNewWeb(data,index){

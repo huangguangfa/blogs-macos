@@ -11,20 +11,20 @@
 
 <script setup>
     import { nextTick, onMounted, ref, watch, onUnmounted, reactive } from "vue";
-    import * as THREE from "@/lib/threeJS/three.module.js";
-    import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls.js';
-    import { MD2CharacterComplex } from '@/lib/threeJS/jsm/misc/MD2CharacterComplex.js';
-	import { FBXLoader } from "@/lib/threeJS/jsm/loaders/FBXLoader.js"
-	import { GLTFLoader } from '@/lib/threeJS/jsm/loaders/GLTFLoader.js';
-    import { Gyroscope } from "@/lib/threeJS/jsm/misc/Gyroscope.js";
-    import { PointerLockControls } from '@/lib/threeJS/jsm/controls/PointerLockControls.js';
+    import * as THREE from "@/lib/threeJS/three.module";
+    import { OrbitControls } from '@/lib/threeJS/jsm/controls/OrbitControls';
+    import { MD2CharacterComplex } from '@/lib/threeJS/jsm/misc/MD2CharacterComplex';
+	import { FBXLoader } from "@/lib/threeJS/jsm/loaders/FBXLoader"
+	import { GLTFLoader } from '@/lib/threeJS/jsm/loaders/GLTFLoader';
+    import { Gyroscope } from "@/lib/threeJS/jsm/misc/Gyroscope";
+    import { PointerLockControls } from '@/lib/threeJS/jsm/controls/PointerLockControls';
 	// 模型选中发光 start-------
-	import { EffectComposer } from '@/lib/threeJS/jsm/postprocessing/EffectComposer.js';
-	import { RenderPass } from '@/lib/threeJS/jsm/postprocessing/RenderPass.js';
-	import { OutlinePass } from '@/lib/threeJS/jsm/postprocessing/OutlinePass.js';
-	import { ShaderPass } from '@/lib/threeJS/jsm/postprocessing/ShaderPass.js';
-	import { FXAAShader } from '@/lib/threeJS/jsm/shaders/FXAAShader.js';
-	import { AfterimagePass } from '@/lib/threeJS/jsm/postprocessing/AfterimagePass.js';
+	import { EffectComposer } from '@/lib/threeJS/jsm/postprocessing/EffectComposer';
+	import { RenderPass } from '@/lib/threeJS/jsm/postprocessing/RenderPass';
+	import { OutlinePass } from '@/lib/threeJS/jsm/postprocessing/OutlinePass';
+	import { ShaderPass } from '@/lib/threeJS/jsm/postprocessing/ShaderPass';
+	import { FXAAShader } from '@/lib/threeJS/jsm/shaders/FXAAShader';
+	import { AfterimagePass } from '@/lib/threeJS/jsm/postprocessing/AfterimagePass';
 	// 模型选中发光 end -------
     import rasslightBig from "@/lib/threeJS/textures/grasslight-big.jpg";
     const MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;

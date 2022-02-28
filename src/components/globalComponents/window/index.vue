@@ -50,11 +50,11 @@
 
 <script setup>
     import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
-    import { useSystemStore } from "@/store/system.js";
+    import { useSystemStore } from "@/store/system";
     const systemStore = useSystemStore();
-    import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_NAVIGATION } from "@/config/store.config.js";
+    import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_NAVIGATION } from "@/config/store.config";
     import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";
-    import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config.js";
+    import { initWindowStaus, mouseups, documentMoves, statusList, windowTbarConfig } from "./hooks/config";
     import { propsOption } from "./props";
     const props = defineProps(propsOption);
     const emit = defineEmits(['windowId', 'eventMousemove', 'change', 'windowSize']);

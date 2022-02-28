@@ -98,14 +98,14 @@ export const TABABR_NAVIGATION = [
         _index:8,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/blogs.png"
     },
-    {
-        id: "MyHome",
-        title: "MyHome",
-        desktop: false,
-        isMinimize:false,
-        _index:9,
-        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
-    },
+    // {
+    //     id: "MyHome",
+    //     title: "MyHome",
+    //     desktop: false,
+    //     isMinimize:false,
+    //     _index:9,
+    //     img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
+    // },
     {
         id: "fcwUI",
         title: "fcwUI",

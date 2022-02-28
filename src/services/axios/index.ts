@@ -1,4 +1,4 @@
-import { serviceHost } from '@/config/service.config.js';
+import { serviceHost } from '@/config/service.config';
 import axios from "axios";
 const service = axios.create({
     baseURL: serviceHost,

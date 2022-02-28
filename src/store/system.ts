@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { 
     TABABR_NAVIGATION, 
     TABABR_MINIMIZE 
-} from "@/config/dock.config.js";
+} from "@/config/dock.config";
 
 import {
     SET_WINDOW_ID,
@@ -13,7 +13,7 @@ import {
     SET_SYSTEM_CONFIG,
     SET_TABABR_MINIMIZE,
     SET_GLOABL_SOCKET_DATA,
-} from "@/config/store.config.js";
+} from "@/config/store.config";
 
 export const useSystemStore = defineStore({
     id:"system-store",

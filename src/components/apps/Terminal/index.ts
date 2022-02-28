@@ -1,5 +1,5 @@
 import { Terminal } from 'xterm';
-import { getTtermId } from "@/services/api/xterm.js"
+import { getTtermId } from "@/services/api/xterm"
 import { AttachAddon } from "./xterm-addon-attach";
 const xtermConfig = {
     cols: 92,

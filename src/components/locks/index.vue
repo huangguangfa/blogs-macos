@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-    import { getRandomMoble, getRandomName, getRandomuAvatar } from "@/utils/utils.js"
+    import { getRandomMoble, getRandomName, getRandomuAvatar } from "@/utils/utils"
     import { reactive } from 'vue';
     import { propsOptions } from "./props"
     const props = defineProps(propsOptions);

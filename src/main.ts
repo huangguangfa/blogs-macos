@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from "pinia";
 import App from './views/app.vue';
-import routes from "./router";
+import routes from "./router/index";
 import { initGlobalMethods } from "./plugins/index";
 
 

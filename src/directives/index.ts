@@ -1,4 +1,4 @@
-import clickoutside from "./clickoutside.js"
+import clickoutside from "./clickoutside"
 
 export function initGlobalDirectives(app){
     let directivesList = {

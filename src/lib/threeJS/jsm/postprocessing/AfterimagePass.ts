@@ -6,9 +6,9 @@ import {
 	ShaderMaterial,
 	UniformsUtils,
 	WebGLRenderTarget
-} from '../../three.module.js';
-import { Pass, FullScreenQuad } from './Pass.js';
-import { AfterimageShader } from '../shaders/AfterimageShader.js';
+} from '../../three.module';
+import { Pass, FullScreenQuad } from './Pass';
+import { AfterimageShader } from '../shaders/AfterimageShader';
 
 class AfterimagePass extends Pass {
 

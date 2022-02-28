@@ -25,7 +25,7 @@
     import { AttachAddon } from "./xterm-addon-attach";
     import { FitAddon } from "./FitAddon";
     import vmlogin from "../../locks/index.vue";
-    import { logins } from "@/services/api/user-api.js"
+    import { logins } from "@/services/api/user-api"
     const props = defineProps({
         appInfo:Object
     })

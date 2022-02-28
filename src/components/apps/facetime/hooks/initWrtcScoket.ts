@@ -1,5 +1,5 @@
-import scoket from "@/services/socket/index.js";
-import { socketHost } from "@/config/service.config.js";
+import scoket from "@/services/socket/index";
+import { socketHost } from "@/config/service.config";
 export function initScoket({uId, uName, uAvatar, isStartCamera}){
     const url = `${socketHost}/scoket/webrtc/user?uId=${uId}&uName=${uName}&uAvatar=${uAvatar}&isStartCamera=${isStartCamera}`
     // const url = `${scoketHost}`

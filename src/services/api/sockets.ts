@@ -1,9 +1,9 @@
-import { SET_GLOABL_SOCKET_DATA } from "@/config/store.config.js";
-import socket from "@/services/socket/index.js";
-import { socketHost } from "@/config/service.config.js";
-import { getTemporaryUser } from "@/services/api/user-api.js";
-import { useSystemStore } from "@/store/system.js";
-let systemStore = null
+import { SET_GLOABL_SOCKET_DATA } from "@/config/store.config";
+import socket from "@/services/socket/index";
+import { socketHost } from "@/config/service.config";
+import { getTemporaryUser } from "@/services/api/user-api";
+import { useSystemStore } from "@/store/system";
+let systemStore:unknown = null
 export async function initScoket(){
     const { result } = await getTemporaryUser();
     sessionStorage.setItem('userId',`/ws/${result.userId}`)

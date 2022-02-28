@@ -52,8 +52,8 @@
 <script setup>
     import { reactive, computed, onUnmounted, onMounted } from "vue";
     import { handleFullScreen } from "@/utils/index";
-    import { SET_SYSTEM_CONFIG } from "@/config/store.config.js"
-    import { useSystemStore } from "@/store/system.js";
+    import { SET_SYSTEM_CONFIG } from "@/config/store.config"
+    import { useSystemStore } from "@/store/system";
     const systemStore = useSystemStore();
     let intervalId = null;
     let dates = reactive({
