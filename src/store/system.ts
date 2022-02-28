@@ -19,26 +19,16 @@ export const useSystemStore = defineStore({
     id:"system-store",
     state: () => {
         return {
-            // WINDOWID:null,   //当前窗口ID
             windowId:null,
-            // FULLSCREENBAR:false, //是否全屏以及显示bar和最顶部topbar
-            fullscreenbar:false,
-            // STARTGLOBALSEARCH:false , //开启全局搜索
-            startGlobalSearch:false,
-            // TABABR_NAVIGATION:TABABR_NAVIGATION,
+            fullscreenbar:false, //是否全屏以及显示bar和最顶部topbar
+            startGlobalSearch:false,  //开启全局搜索
             tabbarNavigation:TABABR_NAVIGATION,
-            // TABABR_MINIMIZE,  // 当前系统最小化窗口列表、存放的是窗口ID
-            tabbarMinimize:TABABR_MINIMIZE,
-            // SYSTEM_CONFIG:{  //系统配置
-            //     isFullscreen:false, //是否全屏
-            //     isShowControlcenter:false, //显示控制
-            // },
+            tabbarMinimize:TABABR_MINIMIZE, // 当前系统最小化窗口列表、存放的是窗口ID
             systemConfig:{
                 isFullscreen:false, //是否全屏
                 isShowControlcenter:false, //显示控制
             },
-            // GLOABL_SOCKET_DATA:{}, // 全局socket消息
-            globalSocketData:{}
+            globalSocketData:{} // 全局socket消息
         }
     },
     getters:{
@@ -51,7 +41,7 @@ export const useSystemStore = defineStore({
         GLOABL_SOCKET_DATA :state => state.globalSocketData
     },
     actions:{
-        [SET_WINDOW_ID](id) {
+        [SET_WINDOW_ID](id:string) {
             this.windowId = id;
         },
         [SET_FULL_SCREENBAR](status){
