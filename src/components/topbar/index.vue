@@ -22,7 +22,7 @@
     import VmSearch from "./components/Search.vue";
     import VmControlcenter from "./components/Controlcenter.vue";
     import VmGlobalSearch from "@/components/search/index.vue";
-    import { useSystemStore } from "@/store/system";
+    import { useSystemStore } from "@/store/index";
     const systemStore = useSystemStore();
 
     const FULLSCREENBAR = computed( () => systemStore.FULLSCREENBAR )

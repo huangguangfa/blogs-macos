@@ -2,7 +2,7 @@ import { SET_GLOABL_SOCKET_DATA } from "@/config/store.config";
 import socket from "@/services/socket/index";
 import { socketHost } from "@/config/service.config";
 import { getTemporaryUser } from "@/services/api/user-api";
-import { useSystemStore } from "@/store/system";
+import { useSystemStore } from "@/store/index";
 let systemStore:unknown = null
 export async function initScoket(){
     const { result } = await getTemporaryUser();

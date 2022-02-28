@@ -30,7 +30,7 @@
 <script setup>
     import { ref, getCurrentInstance, onUnmounted, onMounted } from 'vue';
     import { SET_START_GLOBAL_SEARCH, SET_TABABR_NAVIGATION, SET_WINDOW_ID  } from "@/config/store.config";
-    import { useSystemStore } from "@/store/system";
+    import { useSystemStore } from "@/store/index";
     const systemStore = useSystemStore();
 
     const { proxy } = getCurrentInstance();

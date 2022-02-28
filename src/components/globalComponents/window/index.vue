@@ -50,7 +50,7 @@
 
 <script setup>
     import { onMounted, reactive, onUnmounted, watch, nextTick, computed, ref } from 'vue';
-    import { useSystemStore } from "@/store/system";
+    import { useSystemStore } from "@/store/index";
     const systemStore = useSystemStore();
     import { SET_WINDOW_ID, SET_FULL_SCREENBAR, SET_TABABR_NAVIGATION } from "@/config/store.config";
     import { addEvents, removeEvents, getByIdDom } from "@/utils/dom";

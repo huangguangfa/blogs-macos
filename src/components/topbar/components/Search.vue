@@ -7,7 +7,7 @@
     import { getCurrentInstance, onUnmounted } from "vue";
     import { SET_START_GLOBAL_SEARCH } from "@/config/store.config";
     const { proxy } = getCurrentInstance();
-    import { useSystemStore } from "@/store/system";
+    import { useSystemStore } from "@/store/index";
     const systemStore = useSystemStore();
     function startGlobalSearch(){
         const status = systemStore.STARTGLOBALSEARCH;

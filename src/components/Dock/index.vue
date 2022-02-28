@@ -33,7 +33,7 @@
 
 <script setup>
     import { reactive, computed, getCurrentInstance } from "vue";
-    import { useSystemStore } from "@/store/system";
+    import { useSystemStore } from "@/store/index";
     const systemStore = useSystemStore();
     import vmTopbar from "@/components/topbar/index.vue";
     import APPSCONFIG from "./apps-config";
