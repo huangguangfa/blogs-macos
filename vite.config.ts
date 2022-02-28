@@ -1,6 +1,10 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-const { resolve } = require('path')
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+const { resolve } = require('path');
+
+function pathResolve(dir: string) {
+    return resolve(process.cwd(), '.', dir);
+}
 
 export default defineConfig({
     resolve:{

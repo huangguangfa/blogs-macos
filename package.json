@@ -19,6 +19,7 @@
     "xterm": "^4.13.0"
   },
   "devDependencies": {
+    "@types/node": "^17.0.21",
     "@vitejs/plugin-vue": "^1.2.5",
     "@vue/cli-plugin-typescript": "~4.5.15",
     "@vue/cli-service": "^5.0.1",
