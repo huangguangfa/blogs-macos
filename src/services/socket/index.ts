@@ -1,47 +1,45 @@
-import { paramsType } from "./types"
-class Socket {
+import { socketType } from "./types";
+
+export default class Socket {
+    [key: string]: any
     /* websocket实例 */
     ws: { [Key: string]: any } = {}
     //连接状态
-    #alive = false
+    #alive: boolean = false
     //把类的参数传入这里，方便调用
     #params: { [Key: string]: any } = {}
-
     //重连计时器
-    #reconnect_timer:number = 0
+    #reconnect_timer: number = 0;
     //心跳计时器
-    #heart_timer:number = 0
+    #heart_timer: number = 0
     // 信息onmessage缓存方法
-    #message_func:undefined | Function
-
+    #message_func: undefined | Function
     //心跳时间 5秒一次
-    heartBeat = 5000
+    heartBeat: number = 5000
     //心跳信息：默认为‘ping’随便改，看后台
-    heartMsg = 'ping'
+    heartMsg: string = 'ping'
     //是否自动重连
-    reconnect = true
+    reconnect: boolean = true
     //重连间隔时间
-    reconnectTime = 5000
+    reconnectTime: number = 5000
     //重连次数
-    reconnectTimes = 10
-
-    constructor(params:{ [Key: string]: any }) {
+    reconnectTimes: number = 10
+    constructor(params: { [Key: string]: any }) {
         this.#params = params
         this.init()
     }
-
     init() {
         clearInterval(this.#reconnect_timer)
         clearInterval(this.#heart_timer)
         //取出所有参数
-        let params = this.#params
+        let params:{[Key:string]:any} = this.#params
         //设置连接路径
         let { url, port } = params;
-        let global_params = ['heartBeat', 'heartMsg', 'reconnect', 'reconnectTime', 'reconnectTimes']
+        let global_params = ['heartBeat', 'heartMsg', 'reconnect', 'reconnectTime', 'reconnectTimes'];
         //定义全局变量
-        Object.keys(params).forEach(key => {
+        Object.keys(params).forEach((key: string) => {
             if (global_params.indexOf(key) !== -1) {
-                this[key] = params[key];
+                this[key] = params[key]
             }
         })
         let ws_url = port ? url + ':' + port : url
@@ -73,23 +71,20 @@ class Socket {
         //在连接状态下
         if (true == this.#alive) {
             /* 心跳计时器 */
-            this.#heart_timer = setInterval(() => {
+            this.#heart_timer = window.setInterval(() => {
                 //发送心跳信息
                 this.send(this.heartMsg)
                 func ? func(this) : false
             }, this.heartBeat)
         }
     }
-
     onreconnect(func?: Function) {
         /* 重连间隔计时器 */
-        this.#reconnect_timer = setInterval(() => {
+        this.#reconnect_timer = window.setInterval(() => {
             //限制重连次数
             if (this.reconnectTimes <= 0) {
                 //关闭定时器
-                // this.#isReconnect = false
                 clearInterval(this.#reconnect_timer)
-                //跳出函数之间的循环
                 return;
             } else {
                 //重连一次-1
@@ -97,7 +92,7 @@ class Socket {
             }
             //进入初始状态
             this.init()
-            func ? func(this) : false
+            func && func(this)
         }, this.reconnectTime)
     }
     send(data: string | { [Key: string]: any }) {
@@ -106,7 +101,6 @@ class Socket {
             this.ws?.send(data)
         }
     }
-
     close() {
         if (true == this.#alive) {
             this.ws?.close()
@@ -116,21 +110,20 @@ class Socket {
         }
     }
     onmessage(func?: Function, all = false) {
-        this.ws.onmessage = (data:{[Key:string]:any}) => {
+        this.ws.onmessage = (data: { [Key: string]: any }) => {
             this.#message_func = func
             func && func(!all ? data.data : data)
         }
     }
-
     onopen(func?: Function) {
-        this.ws.onopen = (event?:string) => {
+        this.ws.onopen = (event?: string) => {
             this.#alive = true;
             this.onheartbeat();
-            func ? func(event) : false
+            func && func(event)
         }
     }
     onclose(func?: Function) {
-        this.ws.onclose = (event:string) => {
+        this.ws.onclose = (event: string) => {
             //设置状态为断开
             this.#alive = false
             clearInterval(this.#heart_timer)
@@ -139,14 +132,12 @@ class Socket {
                 /* 断开后立刻重连 */
                 this.onreconnect()
             }
-            func ? func(event) : false
+            func && func(event)
         }
     }
     onerror(func?: Function) {
-        this.ws.onerror = (event:string) => {
-            func ? func(event) : false
+        this.ws.onerror = (event: string) => {
+            func && func(event)
         }
     }
 }
-
-export default Socket;
