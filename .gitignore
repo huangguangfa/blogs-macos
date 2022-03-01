@@ -43,6 +43,8 @@ blogs-macos/
 jspm_packages/
 .idea/
 .vscode/
+.test_s/
+
 
 # TypeScript v1 declaration files
 typings/
