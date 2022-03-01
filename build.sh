@@ -11,9 +11,9 @@ echo "\033[35m 当前分支是：${branch} \033[0m"
 
 #打包
 function build() {
-    echo "\033[32m 正在打包！！！ \033[0m" 
+    echo "\033[32m 正在打包... \033[0m" 
     yarn buildVite 
-    echo "\033[32m $1打包成功！！！" 
+    echo "\033[32m $1打包成功..." 
 }
 #上传服务器
 function upload() {
