@@ -1,18 +1,33 @@
+import type {
+    DirectiveBinding,
+    ObjectDirective,
+} from 'vue'
 import { on } from '@/utils/dom';
 
-const nodeList = [];
+type clickoutsideContextType = HTMLElement & {    
+    "@@clickoutsideContext":{
+        methodName:string,
+        id:number,
+        documentHandler:Function,
+    }
+}
+
+
+const nodeList:{[Key:string]:any}[] = [];
 const ctx = '@@clickoutsideContext';
-let startClick;
+let startClick:MouseEvent;
 let seed = 0;
 
-on(document, 'mousedown', e => (startClick = e));
+on(document, 'mousedown', (e:MouseEvent) => (startClick = e));
 
-on(document, 'mouseup', e => {
+on(document, 'mouseup', (e:MouseEvent) => {
     nodeList.forEach(node => node[ctx].documentHandler(e, startClick));
 });
 
-function createDocumentHandler(el, binding, vnode) {
-    return function(mouseup = {}, mousedown = {}) {
+
+
+function createDocumentHandler(el:clickoutsideContextType, binding:DirectiveBinding, vnode:ObjectDirective) : Function {
+    return function(mouseup:MouseEvent, mousedown:MouseEvent) {
         if (!vnode ||
             !mouseup.target ||
             !mousedown.target ||
@@ -38,7 +53,7 @@ function createDocumentHandler(el, binding, vnode) {
  * ```
  */
 export default {
-    mounted(el, binding, vnode) {
+    mounted(el:clickoutsideContextType, binding:DirectiveBinding, vnode:ObjectDirective) {
         try{
             nodeList.push(el);
             const id = seed++;
@@ -53,12 +68,12 @@ export default {
         }
         
     },
-    updated(el, binding, vnode) {
+    updated(el:clickoutsideContextType, binding:DirectiveBinding, vnode:ObjectDirective) {
         el[ctx].documentHandler = createDocumentHandler(el, binding, vnode);
         el[ctx].methodName = binding.expression;
         el[ctx].bindingFn = binding.value;
     },
-    unmounted(el) {
+    unmounted(el:HTMLElement) {
         let len = nodeList.length;
         for (let i = 0; i < len; i++) {
             if (nodeList[i][ctx].id === el[ctx].id) {
