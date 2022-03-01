@@ -5,7 +5,6 @@ import routes from "./router/index";
 import { initGlobalMethods } from "./plugins/index";
 
 
-
 function bootstrap() {
     const app = createApp(App);
     app.use(routes).use(piniaStore).mount('#app');

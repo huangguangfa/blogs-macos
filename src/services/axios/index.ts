@@ -6,11 +6,6 @@ const service = axios.create({
     validateStatus: x => x === 200
 })
 
-const done = function (h:Promise<any>) {
-    return this.then(h).catch(({ code, msg }:{code:number, msg:string}) => {
-        console.error('请求错误啦 =>', code, msg)
-    })
-}
 
 const onsend = (req:{[Key:string]:any}) => {
     return req;
@@ -47,8 +42,6 @@ const onerror = (e:{[Key:string]:any}) => {
     throw err
 }
 
-Promise.prototype.done = done;
-window.Promise.prototype.done = done;
 service.interceptors.request.use(onsend);
 service.interceptors.response.use(onsuccess, onerror);
 

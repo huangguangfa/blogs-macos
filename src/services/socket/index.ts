@@ -1,4 +1,4 @@
-import { socketType } from "./types";
+import { SocketType } from "./types";
 
 export default class Socket {
     [key: string]: any
@@ -16,7 +16,7 @@ export default class Socket {
     #message_func: undefined | Function
     //心跳时间 5秒一次
     heartBeat: number = 5000
-    //心跳信息：默认为‘ping’随便改，看后台
+    //心跳信息：默认为‘ping’
     heartMsg: string = 'ping'
     //是否自动重连
     reconnect: boolean = true
@@ -28,11 +28,11 @@ export default class Socket {
         this.#params = params
         this.init()
     }
-    init() {
+    init(): void {
         clearInterval(this.#reconnect_timer)
         clearInterval(this.#heart_timer)
         //取出所有参数
-        let params:{[Key:string]:any} = this.#params
+        let params: { [Key: string]: any } = this.#params
         //设置连接路径
         let { url, port } = params;
         let global_params = ['heartBeat', 'heartMsg', 'reconnect', 'reconnectTime', 'reconnectTimes'];
@@ -67,7 +67,7 @@ export default class Socket {
             }
         }
     }
-    onheartbeat(func?: Function) {
+    onheartbeat(func?: Function): void {
         //在连接状态下
         if (true == this.#alive) {
             /* 心跳计时器 */
@@ -78,7 +78,7 @@ export default class Socket {
             }, this.heartBeat)
         }
     }
-    onreconnect(func?: Function) {
+    onreconnect(func?: Function): void {
         /* 重连间隔计时器 */
         this.#reconnect_timer = window.setInterval(() => {
             //限制重连次数
@@ -95,13 +95,13 @@ export default class Socket {
             func && func(this)
         }, this.reconnectTime)
     }
-    send(data: string | { [Key: string]: any }) {
+    send(data: string | { [Key: string]: any }): void {
         if (true == this.#alive) {
             data = typeof data == 'string' ? data : JSON.stringify(data)
             this.ws?.send(data)
         }
     }
-    close() {
+    close(): void {
         if (true == this.#alive) {
             this.ws?.close()
             this.#alive = false
@@ -109,20 +109,20 @@ export default class Socket {
             this.reconnect = false
         }
     }
-    onmessage(func?: Function, all = false) {
+    onmessage(func?: Function, all = false): void {
         this.ws.onmessage = (data: { [Key: string]: any }) => {
             this.#message_func = func
             func && func(!all ? data.data : data)
         }
     }
-    onopen(func?: Function) {
+    onopen(func?: Function): void {
         this.ws.onopen = (event?: string) => {
             this.#alive = true;
             this.onheartbeat();
             func && func(event)
         }
     }
-    onclose(func?: Function) {
+    onclose(func?: Function): void {
         this.ws.onclose = (event: string) => {
             //设置状态为断开
             this.#alive = false
@@ -135,7 +135,7 @@ export default class Socket {
             func && func(event)
         }
     }
-    onerror(func?: Function) {
+    onerror(func?: Function): void {
         this.ws.onerror = (event: string) => {
             func && func(event)
         }
