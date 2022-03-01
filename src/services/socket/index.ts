@@ -1,7 +1,5 @@
-import { SocketType } from "./types";
 
 export default class Socket {
-    [key: string]: any
     /* websocket实例 */
     ws: { [Key: string]: any } = {}
     //连接状态
@@ -39,7 +37,7 @@ export default class Socket {
         //定义全局变量
         Object.keys(params).forEach((key: string) => {
             if (global_params.indexOf(key) !== -1) {
-                this[key] = params[key]
+                (this as {[Key:string]:any})[key] = params[key]
             }
         })
         let ws_url = port ? url + ':' + port : url
