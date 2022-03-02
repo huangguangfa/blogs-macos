@@ -1,5 +1,9 @@
 import apps from "./apps";
-let APPSCONFIG = {
+
+type appsConfigType = {
+    [Key:string]:any
+}
+let APPSCONFIG:appsConfigType = {
     appsComponent:{}
 }
 for( let key in apps ){
