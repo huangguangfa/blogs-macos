@@ -1,7 +1,13 @@
 import apps from "./apps";
-
+import type { ComponentCustomOptions } from "vue"
 type appsConfigType = {
-    [Key:string]:any
+    appsComponent:{
+        [Key:string]:{
+            appsDataIndex:number,
+            appsName:string,
+            appComponent:ComponentCustomOptions
+        }
+    }
 }
 let APPSCONFIG:appsConfigType = {
     appsComponent:{}
