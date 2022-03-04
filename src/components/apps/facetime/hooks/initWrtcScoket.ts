@@ -1,6 +1,14 @@
 import scoket from "@/services/socket/index";
 import { socketHost } from "@/config/service.config";
-export function initScoket({uId, uName, uAvatar, isStartCamera}){
+
+interface initScoketType{
+    uId:number,
+    uName:string,
+    uAvatar:string,
+    isStartCamera:boolean
+}
+
+export function initScoket({uId, uName, uAvatar, isStartCamera}:initScoketType){
     const url = `${socketHost}/scoket/webrtc/user?uId=${uId}&uName=${uName}&uAvatar=${uAvatar}&isStartCamera=${isStartCamera}`
     // const url = `${scoketHost}`
     return new scoket({
