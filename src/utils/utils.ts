@@ -15,8 +15,8 @@ export function getRandomMoble(): string {
 *@param Number NameLength 随机获取名字
 */
 export function getRandomName(): string {
-    let index = Math.floor(Math.random() * (136 - 0)) + 0;
-    let names = [
+    let index: number = Math.floor(Math.random() * (136 - 0)) + 0;
+    let names: string[] = [
         "宋江", "卢俊义", "吴用", "公孙胜", "关胜",
         "林冲", "秦明", "呼延灼", "花荣", "柴进",
         "李应", "朱仝", "鲁智深", "武松", "董平",

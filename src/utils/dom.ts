@@ -1,12 +1,11 @@
-type Events = { [Key:string]: Function }
 
-export function addEvents(events: Array<Events>) {
-    events?.forEach( (cb, eventName) => {
+export function addEvents(events: Map<string,() => {}>) {
+    events?.forEach( (cb, eventName):void => {
         document.documentElement.addEventListener(eventName, cb);
     })
 }
 
-export function removeEvents(events) {
+export function removeEvents(events: Map<string,() => {}>) {
     events && events.forEach((cb, eventName) => {
         document.documentElement.removeEventListener(eventName, cb);
     });
@@ -18,42 +17,26 @@ export function getByIdDom(id:string){
 
 /* 绑定事件 */
 export const on = (function() {
-    let eventTarget:HTMLBaseElement = document.addEventListener
-    if (eventTarget) {
-        return function(element, event, handler) {
-            if (element && event && handler) {
-                eventTarget(event, handler, false);
-            }
-        };
-    } else {
-        return function(element, event, handler) {
-            if (element && event && handler) {
-                element.attachEvent('on' + event, handler);
-            }
-        };
-    }
+    let eventTarget = document.addEventListener
+    return function(element:Document, event:string, handler:any) {
+        if (element && event && handler) {
+            eventTarget(event, handler, false);
+        }
+    };
 })();
 
 /* 解除事件绑定 */
 export const off = (function() {
-    if (document.removeEventListener) {
-        return function(element, event, handler) {
-            if (element && event) {
-                element.removeEventListener(event, handler, false);
-            }
-        };
-    } else {
-        return function(element, event, handler) {
-            if (element && event) {
-                element.detachEvent('on' + event, handler);
-            }
-        };
-    }
+    return function(element:Document, event:string, handler:any) {
+        if (element && event) {
+            element.removeEventListener(event, handler, false);
+        }
+    };
 })();
 
 /* 事件执行1次就被解除 */
-export const once = function(el, event, fn) {
-    var listener = function() {
+export const once = function(el:Document, event:string, fn:Function) {
+    let listener = function() {
         if (fn) {
             fn.apply(this, arguments);
         }
