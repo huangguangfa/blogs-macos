@@ -36,7 +36,7 @@ export const off = (function() {
 
 /* 事件执行1次就被解除 */
 export const once = function(el:Document, event:string, fn:Function) {
-    let listener = function() {
+    let listener = function(this:any) {
         if (fn) {
             fn.apply(this, arguments);
         }
