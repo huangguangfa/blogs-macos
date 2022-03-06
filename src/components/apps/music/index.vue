@@ -35,7 +35,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <!-- 虚化背景 -->
                 <div class="mmPlayer-bg" :style="`background-image: url(${palyConfig.playBg})`"></div>
             </div>

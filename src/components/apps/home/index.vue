@@ -327,15 +327,6 @@
 		}
 	}
 
-
-
-
-
-
-
-
-
-
 	// 事件的绑定
 	const addEvents = () =>{
 		document.addEventListener( 'keydown', onKeyDown );
