@@ -15,6 +15,7 @@ export default {
     },
     setup(props) {
         const change = () =>{
+            console.log('1')
             props.bind.setShow()
         }
 
