@@ -132,8 +132,8 @@ export const TABABR_NAVIGATION = [
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/yuque.png"
     },
     {
-        id: "gf-ui",
-        title: "gf-ui",
+        id: "@gf-ui",
+        title: "@gf-ui",
         desktop: false,
         isMinimize:false,
         _index:13,
