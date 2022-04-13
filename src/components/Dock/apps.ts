@@ -8,7 +8,9 @@ import Blogs from "@/components/apps/blogs/index.vue";
 import Home from "@/components/apps/home/index.vue";
 import NewYear from "@/components/apps/newYear/index.vue";
 import fcwUi from "@/components/apps/fcwUi/index.vue";
-import type { ComponentCustomOptions } from "vue"
+import Yueque from "@/components/apps/yuque/index.vue";
+import GfUI from "@/components/apps/gf-ui/index.vue"
+import type { ComponentCustomOptions } from "vue";
 
 type appsType = {
     [Key:string]:{
@@ -16,7 +18,6 @@ type appsType = {
         index:number
     }
 }
-
 const apps:appsType = {
     'AppFacetime':{
         component:Facetime,
@@ -57,6 +58,14 @@ const apps:appsType = {
     'AppNewYear':{
         component:NewYear,
         index:11
+    },
+    'Yueque':{
+        component:Yueque,
+        index:12
+    },
+    '@gf-ui':{
+        component:GfUI,
+        index:13
     }
 };
 

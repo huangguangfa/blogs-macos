@@ -98,14 +98,14 @@ export const TABABR_NAVIGATION = [
         _index:8,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/blogs.png"
     },
-    // {
-    //     id: "MyHome",
-    //     title: "MyHome",
-    //     desktop: false,
-    //     isMinimize:false,
-    //     _index:9,
-    //     img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
-    // },
+    {
+        id: "MyHome",
+        title: "MyHome",
+        desktop: false,
+        isMinimize:false,
+        _index:9,
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/home.png"
+    },
     {
         id: "fcwUI",
         title: "fcwUI",
@@ -123,14 +123,30 @@ export const TABABR_NAVIGATION = [
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/2022.png"
     },
     {
+        id: "个人羽雀",
+        title: "个人羽雀",
+        desktop: false,
+        isMinimize:false,
+        className:"yuque-icon",
+        _index:12,
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/yuque.png"
+    },
+    {
+        id: "gf-ui",
+        title: "gf-ui",
+        desktop: false,
+        isMinimize:false,
+        _index:13,
+        img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/gf-ui.png"
+    },
+    {
         id: "Trash",
         title: "Trash",
         desktop: false,
         isMinimize:false,
-        _index:12,
+        _index:14,
         img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/trash.png"
-    },
-    
+    }
 ]
 
 // 最小化活动列表

@@ -14,7 +14,7 @@
                     <p class="tabbar-title absolute d-none">{{ item.title }}</p>
                     <div class="dock-items" >
                         <span class="minimizes-mark" v-if="item.isMinimize"></span>
-                        <img class="tabbar-img" :style="dockStyle(index)" @click="openWindows(item)" :src="item.img" :data-index="index">
+                        <img class="tabbar-img" :class="item.className" :style="dockStyle(index)" @click="openWindows(item)" :src="item.img" :data-index="index">
                     </div>
                 </li>
             </ul>
@@ -39,7 +39,6 @@
     import APPSCONFIG from "./apps-config";
     import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config";
     const { proxy } = getCurrentInstance();
-
     const TABABR_NAVIGATIONS = computed( () => systemStore.TABABR_NAVIGATION);
     const TABABR_LIST_WIDTH = reactive(Array(systemStore.TABABR_NAVIGATION.length).fill(50));
     const APPS_COMPONENT = APPSCONFIG.appsComponent;
@@ -120,6 +119,11 @@
                 .dock-items{
                     padding: 0 3px; 
                     position: relative;
+                    .yuque-icon{
+                        width: 45px;
+                        height: 45px;
+                        border-radius: 100%;
+                    }
                     .tabbar-img{ 
                         transition-timing-function: cubic-bezier(0.4, 0, 1, 1); transform-origin: bottom; 
                         transition-duration: .15s;  will-change: width height;
