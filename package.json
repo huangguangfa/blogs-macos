@@ -6,7 +6,8 @@
     "build": "sh build.sh",
     "buildVite": "vite build",
     "start": "vite",
-    "nodes": "node app.js"
+    "nodes": "node app.js",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "axios": "^0.21.1",
