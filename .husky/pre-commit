@@ -1,10 +1,4 @@
-#!/usr/bin/env node
-const childProcess = require('child_process');
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-try {
-    console.log(111)
-  childProcess.execSync('npm run nodes');
-} catch (error) {
-  console.log(error.stdout.toString());
-  process.exit(1);
-}
+npm run nodes
