@@ -4,7 +4,8 @@ import { initGlobalDirectives } from "@/directives/index";
 import { initScoket } from "@/services/api/sockets";
 import EventBus from "@/utils/event-bus";
 import ContinuousEvent from "@/utils/continuousEvent";
-export function initGlobalMethods(app:any) {
+import type { App } from "vue"
+export function initGlobalMethods(app: App) {
     // 初始化换肤方法
     app.config.globalProperties.$theme = new CssTheme();
     // eventBus

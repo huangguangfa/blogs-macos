@@ -1,10 +1,10 @@
 import clickoutside from "./clickoutside"
-
-export function initGlobalDirectives(app:any){
-    let directivesList:{[Key:string]:any} = {
+import type { App } from "vue"
+export function initGlobalDirectives(app: App) {
+    let directivesList: { [Key: string]: any } = {
         clickoutside, //v-clickoutside
     };
-    Object.keys(directivesList).map( (key:string) => {
-        app.directive( key, directivesList[ key ] );
+    Object.keys(directivesList).map((key: string) => {
+        app.directive(key, directivesList[key]);
     })
 }
