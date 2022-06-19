@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
-commit_msg=`cat $1`
-echo "111 $1" 
+echo "111 $0" 
 yarn nodes
