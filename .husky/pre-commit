@@ -2,6 +2,7 @@
 const childProcess = require('child_process');
 
 try {
+    console.log(111)
   childProcess.execSync('npm run nodes');
 } catch (error) {
   console.log(error.stdout.toString());
