@@ -1,6 +1,7 @@
 {
   "name": "blogs-macos",
   "version": "0.0.0",
+  "private": true, 
   "scripts": {
     "serve": "vite preview",
     "build": "sh build.sh",
