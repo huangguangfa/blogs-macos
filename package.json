@@ -5,7 +5,8 @@
     "serve": "vite preview",
     "build": "sh build.sh",
     "buildVite": "vite build",
-    "start": "vite"
+    "start": "vite",
+    "nodes": "node app.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
