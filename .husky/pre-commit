@@ -1,3 +1,9 @@
 #!/usr/bin/env node
+const childProcess = require('child_process');
 
-yarn nodes
+try {
+  childProcess.execSync('npm run nodes');
+} catch (error) {
+  console.log(error.stdout.toString());
+  process.exit(1);
+}
