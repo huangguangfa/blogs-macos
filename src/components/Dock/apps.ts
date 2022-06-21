@@ -9,64 +9,69 @@ import Home from "@/components/apps/home/index.vue";
 import NewYear from "@/components/apps/newYear/index.vue";
 import fcwUi from "@/components/apps/fcwUi/index.vue";
 import Yueque from "@/components/apps/yuque/index.vue";
-import GfUI from "@/components/apps/gf-ui/index.vue"
+import GfUI from "@/components/apps/gf-ui/index.vue";
+import excalidraw from "@/components/apps/excalidraw/index.vue";
 import type { ComponentCustomOptions } from "vue";
 
 type appsType = {
-    [Key:string]:{
-        component:ComponentCustomOptions,
-        index:number
-    }
-}
-const apps:appsType = {
-    'AppFacetime':{
-        component:Facetime,
-        index:2
-    },
-    'AppMpas':{
-        component:Maps,
-        index:3
-    },
-    'AppSafari':{
-        component:Safari,
-        index:4
-    },
-    'AppTermial':{
-        component:Termial,
-        index:5
-    },
-    'AppVscode':{
-        component:Vscode,
-        index:6
-    },
-    'AppMusic':{
-        component:Music,
-        index:7
-    },
-    'AppBlogs':{
-        component:Blogs,
-        index:8
-    },
-    'AppHome':{
-        component:Home,
-        index:9
-    },
-    'AppFcwUi':{
-        component:fcwUi,
-        index:10
-    },
-    'AppNewYear':{
-        component:NewYear,
-        index:11
-    },
-    'Yueque':{
-        component:Yueque,
-        index:12
-    },
-    '@gf-ui':{
-        component:GfUI,
-        index:13
-    }
+  [Key: string]: {
+    component: ComponentCustomOptions;
+    index: number;
+  };
+};
+const apps: appsType = {
+  AppFacetime: {
+    component: Facetime,
+    index: 2,
+  },
+  AppMpas: {
+    component: Maps,
+    index: 3,
+  },
+  AppSafari: {
+    component: Safari,
+    index: 4,
+  },
+  AppTermial: {
+    component: Termial,
+    index: 5,
+  },
+  AppVscode: {
+    component: Vscode,
+    index: 6,
+  },
+  AppMusic: {
+    component: Music,
+    index: 7,
+  },
+  AppBlogs: {
+    component: Blogs,
+    index: 8,
+  },
+  AppHome: {
+    component: Home,
+    index: 9,
+  },
+  AppFcwUi: {
+    component: fcwUi,
+    index: 10,
+  },
+  AppNewYear: {
+    component: NewYear,
+    index: 11,
+  },
+  Yueque: {
+    component: Yueque,
+    index: 12,
+  },
+  "@gf-ui": {
+    component: GfUI,
+    index: 13,
+  },
+  AppExcalidraw: {
+    component: excalidraw,
+    index: 14,
+  },
 };
 
 export default apps;
