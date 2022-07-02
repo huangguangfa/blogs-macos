@@ -26,7 +26,7 @@
           :key="apps.id"
         >
           <img :src="apps.img" alt="" />
-          <span>{{ apps.id }}</span>
+          <span v-html="apps.id"></span>
         </div>
       </div>
     </div>
@@ -41,6 +41,7 @@ import {
   SET_WINDOW_ID,
 } from "@/config/store.config";
 import { useSystemStore } from "@/store/index";
+import { highlight } from "@/utils/utils";
 const systemStore = useSystemStore();
 
 const { proxy } = getCurrentInstance();
@@ -72,8 +73,14 @@ proxy.$eventBus.$on("globalKeyup", globalKeyup);
 function getInputValue(e) {
   const v = e.target.value;
   const value = TABABR_NAVIGATIONS.filter(
-    (i) => i.id !== "Trash" && i.id.toLowerCase().includes(v)
-  );
+    (i) =>
+      (i.id !== "Trash" && i.id.toLowerCase().includes(v)) || i.id.includes(v)
+  ).map((i) => {
+    return {
+      ...i,
+      id: highlight(i.id, v),
+    };
+  });
   activeApps.value = value;
   selectIndex.value = 0;
 }

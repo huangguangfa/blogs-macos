@@ -213,7 +213,7 @@ export const randomNum = function (minNum: number, maxNum: number): number {
  * @param {String} str 需要进行高亮处理的文本
  * @param {String} keyword 高亮的关键字
  */
-export const highlight = (str: string, keyword: string, color: string) => {
+export const highlight = (str: string, keyword: string, color = "#5cc24c") => {
   const transform = keyword.replace(DATA_REGEX_PATTERN.highlight, "\\$&");
   const reg = new RegExp(transform, "gi");
   if (str) {
