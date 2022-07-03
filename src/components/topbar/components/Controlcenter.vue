@@ -64,9 +64,9 @@
     <div class="siri-img flex align-items-center">
       <img class="siri ml5" src="@/assets/images/topbar/siri.png" alt="" />
     </div>
-    <!-- v-clickoutside="() => (state.showSidebar = false)" -->
     <div
       class="systemTime noCopy"
+      v-clickoutside="() => (state.showSidebar = false)"
       @click="state.showSidebar = !state.showSidebar"
     >
       <span>{{ datesResult.day }}</span>
@@ -88,7 +88,7 @@ const systemStore = useSystemStore();
 let intervalId = null;
 let state = reactive({
   date: new Date(),
-  showSidebar: true,
+  showSidebar: false,
 });
 let options = reactive({
   module: [

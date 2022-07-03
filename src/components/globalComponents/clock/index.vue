@@ -1,13 +1,18 @@
 <template>
   <div class="clock">
-    <canvas ref="clockRef" height="120" width="120"></canvas>
+    <canvas ref="clockRef" :height="props.size" :width="props.size"></canvas>
   </div>
 </template>
 
-<script setup>
-import { onMounted, ref } from "vue";
+<script setup lang="ts">
+import { onMounted, ref, onUnmounted, withDefaults } from "vue";
+const props = withDefaults(defineProps<{ size?: number; hour?: number }>(), {
+  size: 120,
+  hour: 0,
+});
 const clockRef = ref();
-let ctx, width, height, r, rem;
+let ctx: any, width: number, height: number, r: number, rem: number;
+let times: NodeJS.Timer;
 
 onMounted(() => {
   ctx = clockRef.value.getContext("2d");
@@ -15,8 +20,13 @@ onMounted(() => {
   height = ctx.canvas.height;
   r = width / 2;
   rem = width / 230; //比例
-  setInterval(draw, 1000);
+  times = setInterval(draw, 1000);
 });
+
+onUnmounted(() => {
+  times && clearInterval(times);
+});
+
 //画圆
 function drawBackground() {
   ctx.save();
@@ -25,7 +35,6 @@ function drawBackground() {
   ctx.lineWidth = 10 * rem;
   //以0，0为原点，r为半径，0为起始角，2*Math.PI为结束角，顺时针画圆
   ctx.arc(0, 0, r - ctx.lineWidth / 2, 0, 2 * Math.PI, false);
-  ctx.strokeStyle = "#fff";
   ctx.stroke();
   ctx.fillStyle = "#fff";
   ctx.fill();
@@ -60,7 +69,7 @@ function drawBackground() {
 }
 
 //绘制时针
-function drawHour(hour, minute) {
+function drawHour(hour: number, minute: number) {
   ctx.save();
   ctx.beginPath();
   let rad = ((2 * Math.PI) / 12) * hour;
@@ -75,7 +84,7 @@ function drawHour(hour, minute) {
 }
 
 //绘制分针
-function drawMinute(minute) {
+function drawMinute(minute: number) {
   ctx.save();
   ctx.beginPath();
   let rad = ((2 * Math.PI) / 60) * minute;
@@ -89,7 +98,7 @@ function drawMinute(minute) {
 }
 
 //绘制秒针
-function drawSecond(second) {
+function drawSecond(second: number) {
   ctx.save();
   ctx.beginPath();
   ctx.fillStyle = "#d89436";
@@ -113,7 +122,7 @@ function drawDot() {
 
 function draw() {
   ctx.clearRect(0, 0, width, height);
-  let now = new Date();
+  let now = new Date(new Date().setHours(new Date().getHours() - props.hour));
   let hour = now.getHours();
   let minutes = now.getMinutes();
   let seconds = now.getSeconds();
@@ -125,5 +134,3 @@ function draw() {
   ctx.restore();
 }
 </script>
-
-<style lang="less" scoped></style>
