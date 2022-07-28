@@ -9,7 +9,7 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        filter: brightness(100%);
+        //filter: brightness(100%);
     }
 </style>
 
