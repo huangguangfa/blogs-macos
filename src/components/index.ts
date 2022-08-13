@@ -1,9 +1,9 @@
-import vmwindow from "./globalComponents/window/index.vue";
-import vmloading from "./globalComponents/loading/index.vue";
-import vmiframe from "./globalComponents/iframe/index.vue";
-import vmempty from "./globalComponents/empty/index.vue";
-import vmClock from "./globalComponents/clock/index.vue";
-import { Message } from "./globalComponents/windowTips/Tips";
+import vmwindow from "./global/window/index.vue";
+import vmloading from "./global/loading/index.vue";
+import vmiframe from "./global/iframe/index.vue";
+import vmempty from "./global/empty/index.vue";
+import vmClock from "./global/clock/index.vue";
+import { Message } from "./global/windowTips/Tips";
 import type { App, Component } from "vue";
 type CompnentsList = Array<{
   name: string;
