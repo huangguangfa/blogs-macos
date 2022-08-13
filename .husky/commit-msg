@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
 commit_msg=`cat $1`
 
-echo "2222 $commit_msg"
+yarn commitlint -e -V
+
