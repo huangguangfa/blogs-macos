@@ -17,7 +17,5 @@ yarn start
 
 ![image](https://github.com/huanggungfa/blogs-macos/blob/main/file/example-gif/doc.gif)
 
-scp -r /Users/guangfa/Desktop/guangfaMac/guangfa/gfCode/blogs-macos/blogs-macos/ root@120.25.233.183:/usr/gfDocker/nginx/web
-
 > server服务端 ❗❗❗注意：暂时不维护了、已经使用自己博客的NestJs服务集成使用了
 /Users/guangfa/Desktop/guangfaMac/guangfa/gfCode/blogs-macos/blogs-macos
