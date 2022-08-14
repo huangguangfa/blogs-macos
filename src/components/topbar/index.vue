@@ -23,13 +23,13 @@
 
 <script setup>
 import { computed } from "vue";
-import VmAbout from "./components/About.vue";
-import VmElectricity from "./components/Electricity.vue";
-import VmWifi from "./components/Wifi.vue";
-import VmSearch from "./components/Search.vue";
-import VmControlcenter from "./components/Controlcenter.vue";
+import VmAbout from "./components/about.vue";
+import VmElectricity from "./components/electricity.vue";
+import VmWifi from "./components/wifi.vue";
+import VmSearch from "./components/search.vue";
+import VmControlcenter from "./components/controlcenter.vue";
 import VmGlobalSearch from "@/components/search/index.vue";
-import VmXyInfo from "./components/Xy-info.vue";
+import VmXyInfo from "./components/xy-info.vue";
 import { useSystemStore } from "@/store/index";
 const systemStore = useSystemStore();
 

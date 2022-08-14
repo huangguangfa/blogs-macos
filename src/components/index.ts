@@ -3,7 +3,7 @@ import vmloading from "./global/loading/index.vue";
 import vmiframe from "./global/iframe/index.vue";
 import vmempty from "./global/empty/index.vue";
 import vmClock from "./global/clock/index.vue";
-import { Message } from "./global/windowTips/Tips";
+import { Message } from "./global/window-tips/Tips";
 import type { App, Component } from "vue";
 type CompnentsList = Array<{
   name: string;
