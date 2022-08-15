@@ -1,4 +1,3 @@
-import { initScoket } from "./initWrtcScoket";
 const SkyRTC = function () {
   //创建本地流
   let gThat;
@@ -23,9 +22,12 @@ const SkyRTC = function () {
     iceServers: [
       { url: "stun:stun.l.google.com:19302" },
       {
-        url: "stun:120.25.233.183:3478",
-        username: "admin",
-        credential: "123456",
+        url: "stun:182.92.163.143:3478",
+      },
+      {
+        url: "turn:182.92.163.143:3478",
+        username: "metartc",
+        credential: "metartc",
       },
     ],
   };
@@ -139,11 +141,15 @@ const SkyRTC = function () {
   //访问用户媒体设备的兼容方法
   function getUserMediaFun(constraints, success, error) {
     if (navigator.mediaDevices.getUserMedia) {
-      //最新的标准API
-      navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then(success)
-        .catch(error);
+      try {
+        //最新的标准API
+        navigator.mediaDevices
+          .getUserMedia(constraints)
+          .then(success)
+          .catch(error);
+      } catch (e) {
+        console.log(e);
+      }
     } else if (navigator.webkitGetUserMedia) {
       //webkit核心浏览器
       navigator.webkitGetUserMedia(constraints, success, error);
@@ -178,8 +184,7 @@ const SkyRTC = function () {
     let that = this;
     gThat = this;
     options.video = !!options.video;
-    // options.audio = !!options.audio;
-    options.audio = false;
+    options.audio = !!options.audio;
     if (getUserMedia) {
       // 调用用户媒体设备, 访问摄像头
       getUserMediaFun(options, createStreamSuccess, createStreamError);
