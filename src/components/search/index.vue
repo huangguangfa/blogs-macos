@@ -72,14 +72,14 @@ proxy.$eventBus.$on("globalKeyup", globalKeyup);
 // methods
 function getInputValue(e) {
   const v = e.target.value;
-  const value = TABABR_NAVIGATIONS.filter((i) => {
-    if (
-      (i.id !== "Trash" && i.id.toLowerCase().includes(v)) ||
-      i.id.includes(v)
-    ) {
-      i.id = highlight(i.id, v);
-      return true;
-    }
+  const value = TABABR_NAVIGATIONS.filter(
+    (i) =>
+      (i.id !== "Trash" && i.id.toLowerCase().includes(v)) || i.id.includes(v)
+  ).map((item) => {
+    return {
+      ...item,
+      id: highlight(item.id, v),
+    };
   });
   activeApps.value = value;
   selectIndex.value = 0;

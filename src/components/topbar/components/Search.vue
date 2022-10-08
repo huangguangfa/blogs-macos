@@ -5,9 +5,10 @@
 </template>
 <script setup>
 import { getCurrentInstance, onUnmounted } from "vue";
-import { SET_START_GLOBAL_SEARCH } from "@/config/store.config";
-const { proxy } = getCurrentInstance();
 import { useSystemStore } from "@/store/index";
+import { SET_START_GLOBAL_SEARCH } from "@/config/store.config";
+
+const { proxy } = getCurrentInstance();
 const systemStore = useSystemStore();
 function startGlobalSearch() {
   const status = systemStore.STARTGLOBALSEARCH;

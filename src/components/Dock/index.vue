@@ -48,7 +48,7 @@ import { reactive, computed, getCurrentInstance } from "vue";
 import { useSystemStore } from "@/store/index";
 import vmTopbar from "@/components/topbar/index.vue";
 import APPSCONFIG from "./apps-config";
-import { SET_TABABR_NAVIGATION, SET_WINDOW_ID } from "@/config/store.config";
+import { SET_TABABR_NAVIGATION } from "@/config/store.config";
 const systemStore = useSystemStore();
 
 const { proxy } = getCurrentInstance();
@@ -96,6 +96,7 @@ function tabbarMouseout() {
   const defaultSize = 50;
   TABABR_LIST_WIDTH.fill(defaultSize);
 }
+
 function openWindows(dock) {
   const appsIndex = TABABR_NAVIGATIONS.value.findIndex(
     (app) => app.id === dock.id

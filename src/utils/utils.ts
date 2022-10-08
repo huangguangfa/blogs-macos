@@ -198,13 +198,10 @@ export const randomNum = function (minNum: number, maxNum: number): number {
   switch (arguments.length) {
     case 1:
       return Math.floor(Math.random() * minNum + 1);
-      break;
     case 2:
       return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
-      break;
     default:
       return 0;
-      break;
   }
 };
 

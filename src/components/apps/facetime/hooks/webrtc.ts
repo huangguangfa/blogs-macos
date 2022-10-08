@@ -119,7 +119,6 @@ const SkyRTC = function () {
       let scoketData = message.data;
       if (sender === "exc") {
         const { data, call_uid, call_uname, exc_type } = scoketData;
-        // console.log('exc_type', exc_type, data)
         this.webrtc.receiveUser.wsId = call_uid;
         this.webrtc.receiveUser.uname = call_uname;
         // 添加远端offer
@@ -225,9 +224,10 @@ const SkyRTC = function () {
     let that = this;
     this.localPeer.createAnswer().then((answerOffer) => {
       //设置下本地
-      that.localPeer.setLocalDescription(answerOffer);
-      const { wsId } = that.receiveUser;
-      that.sendMessage(wsId, answerOffer, "sdp");
+      that.localPeer.setLocalDescription(answerOffer, () => {
+        const { wsId } = that.receiveUser;
+        that.sendMessage(wsId, answerOffer, "sdp");
+      });
     });
   };
   /****** ICE 信息交换 *****/
@@ -253,7 +253,7 @@ const SkyRTC = function () {
   };
 
   //创建单个PeerConnection
-  skyrtc.prototype.createPeerConnection = function () {
+  skyrtc.prototype.createPeerConnection = function (wsId) {
     let that = this;
     this.localPeer = new PeerConnection(iceServer);
     //本地数据流添加到PeerConnection
@@ -263,6 +263,9 @@ const SkyRTC = function () {
         this.localPeer.addTrack(track, gThat.localMediaStream)
       );
     //ICE信息
+    // setTimeout(() => {
+
+    // },000)
     this.localPeer.onicecandidate = function (evt) {
       let candidate = evt.candidate;
       if (candidate) {
@@ -271,7 +274,7 @@ const SkyRTC = function () {
     };
     //rtc连接状态变化
     this.localPeer.oniceconnectionstatechange = (evt) => {
-      // console.log('ICE连接状态: ' + evt.target.iceConnectionState);
+      console.log("ICE连接状态: " + evt.target.iceConnectionState);
     };
 
     this.localPeer.onnegotiationneeded = function (e) {
@@ -283,6 +286,7 @@ const SkyRTC = function () {
 
     //接收远端视频流
     this.localPeer.ontrack = function (e) {
+      console.log("接收远端的流");
       if (e && e.streams.length) {
         that.emit("remote_streams", e.streams[0]);
       }
