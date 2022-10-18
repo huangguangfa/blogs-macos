@@ -19,6 +19,10 @@ function globalKeyup(e) {
   if (code === "Shift") {
     proxy.$continuousEvent.checkDouble(code, startGlobalSearch, 500);
   }
+  if (code === "Escape") {
+    const status = systemStore.STARTGLOBALSEARCH;
+    status && systemStore[SET_START_GLOBAL_SEARCH](!status);
+  }
 }
 proxy.$eventBus.$on("globalKeyup", globalKeyup);
 onUnmounted(() => {

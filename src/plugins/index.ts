@@ -4,7 +4,7 @@ import { initGlobalDirectives } from "@/directives/index";
 import { initScoket } from "@/services/api/sockets";
 import EventBus from "@/utils/event-bus";
 import ContinuousEvent from "@/utils/continuousEvent";
-import { disableDevTool } from "./mixin";
+import { disableDevTool, gflogs } from "./mixin";
 
 import type { App } from "vue";
 
@@ -26,5 +26,6 @@ export function initGlobalMethods(app: App) {
   // 禁用开发工具
   if (import.meta.env.PROD) {
     disableDevTool();
+    gflogs();
   }
 }

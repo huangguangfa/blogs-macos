@@ -74,11 +74,12 @@ function getInputValue(e) {
   const v = e.target.value;
   const value = TABABR_NAVIGATIONS.filter(
     (i) =>
-      (i.id !== "Trash" && i.id.toLowerCase().includes(v)) || i.id.includes(v)
+      i.title !== "Trash" &&
+      (i.title.toLowerCase().includes(v) || i.title.includes(v))
   ).map((item) => {
     return {
       ...item,
-      id: highlight(item.id, v),
+      id: highlight(item.title, v),
     };
   });
   activeApps.value = value;
