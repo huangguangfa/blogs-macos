@@ -4,7 +4,10 @@ import { initGlobalDirectives } from "@/directives/index";
 import { initScoket } from "@/services/api/sockets";
 import EventBus from "@/utils/event-bus";
 import ContinuousEvent from "@/utils/continuousEvent";
+import { disableDevTool } from "./mixin";
+
 import type { App } from "vue";
+
 export function initGlobalMethods(app: App) {
   // 初始化换肤方法
   app.config.globalProperties.$theme = new CssTheme();
@@ -20,4 +23,8 @@ export function initGlobalMethods(app: App) {
   initGlobalComponent(app);
   // 初始化全局指令
   initGlobalDirectives(app);
+  // 禁用开发工具
+  if (import.meta.env.PROD) {
+    disableDevTool();
+  }
 }
