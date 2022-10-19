@@ -3,7 +3,10 @@ export function disableDevTool() {
     return false;
   };
   document.onkeydown = function (event) {
-    event.preventDefault();
+    const { code } = event;
+    if (["F12"].includes(code)) {
+      event.preventDefault();
+    }
   };
 }
 
