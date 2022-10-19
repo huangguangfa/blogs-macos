@@ -11,6 +11,7 @@ import fcwUi from "@/components/apps/fcw-ui/index.vue";
 import Yueque from "@/components/apps/yuque/index.vue";
 import GfUI from "@/components/apps/gf-ui/index.vue";
 import excalidraw from "@/components/apps/excalidraw/index.vue";
+import launchpad from "@/components/apps/launchpad/index.vue";
 import type { ComponentCustomOptions } from "vue";
 
 type appsType = {
@@ -20,6 +21,10 @@ type appsType = {
   };
 };
 const apps: appsType = {
+  Launchpad: {
+    component: launchpad,
+    index: 1,
+  },
   AppFacetime: {
     component: Facetime,
     index: 2,

@@ -105,7 +105,7 @@ function openWindows(dock) {
     _index: appsIndex,
     dockData: { desktop: true, isMinimize: false },
   });
-  const undevelopedAppsIndex = [0, 1];
+  const undevelopedAppsIndex = [0];
   if (undevelopedAppsIndex.includes(appsIndex)) {
     proxy.$message.error({
       content: "正在开发中....😊",
