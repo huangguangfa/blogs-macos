@@ -112,3 +112,9 @@
     z-index: 999999999 !important;
 }
 .wh100{width: 100%;height: 100%;}
+
+@keyframes loadingKeyframes {
+    100% {
+      background-size: 120%;
+    }
+  }
