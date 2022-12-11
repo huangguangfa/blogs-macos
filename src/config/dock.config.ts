@@ -147,11 +147,19 @@ export const TABABR_NAVIGATION = [
     img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/excalidraw.png",
   },
   {
+    id: "openAiChat",
+    title: "openAiChat",
+    desktop: true,
+    isMinimize: false,
+    _index: 15,
+    img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/openai.png",
+  },
+  {
     id: "Trash",
     title: "Trash",
     desktop: false,
     isMinimize: false,
-    _index: 15,
+    _index: 16,
     img: "https://blogs-macos.oss-cn-shenzhen.aliyuncs.com/tabbar-navigation/trash.png",
   },
 ];

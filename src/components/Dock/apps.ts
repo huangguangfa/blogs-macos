@@ -12,6 +12,7 @@ import Yueque from "@/components/apps/yuque/index.vue";
 import GfUI from "@/components/apps/gf-ui/index.vue";
 import excalidraw from "@/components/apps/excalidraw/index.vue";
 import launchpad from "@/components/apps/launchpad/index.vue";
+import openAiChat from "@/components/apps/open-ai-chat/index.vue";
 import type { ComponentCustomOptions } from "vue";
 
 type appsType = {
@@ -76,6 +77,10 @@ const apps: appsType = {
   AppExcalidraw: {
     component: excalidraw,
     index: 14,
+  },
+  openAiChat: {
+    component: openAiChat,
+    index: 15,
   },
 };
 
